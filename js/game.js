@@ -3628,8 +3628,8 @@
 
 } )();
 
-const GLB_DATA={"watch_shop": "models/props/watch_shop.glb", "watch_sign": "models/props/watch_sign.glb", "range_sign": "models/props/range_sign.glb", "bpd": "models/cars/bpd_69.glb", "concord": "models/cars/concordance.glb", "donut": "models/cars/donut_patrol.glb", "duck": "models/cars/duck_plasma.glb", "gt44": "models/cars/gt40.glb", "missile": "models/cars/missile_commander.glb", "leopard": "models/cars/night_leopard.glb", "trout": "models/cars/trout_protocol.glb"};
-const GLB_TEX={"watch_shop": {"base": "models/props/watch_shop_base.jpg", "normal": "models/props/watch_shop_normal.jpg", "mr": "models/props/watch_shop_mr.jpg"}, "watch_sign": {"base": "models/props/watch_sign_base.jpg", "normal": "models/props/watch_sign_normal.jpg", "mr": "models/props/watch_sign_mr.jpg"}, "range_sign": {"base": "models/props/range_sign_base.jpg", "normal": "models/props/range_sign_normal.jpg", "mr": "models/props/range_sign_mr.jpg"}, "bpd": {"base": "models/cars/bpd_69_base.jpg", "normal": "models/cars/bpd_69_normal.jpg", "mr": "models/cars/bpd_69_mr.jpg"}, "concord": {"base": "models/cars/concordance_base.jpg", "normal": "models/cars/concordance_normal.jpg", "mr": "models/cars/concordance_mr.jpg"}, "donut": {"base": "models/cars/donut_patrol_base.jpg", "normal": "models/cars/donut_patrol_normal.jpg", "mr": "models/cars/donut_patrol_mr.jpg"}, "duck": {"base": "models/cars/duck_plasma_base.jpg", "normal": "models/cars/duck_plasma_normal.jpg", "mr": "models/cars/duck_plasma_mr.jpg"}, "gt44": {"base": "models/cars/gt40_base.jpg", "normal": "models/cars/gt40_normal.jpg", "mr": "models/cars/gt40_mr.jpg"}, "missile": {"base": "models/cars/missile_commander_base.jpg", "normal": "models/cars/missile_commander_normal.jpg", "mr": "models/cars/missile_commander_mr.jpg"}, "leopard": {"base": "models/cars/night_leopard_base.jpg", "normal": "models/cars/night_leopard_normal.jpg", "mr": "models/cars/night_leopard_mr.jpg"}, "trout": {"base": "models/cars/trout_protocol_base.jpg", "normal": "models/cars/trout_protocol_normal.jpg", "mr": "models/cars/trout_protocol_mr.jpg"}};
+const GLB_DATA={"watch_shop": "models/props/watch_shop.glb?v=1790357811", "watch_sign": "models/props/watch_sign.glb?v=1790357811", "range_sign": "models/props/range_sign.glb?v=1790357811", "bpd": "models/cars/bpd_69.glb?v=1790357811", "concord": "models/cars/concordance.glb?v=1790357811", "donut": "models/cars/donut_patrol.glb?v=1790357811", "duck": "models/cars/duck_plasma.glb?v=1790357811", "gt44": "models/cars/gt40.glb?v=1790357811", "missile": "models/cars/missile_commander.glb?v=1790357811", "leopard": "models/cars/night_leopard.glb?v=1790357811", "trout": "models/cars/trout_protocol.glb?v=1790357811"};
+const GLB_TEX={"watch_shop": {"base": "models/props/watch_shop_base.jpg?v=1790357811", "normal": "models/props/watch_shop_normal.jpg?v=1790357811", "mr": "models/props/watch_shop_mr.jpg?v=1790357811"}, "watch_sign": {"base": "models/props/watch_sign_base.jpg?v=1790357811", "normal": "models/props/watch_sign_normal.jpg?v=1790357811", "mr": "models/props/watch_sign_mr.jpg?v=1790357811"}, "range_sign": {"base": "models/props/range_sign_base.jpg?v=1790357811", "normal": "models/props/range_sign_normal.jpg?v=1790357811", "mr": "models/props/range_sign_mr.jpg?v=1790357811"}, "bpd": {"base": "models/cars/bpd_69_base.jpg?v=1790357811", "normal": "models/cars/bpd_69_normal.jpg?v=1790357811", "mr": "models/cars/bpd_69_mr.jpg?v=1790357811"}, "concord": {"base": "models/cars/concordance_base.jpg?v=1790357811", "normal": "models/cars/concordance_normal.jpg?v=1790357811", "mr": "models/cars/concordance_mr.jpg?v=1790357811"}, "donut": {"base": "models/cars/donut_patrol_base.jpg?v=1790357811", "normal": "models/cars/donut_patrol_normal.jpg?v=1790357811", "mr": "models/cars/donut_patrol_mr.jpg?v=1790357811"}, "duck": {"base": "models/cars/duck_plasma_base.jpg?v=1790357811", "normal": "models/cars/duck_plasma_normal.jpg?v=1790357811", "mr": "models/cars/duck_plasma_mr.jpg?v=1790357811"}, "gt44": {"base": "models/cars/gt40_base.jpg?v=1790357811", "normal": "models/cars/gt40_normal.jpg?v=1790357811", "mr": "models/cars/gt40_mr.jpg?v=1790357811"}, "missile": {"base": "models/cars/missile_commander_base.jpg?v=1790357811", "normal": "models/cars/missile_commander_normal.jpg?v=1790357811", "mr": "models/cars/missile_commander_mr.jpg?v=1790357811"}, "leopard": {"base": "models/cars/night_leopard_base.jpg?v=1790357811", "normal": "models/cars/night_leopard_normal.jpg?v=1790357811", "mr": "models/cars/night_leopard_mr.jpg?v=1790357811"}, "trout": {"base": "models/cars/trout_protocol_base.jpg?v=1790357811", "normal": "models/cars/trout_protocol_normal.jpg?v=1790357811", "mr": "models/cars/trout_protocol_mr.jpg?v=1790357811"}};
 "use strict";
 // ===== UTILITIES =====
 const TAU=Math.PI*2;
@@ -4286,7 +4286,7 @@ function loadCarGLBs(done,progress){
     const next=()=>{ if(k>=ids.length) return; const id=ids[k++];
       const parse=buf=>L.parse(buf,'',g=>{ CAR_GLTF[id]=g.scene; fin(); },e=>{ GLB_ERROR=id+': '+(e&&e.message||e); console.warn('GLB failed',id,e); fin(); });
       const src=data[id];
-      if(/\.glb$/i.test(src)){ fetch(src).then(r=>{ if(!r.ok) throw new Error('HTTP '+r.status+' '+src); return r.arrayBuffer(); }).then(parse).catch(e=>{ GLB_ERROR=id+': '+e.message; fin(); }); return; }
+      if(/\.glb(\?|$)/i.test(src)){ fetch(src).then(r=>{ if(!r.ok) throw new Error('HTTP '+r.status+' '+src); return r.arrayBuffer(); }).then(parse).catch(e=>{ GLB_ERROR=id+': '+e.message; fin(); }); return; }
       try{ const s=atob(src); const u=new Uint8Array(s.length); for(let i=0;i<s.length;i++) u[i]=s.charCodeAt(i); parse(u.buffer); }
       catch(e){ GLB_ERROR=id+': '+e.message; console.warn('GLB decode failed',id,e); fin(); } };
     const fin=()=>{ left--; if(progress) progress(ids.length-left,ids.length); if(left<=0) done(); else setTimeout(next,0); };
@@ -5737,11 +5737,28 @@ class Input{
     addEventListener('keydown',e=>{ if(e.target&&e.target.tagName==='INPUT'){ if(e.code==='Enter'){ const a=game.screen==='account'&&!game.online.user?'login':null; if(a){ e.preventDefault(); game.ui.act(a); } } else if(e.code==='Escape'){ e.target.blur(); } return; } if(e.repeat&&this.keys[e.code]) { this.prevent(e); return; } this.keys[e.code]=true; this.pressed.push(e.code); this.prevent(e); game.onAnyInput(); });
     addEventListener('keyup',e=>{ this.keys[e.code]=false; });
     addEventListener('blur',()=>{ this.keys={}; });
-    document.querySelectorAll('#touch .tb').forEach(b=>{ const k=b.dataset.k;
-      const on=e=>{ e.preventDefault(); this.touch[k]=true; b.classList.add('on'); game.audio.init(); };
-      const off=e=>{ e.preventDefault(); this.touch[k]=false; b.classList.remove('on'); };
-      b.addEventListener('touchstart',on,{passive:false}); b.addEventListener('touchend',off,{passive:false}); b.addEventListener('touchcancel',off,{passive:false});
-      b.addEventListener('mousedown',on); b.addEventListener('mouseup',off); b.addEventListener('mouseleave',off); });
+    // ---- touch: floating joystick (left) + multi-touch buttons you can slide/chord between (right) ----
+    this.touches=new Map(); this.joy={id:null,x:0,y:0,sx:0,sy:0,steer:0,brake:false};
+    const tEl=$('touch'), active=()=>tEl.classList.contains('on');
+    const hitButtons=(x,y)=>{ const out=[]; tEl.querySelectorAll('.tb').forEach(b=>{ if(b.offsetParent===null) return; const r=b.getBoundingClientRect(); const cx=r.left+r.width/2, cy=r.top+r.height/2, R=r.width/2; if(Math.hypot(x-cx,y-cy)<=R*1.22) out.push(b.dataset.k); }); return out; };
+    const refresh=()=>{ const on={}; this.touches.forEach(v=>{ if(v.type==='btn') v.keys.forEach(k=>on[k]=true); }); ['gas','brake','drift','item'].forEach(k=>this.touch[k]=!!on[k]); tEl.querySelectorAll('.tb').forEach(b=>b.classList.toggle('on',!!on[b.dataset.k])); };
+    const joyEl=$('joy'), knob=$('joyK');
+    const joyMove=(x,y)=>{ const J=this.joy, R=58; let dx=x-J.sx, dy=y-J.sy; const d=Math.hypot(dx,dy); if(d>R){ dx*=R/d; dy*=R/d; } knob.style.transform=`translate(${dx}px,${dy}px)`;
+      let s=dx/R; s=Math.abs(s)<0.1?0:Math.sign(s)*Math.pow((Math.abs(s)-0.1)/0.9,1.15); J.steer=clamp(s,-1,1); J.brake=dy/R>0.6; };
+    const start=e=>{ if(!active()) return; let used=false;
+      for(const t of e.changedTouches){ if(t.target && t.target.closest && t.target.closest('#pauseBtn')) continue; const x=t.clientX,y=t.clientY; used=true; game.audio.init();
+        if(x<innerWidth*0.46 && y>innerHeight*0.28 && this.joy.id===null){ const J=this.joy; J.id=t.identifier; J.sx=x; J.sy=y; joyEl.style.left=x+'px'; joyEl.style.top=y+'px'; joyEl.classList.add('on'); joyMove(x,y); this.touches.set(t.identifier,{type:'joy'}); }
+        else this.touches.set(t.identifier,{type:'btn',keys:hitButtons(x,y)}); }
+      if(used){ e.preventDefault(); refresh(); } };
+    const move=e=>{ if(!active()||!this.touches.size) return; let used=false;
+      for(const t of e.changedTouches){ const v=this.touches.get(t.identifier); if(!v) continue; used=true; if(v.type==='joy') joyMove(t.clientX,t.clientY); else v.keys=hitButtons(t.clientX,t.clientY); }
+      if(used){ e.preventDefault(); refresh(); } };
+    const end=e=>{ let used=false; for(const t of e.changedTouches){ const v=this.touches.get(t.identifier); if(!v) continue; used=true; this.touches.delete(t.identifier);
+        if(v.type==='joy'){ const J=this.joy; J.id=null; J.steer=0; J.brake=false; knob.style.transform=''; joyEl.classList.remove('on'); joyEl.style.left=''; joyEl.style.top=''; } }
+      if(used){ if(e.cancelable) e.preventDefault(); refresh(); } };
+    document.addEventListener('touchstart',start,{passive:false}); document.addEventListener('touchmove',move,{passive:false});
+    document.addEventListener('touchend',end,{passive:false}); document.addEventListener('touchcancel',end,{passive:false});
+    this.clearTouch=()=>{ this.touches.clear(); const J=this.joy; J.id=null; J.steer=0; J.brake=false; knob.style.transform=''; joyEl.classList.remove('on'); refresh(); };
   }
   prevent(e){ if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space','Tab'].includes(e.code)) e.preventDefault(); }
   pad(){ const ps=navigator.getGamepads?navigator.getGamepads():[]; for(const p of ps){ if(p&&p.connected) return p; } return null; }
@@ -5755,8 +5772,10 @@ class Input{
   }
   drive(){
     const K=this.keys,T=this.touch; const o={thr:0,brk:0,steer:0,drift:false,item:false,reset:false,skip:false};
-    if(K.KeyW||K.ArrowUp||T.gas) o.thr=1; if(K.KeyS||K.ArrowDown||T.brake) o.brk=1;
-    if(K.KeyA||K.ArrowLeft||T.left) o.steer-=1; if(K.KeyD||K.ArrowRight||T.right) o.steer+=1;
+    const J=this.joy||{steer:0,brake:false};
+    if(K.KeyW||K.ArrowUp||T.gas) o.thr=1; if(K.KeyS||K.ArrowDown||T.brake||J.brake) o.brk=1;
+    if(K.KeyA||K.ArrowLeft) o.steer-=1; if(K.KeyD||K.ArrowRight) o.steer+=1; if(J.steer) o.steer=clamp(o.steer+J.steer,-1,1);
+    const R=this.g.race; if(this.g.S.autogas && this.g.ui.isTouch() && !o.brk && R && R.state!=='intro' && R.state!=='countdown') o.thr=1;
     o.drift=!!(K.Space||T.drift); o.item=!!(K.ShiftLeft||K.ShiftRight||K.KeyE||T.item); o.reset=!!K.KeyR;
     const p=this.pad(); if(p){ const ax=p.axes[0]||0; if(Math.abs(ax)>0.15) o.steer=clamp(o.steer+Math.sign(ax)*(Math.abs(ax)-0.15)/0.85,-1,1);
       const bv=i=>p.buttons[i]?(p.buttons[i].value||(p.buttons[i].pressed?1:0)):0;
@@ -5766,7 +5785,7 @@ class Input{
 }
 class Game{
   constructor(){
-    this.S=Object.assign({master:0.8,sfx:0.9,music:0.6,musicOn:true,quality:'medium',shake:true,units:'mph',touch:'auto'},Store.get('settings',{}));
+    this.S=Object.assign({master:0.8,sfx:0.9,music:0.6,musicOn:true,quality:'medium',shake:true,units:'mph',touch:'auto',autogas:true},Store.get('settings',{}));
     this.sel={vehicle:Store.get('lastCar',2),track:Store.get('lastTrack',0),diff:Store.get('lastDiff','normal')};
     const canvas=$('gl'); this.renderer=new THREE.WebGLRenderer({canvas,antialias:true,powerPreference:'high-performance'});
     const r=this.renderer; r.outputEncoding=THREE.sRGBEncoding; r.toneMapping=THREE.ACESFilmicToneMapping; r.shadowMap.type=THREE.PCFSoftShadowMap;
@@ -5890,16 +5909,16 @@ class UI{
     // settings wiring
     document.querySelectorAll('#settings input[type=range]').forEach(inp=>{ const k=inp.dataset.s; inp.value=g.S[k]; const lab=inp.nextElementSibling; lab.textContent=Math.round(g.S[k]*100);
       inp.addEventListener('input',()=>{ g.S[k]=+inp.value; lab.textContent=Math.round(g.S[k]*100); g.saveSettings(); }); });
-    document.querySelectorAll('#settings .seg').forEach(seg=>{ const k=seg.dataset.t; seg.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{ let v=b.dataset.v; if(k==='musicOn'||k==='shake') v=v==='1'; g.S[k]=v; g.audio.init(); g.audio.play('blip'); if(k==='quality') g.applyQuality(); g.saveSettings(); this.settingsUI(); })); });
+    document.querySelectorAll('#settings .seg').forEach(seg=>{ const k=seg.dataset.t; seg.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{ let v=b.dataset.v; if(k==='musicOn'||k==='shake'||k==='autogas') v=v==='1'; g.S[k]=v; g.audio.init(); g.audio.play('blip'); if(k==='quality') g.applyQuality(); g.saveSettings(); this.settingsUI(); })); });
     this.settingsUI(); this.buildTracks(); this.carDots(); g.online.onChange(()=>this.acctUI()); this.acctUI();
     this.lastItem=null; this.rollT=0;
     if('ontouchstart' in window) $('pressTxt').textContent='Tap to start';
   }
   error(e){ const el=$('err'); el.style.display='block'; el.textContent='Error: '+(e&&e.message||e); }
   isTouch(){ const t=this.g.S.touch; return t==='on'||(t==='auto'&&(('ontouchstart' in window)||navigator.maxTouchPoints>0)&&matchMedia('(pointer:coarse)').matches); }
-  touchMode(){ document.body.classList.toggle('touch',this.isTouch()); }
-  touchVisible(on){ $('touch').classList.toggle('on',on&&this.isTouch()); }
-  settingsUI(){ const S=this.g.S; document.querySelectorAll('#settings .seg').forEach(seg=>{ const k=seg.dataset.t; seg.querySelectorAll('button').forEach(b=>{ let v=b.dataset.v; if(k==='musicOn'||k==='shake') v=v==='1'; b.classList.toggle('on',S[k]===v); }); }); }
+  touchMode(){ document.body.classList.toggle('touch',this.isTouch()); document.body.classList.toggle('autogas',!!this.g.S.autogas); }
+  touchVisible(on){ $('touch').classList.toggle('on',on&&this.isTouch()); if(!on&&this.g.input&&this.g.input.clearTouch) this.g.input.clearTouch(); }
+  settingsUI(){ const S=this.g.S; document.querySelectorAll('#settings .seg').forEach(seg=>{ const k=seg.dataset.t; seg.querySelectorAll('button').forEach(b=>{ let v=b.dataset.v; if(k==='musicOn'||k==='shake'||k==='autogas') v=v==='1'; b.classList.toggle('on',S[k]===v); }); }); }
   diffUI(){ $('diffSeg').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.d===this.g.sel.diff)); }
   items(){ return [...document.querySelectorAll('.screen.on .btn, .screen.on .tcard, .screen.on .arrow')].filter(b=>b.offsetParent!==null&&!b.classList.contains('arrow')); }
   refocus(){ const it=this.items(); it.forEach((b,k)=>b.classList.toggle('focus',k===this.g.focus)); }

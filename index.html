@@ -107,6 +107,20 @@ input[type=range]{width:100%;accent-color:var(--pink)}
 #touch.on{display:block}
 .tb{position:absolute;pointer-events:auto;border-radius:50%;border:2px solid rgba(255,255,255,.35);background:rgba(20,10,40,.45);color:#fff;font-family:var(--disp);display:flex;align-items:center;justify-content:center;font-size:14px;letter-spacing:.08em}
 .tb.on{background:rgba(255,46,151,.55);border-color:var(--pink)}
+.tb{pointer-events:none!important;user-select:none;-webkit-user-select:none}
+.tb[data-k=gas]{right:22px;bottom:26px;width:104px;height:104px;font-size:17px}
+.tb[data-k=drift]{right:136px;bottom:34px;width:88px;height:88px;font-size:15px}
+.tb[data-k=brake]{right:152px;bottom:134px;width:64px;height:64px;font-size:12px}
+.tb[data-k=item]{right:38px;bottom:142px;width:72px;height:72px;font-size:14px}
+body.autogas .tb[data-k=gas]{display:none}
+body.autogas .tb[data-k=drift]{right:22px;bottom:26px;width:108px;height:108px;font-size:17px}
+body.autogas .tb[data-k=brake]{right:144px;bottom:22px;width:70px;height:70px}
+body.autogas .tb[data-k=item]{right:40px;bottom:150px;width:78px;height:78px}
+#joy{position:absolute;width:132px;height:132px;margin:-66px 0 0 -66px;border-radius:50%;border:2px solid rgba(255,255,255,.3);background:rgba(20,10,40,.35);left:110px;top:calc(100% - 110px);opacity:.55;transition:opacity .15s}
+#joy.on{opacity:1}
+#joyK{position:absolute;left:50%;top:50%;width:60px;height:60px;margin:-30px 0 0 -30px;border-radius:50%;background:rgba(255,46,151,.6);border:2px solid #fff;box-shadow:0 0 12px rgba(255,46,151,.6)}
+#joyHint{position:absolute;left:84px;bottom:24px;font-size:10px;letter-spacing:.3em;color:rgba(255,255,255,.45);font-family:var(--disp)}
+#joy.on~#joyHint{display:none}
 /* results */
 #results table{border-collapse:collapse;width:min(640px,92vw);font-size:15px}
 #results td{padding:7px 10px;border-bottom:1px solid rgba(255,255,255,.08);white-space:nowrap}
@@ -118,7 +132,7 @@ input[type=range]{width:100%;accent-color:var(--pink)}
 #loading .bar2{width:min(360px,70vw);height:6px;background:rgba(255,255,255,.1);margin-top:18px;overflow:hidden;border-radius:3px}
 #loading .bar2 i{display:block;height:100%;width:40%;background:linear-gradient(90deg,var(--pink),var(--cyan));animation:load 1s infinite linear}
 @keyframes load{0%{transform:translateX(-100%)}100%{transform:translateX(260%)}}
-body.touch #board{display:none}body.touch #miniBox{bottom:auto;top:96px}body.touch #mini{width:120px;height:120px}body.touch #spdBox{bottom:auto;top:112px}#rot{position:fixed;inset:0;background:#150a2e;z-index:50;display:none;align-items:center;justify-content:center;text-align:center;font-family:var(--disp);font-size:26px;padding:30px;color:#fff}@media (orientation:portrait){body.touch.racing #rot{display:flex}}body.touch #miniName{display:none}
+body.touch #board{display:none}body.touch #miniBox{bottom:auto;top:96px}body.touch #mini{width:120px;height:120px}body.touch #spdBox{top:auto;right:50%;transform:translateX(50%);bottom:max(40px,env(safe-area-inset-bottom));text-align:center}body.touch #hSpd{font-size:40px}#rot{position:fixed;inset:0;background:#150a2e;z-index:50;display:none;align-items:center;justify-content:center;text-align:center;font-family:var(--disp);font-size:26px;padding:30px;color:#fff}@media (orientation:portrait){body.touch.racing #rot{display:flex}}body.touch #miniName{display:none}
 @media (max-height:520px){.btn{padding:7px 18px;font-size:17px}.menu{gap:7px;margin-top:0}#menu .logo{margin-bottom:-8vh!important;transform:rotate(-4deg) scale(.5)!important}.tcard p,.tcard .pl{display:none}#tracks{grid-template-columns:repeat(5,minmax(0,1fr));margin-top:6px;gap:6px}.tcard{padding:6px}.tcard h3{font-size:14px}.title{font-size:26px}#carInfo{padding:10px}#carInfo .desc{display:none}.stat{margin:2px 0}}
 label.fl{display:block;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin:8px 0}
 label.fl input{display:block;width:100%;margin-top:6px;font-family:var(--body);font-size:18px;color:#fff;background:rgba(0,0,0,.4);border:2px solid rgba(255,255,255,.2);border-radius:4px;padding:10px 12px;outline:none;user-select:text;-webkit-user-select:text;letter-spacing:.02em;text-transform:none}
@@ -179,6 +193,7 @@ table.lb td.p{font-family:var(--disp);font-size:19px;color:var(--cyan);width:36p
     <div class="set"><span>Quality</span><div class="seg" data-t="quality"><button data-v="low">Low</button><button data-v="medium">Med</button><button data-v="high">High</button></div><b></b></div>
     <div class="set"><span>Camera shake</span><div class="seg" data-t="shake"><button data-v="1">On</button><button data-v="0">Off</button></div><b></b></div>
     <div class="set"><span>Speed units</span><div class="seg" data-t="units"><button data-v="mph">MPH</button><button data-v="kmh">KM/H</button></div><b></b></div>
+    <div class="set"><span>Auto gas (touch)</span><div class="seg" data-t="autogas"><button data-v="1">On</button><button data-v="0">Off</button></div><b></b></div>
     <div class="set"><span>Touch buttons</span><div class="seg" data-t="touch"><button data-v="auto">Auto</button><button data-v="on">On</button><button data-v="off">Off</button></div><b></b></div>
   </div>
   <div class="row" style="margin-top:16px"><div class="btn small" data-act="back"><span>Done</span></div></div>
@@ -195,6 +210,7 @@ table.lb td.p{font-family:var(--disp);font-size:19px;color:var(--cyan);width:36p
       <tr><td><kbd>Shift</kbd> / <kbd>E</kbd></td><td>Use item</td></tr>
       <tr><td><kbd>R</kbd></td><td>Reset car to the track</td></tr>
       <tr><td><kbd>Esc</kbd> / <kbd>P</kbd></td><td>Pause</td></tr>
+      <tr><td>Touch</td><td>Left thumb anywhere on the left side is a joystick: slide to steer, pull down to brake/reverse. Right side: DRIFT, ITEM, BRAKE. Gas is automatic unless you switch Auto gas off in Settings; then rest your thumb between GAS and DRIFT to press both. You can slide your thumb between buttons.</td></tr>
       <tr><td>Gamepad</td><td>RT / A accelerate · LT / B brake · stick steer · RB / X drift · LB / Y item · Back reset · Start pause</td></tr>
     </table>
     <p><b style="color:var(--pink)">Prism crystals</b> give an item: <b style="color:var(--cyan)">⚡ Nitro Cell</b> (big boost), <b style="color:#7ff6ff">◈ Aegis Bubble</b> (shield — blocks one hazard and bumps rivals aside), <b style="color:var(--pink)">◍ Glaze Slick</b> (drop a sticky puddle behind you that spins out whoever hits it).</p>
@@ -270,16 +286,16 @@ table.lb td.p{font-family:var(--disp);font-size:19px;color:var(--cyan);width:36p
   <button id="pauseBtn">❚❚</button>
 </div>
 <div id="touch">
-  <div class="tb" data-k="left" style="left:18px;bottom:26px;width:84px;height:84px;font-size:30px">◀</div>
-  <div class="tb" data-k="right" style="left:118px;bottom:26px;width:84px;height:84px;font-size:30px">▶</div>
-  <div class="tb" data-k="gas" style="right:18px;bottom:26px;width:92px;height:92px">GAS</div>
-  <div class="tb" data-k="brake" style="right:122px;bottom:18px;width:66px;height:66px">BRAKE</div>
-  <div class="tb" data-k="drift" style="right:30px;bottom:132px;width:70px;height:70px">DRIFT</div>
-  <div class="tb" data-k="item" style="right:118px;bottom:100px;width:62px;height:62px">ITEM</div>
+  <div id="joy"><div id="joyK"></div></div>
+  <div id="joyHint">STEER</div>
+  <div class="tb" data-k="gas">GAS</div>
+  <div class="tb" data-k="drift">DRIFT</div>
+  <div class="tb" data-k="brake">BRAKE</div>
+  <div class="tb" data-k="item">ITEM</div>
 </div>
 <div id="rot">Rotate your phone to landscape to race ⟳</div>
 <div id="acctTag"></div>
 <div id="err"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="js/game.js"></script>
+<script src="js/game.js?v=1790357811"></script>
 </body></html>
