@@ -3628,8 +3628,8 @@
 
 } )();
 
-const GLB_DATA={"brcc": "models/cars/rotor.glb?v=1790369362", "fdc": "models/cars/rrpickup.glb?v=1790369362", "shoe_factory": "models/props/shoe_factory.glb?v=1790369362", "claw_can": "models/props/claw_can.glb?v=1790369362", "echelon_can": "models/props/echelon_can.glb?v=1790369362", "watch_shop": "models/props/watch_shop.glb?v=1790369362", "watch_sign": "models/props/watch_sign.glb?v=1790369362", "range_sign": "models/props/range_sign.glb?v=1790369362", "bpd": "models/cars/bpd_69.glb?v=1790369362", "concord": "models/cars/concordance.glb?v=1790369362", "donut": "models/cars/donut_patrol.glb?v=1790369362", "duck": "models/cars/duck_plasma.glb?v=1790369362", "gt44": "models/cars/gt40.glb?v=1790369362", "missile": "models/cars/missile_commander.glb?v=1790369362", "leopard": "models/cars/night_leopard.glb?v=1790369362", "trout": "models/cars/trout_protocol.glb?v=1790369362"};
-const GLB_TEX={"brcc": {"base": "models/cars/rotor_base.jpg?v=1790369362", "normal": "models/cars/rotor_normal.jpg?v=1790369362", "mr": "models/cars/rotor_mr.jpg?v=1790369362"}, "fdc": {"base": "models/cars/rrpickup_base.jpg?v=1790369362", "normal": "models/cars/rrpickup_normal.jpg?v=1790369362", "mr": "models/cars/rrpickup_mr.jpg?v=1790369362"}, "shoe_factory": {"base": "models/props/shoe_factory_base.jpg?v=1790369362", "normal": "models/props/shoe_factory_normal.jpg?v=1790369362", "mr": "models/props/shoe_factory_mr.jpg?v=1790369362"}, "claw_can": {"base": "models/props/claw_can_base.jpg?v=1790369362", "normal": "models/props/claw_can_normal.jpg?v=1790369362", "mr": "models/props/claw_can_mr.jpg?v=1790369362"}, "echelon_can": {"base": "models/props/echelon_can_base.jpg?v=1790369362", "normal": "models/props/echelon_can_normal.jpg?v=1790369362", "mr": "models/props/echelon_can_mr.jpg?v=1790369362"}, "watch_shop": {"base": "models/props/watch_shop_base.jpg?v=1790369362", "normal": "models/props/watch_shop_normal.jpg?v=1790369362", "mr": "models/props/watch_shop_mr.jpg?v=1790369362"}, "watch_sign": {"base": "models/props/watch_sign_base.jpg?v=1790369362", "normal": "models/props/watch_sign_normal.jpg?v=1790369362", "mr": "models/props/watch_sign_mr.jpg?v=1790369362"}, "range_sign": {"base": "models/props/range_sign_base.jpg?v=1790369362", "normal": "models/props/range_sign_normal.jpg?v=1790369362", "mr": "models/props/range_sign_mr.jpg?v=1790369362"}, "bpd": {"base": "models/cars/bpd_69_base.jpg?v=1790369362", "normal": "models/cars/bpd_69_normal.jpg?v=1790369362", "mr": "models/cars/bpd_69_mr.jpg?v=1790369362"}, "concord": {"base": "models/cars/concordance_base.jpg?v=1790369362", "normal": "models/cars/concordance_normal.jpg?v=1790369362", "mr": "models/cars/concordance_mr.jpg?v=1790369362"}, "donut": {"base": "models/cars/donut_patrol_base.jpg?v=1790369362", "normal": "models/cars/donut_patrol_normal.jpg?v=1790369362", "mr": "models/cars/donut_patrol_mr.jpg?v=1790369362"}, "duck": {"base": "models/cars/duck_plasma_base.jpg?v=1790369362", "normal": "models/cars/duck_plasma_normal.jpg?v=1790369362", "mr": "models/cars/duck_plasma_mr.jpg?v=1790369362"}, "gt44": {"base": "models/cars/gt40_base.jpg?v=1790369362", "normal": "models/cars/gt40_normal.jpg?v=1790369362", "mr": "models/cars/gt40_mr.jpg?v=1790369362"}, "missile": {"base": "models/cars/missile_commander_base.jpg?v=1790369362", "normal": "models/cars/missile_commander_normal.jpg?v=1790369362", "mr": "models/cars/missile_commander_mr.jpg?v=1790369362"}, "leopard": {"base": "models/cars/night_leopard_base.jpg?v=1790369362", "normal": "models/cars/night_leopard_normal.jpg?v=1790369362", "mr": "models/cars/night_leopard_mr.jpg?v=1790369362"}, "trout": {"base": "models/cars/trout_protocol_base.jpg?v=1790369362", "normal": "models/cars/trout_protocol_normal.jpg?v=1790369362", "mr": "models/cars/trout_protocol_mr.jpg?v=1790369362"}};
+const GLB_DATA={"hellcat": "models/cars/hellcat.glb?v=1790374723", "brcc": "models/cars/rotor.glb?v=1790374723", "fdc": "models/cars/rrpickup.glb?v=1790374723", "shoe_factory": "models/props/shoe_factory.glb?v=1790374723", "claw_can": "models/props/claw_can.glb?v=1790374723", "echelon_can": "models/props/echelon_can.glb?v=1790374723", "watch_shop": "models/props/watch_shop.glb?v=1790374723", "watch_sign": "models/props/watch_sign.glb?v=1790374723", "range_sign": "models/props/range_sign.glb?v=1790374723", "bpd": "models/cars/bpd_69.glb?v=1790374723", "concord": "models/cars/concordance.glb?v=1790374723", "donut": "models/cars/donut_patrol.glb?v=1790374723", "duck": "models/cars/duck_plasma.glb?v=1790374723", "gt44": "models/cars/gt40.glb?v=1790374723", "missile": "models/cars/missile_commander.glb?v=1790374723", "leopard": "models/cars/night_leopard.glb?v=1790374723", "trout": "models/cars/trout_protocol.glb?v=1790374723"};
+const GLB_TEX={"hellcat": {"base": "models/cars/hellcat_base.jpg?v=1790374723", "normal": "models/cars/hellcat_normal.jpg?v=1790374723", "mr": "models/cars/hellcat_mr.jpg?v=1790374723"}, "brcc": {"base": "models/cars/rotor_base.jpg?v=1790374723", "normal": "models/cars/rotor_normal.jpg?v=1790374723", "mr": "models/cars/rotor_mr.jpg?v=1790374723"}, "fdc": {"base": "models/cars/rrpickup_base.jpg?v=1790374723", "normal": "models/cars/rrpickup_normal.jpg?v=1790374723", "mr": "models/cars/rrpickup_mr.jpg?v=1790374723"}, "shoe_factory": {"base": "models/props/shoe_factory_base.jpg?v=1790374723", "normal": "models/props/shoe_factory_normal.jpg?v=1790374723", "mr": "models/props/shoe_factory_mr.jpg?v=1790374723"}, "claw_can": {"base": "models/props/claw_can_base.jpg?v=1790374723", "normal": "models/props/claw_can_normal.jpg?v=1790374723", "mr": "models/props/claw_can_mr.jpg?v=1790374723"}, "echelon_can": {"base": "models/props/echelon_can_base.jpg?v=1790374723", "normal": "models/props/echelon_can_normal.jpg?v=1790374723", "mr": "models/props/echelon_can_mr.jpg?v=1790374723"}, "watch_shop": {"base": "models/props/watch_shop_base.jpg?v=1790374723", "normal": "models/props/watch_shop_normal.jpg?v=1790374723", "mr": "models/props/watch_shop_mr.jpg?v=1790374723"}, "watch_sign": {"base": "models/props/watch_sign_base.jpg?v=1790374723", "normal": "models/props/watch_sign_normal.jpg?v=1790374723", "mr": "models/props/watch_sign_mr.jpg?v=1790374723"}, "range_sign": {"base": "models/props/range_sign_base.jpg?v=1790374723", "normal": "models/props/range_sign_normal.jpg?v=1790374723", "mr": "models/props/range_sign_mr.jpg?v=1790374723"}, "bpd": {"base": "models/cars/bpd_69_base.jpg?v=1790374723", "normal": "models/cars/bpd_69_normal.jpg?v=1790374723", "mr": "models/cars/bpd_69_mr.jpg?v=1790374723"}, "concord": {"base": "models/cars/concordance_base.jpg?v=1790374723", "normal": "models/cars/concordance_normal.jpg?v=1790374723", "mr": "models/cars/concordance_mr.jpg?v=1790374723"}, "donut": {"base": "models/cars/donut_patrol_base.jpg?v=1790374723", "normal": "models/cars/donut_patrol_normal.jpg?v=1790374723", "mr": "models/cars/donut_patrol_mr.jpg?v=1790374723"}, "duck": {"base": "models/cars/duck_plasma_base.jpg?v=1790374723", "normal": "models/cars/duck_plasma_normal.jpg?v=1790374723", "mr": "models/cars/duck_plasma_mr.jpg?v=1790374723"}, "gt44": {"base": "models/cars/gt40_base.jpg?v=1790374723", "normal": "models/cars/gt40_normal.jpg?v=1790374723", "mr": "models/cars/gt40_mr.jpg?v=1790374723"}, "missile": {"base": "models/cars/missile_commander_base.jpg?v=1790374723", "normal": "models/cars/missile_commander_normal.jpg?v=1790374723", "mr": "models/cars/missile_commander_mr.jpg?v=1790374723"}, "leopard": {"base": "models/cars/night_leopard_base.jpg?v=1790374723", "normal": "models/cars/night_leopard_normal.jpg?v=1790374723", "mr": "models/cars/night_leopard_mr.jpg?v=1790374723"}, "trout": {"base": "models/cars/trout_protocol_base.jpg?v=1790374723", "normal": "models/cars/trout_protocol_normal.jpg?v=1790374723", "mr": "models/cars/trout_protocol_mr.jpg?v=1790374723"}};
 "use strict";
 // ===== UTILITIES =====
 const TAU=Math.PI*2;
@@ -3865,6 +3865,7 @@ const VEHICLES=[
  {id:'missile',driver:'Ethan',name:'Missile Commander',cls:'Heavy-duty pickup',desc:'Lifted gunmetal pickup with warning-yellow stripes, a grille full of missiles and rocket-fin bed rails.',tag:'Right of way, always.',body:'truck',livery:'missile',rim:0x1c1c1c,stats:{speed:7,accel:6,handling:5,drift:6,weight:10}},
  {id:'brcc',driver:'JT',name:'BRCC',cls:'Rally hatchback',desc:'Black Rifle Coffee rally car in black-and-gold camo. Short, stiff and happiest sideways.',tag:'Fueled by dark roast.',body:'gtcoupe',livery:'goldcamo',num:15,rim:0x1a1a1a,stats:{speed:7,accel:9,handling:8,drift:9,weight:4}},
  {id:'fdc',driver:'Chris',name:'Firearms Direct Club',cls:'Desert pickup',desc:'Sand-tan Firearms Direct Club pickup with a roll bar and a mount in the bed. Tough, heavy and hard to push around.',tag:'Members only.',body:'truck',livery:'goldcamo',rim:0x222222,stats:{speed:7,accel:6,handling:6,drift:5,weight:9}},
+ {id:'hellcat',driver:'CordIsLoud',name:'Colonial Hellcat',cls:'Supercharged muscle car',desc:'Navy-blue muscle car with twin white stripes, a 13-star flag and 1776 on the doors. Monster straight-line speed; it takes some muscle in the corners.',tag:'Loud since 1776.',body:'gtcoupe',livery:'stripes',num:76,rim:0x151515,stats:{speed:10,accel:8,handling:5,drift:7,weight:7}},
  {id:'bpd',driver:'Rich',name:'BPD 69',cls:'Detective cruiser',desc:'Unmarked, unbothered. A boxy 80s cruiser that corners like it has a warrant.',tag:'Case closed at 180.',body:'sedan',livery:'filigree',rim:0x9aa0a6,plate:'BPD 69',stats:{speed:8,accel:7,handling:7,drift:7,weight:7}},
  {id:'concord',driver:'Brandon',name:'Concordance',cls:'Luxury limousine',desc:'Silk-black stretch luxury sedan of a decorated war hero and soon-to-be congressman. Gold crossed-rifle crests, AK-47 hood ornament, flags on the fenders.',tag:'Served. Now serving.',body:'yacht',livery:'silkblack',rim:0x111111,plate:'HERO 1',stats:{speed:8,accel:6,handling:6,drift:9,weight:8}},
  {id:'trout',driver:'Trout',name:'Trout Protocol',cls:'Rainbow trout hypercar',desc:'A mid-engine hypercar that is basically a rainbow trout: speckled olive back, pink stripe, fins, gills and a tail.',tag:'Swims upstream at 300.',body:'hyper',livery:'trout',rim:0x2b2b2b,stats:{speed:9,accel:8,handling:7,drift:5,weight:4}},
@@ -4274,8 +4275,8 @@ function roundedBox(w,h,d,r){ const s=new THREE.Shape(); const x=-d/2,y=-h/2; s.
 // ===== GLB CAR MODELS (Meshy exports supplied by the player) =====
 // GLB_DATA (base64 per vehicle id) is injected by the build.
 const CAR_GLTF={}, GLB_PROC={};
-const GLB_ROT={brcc:Math.PI/2, fdc:Math.PI/2};
-const GLB_LEN={brcc:4.4,fdc:5.3,duck:3.9,gt44:4.4,donut:4.5,missile:5.8,bpd:4.8,concord:5.8,trout:5.0,leopard:4.5};
+const GLB_ROT={brcc:Math.PI/2, fdc:Math.PI/2, hellcat:Math.PI/2};
+const GLB_LEN={hellcat:4.9,brcc:4.4,fdc:5.3,duck:3.9,gt44:4.4,donut:4.5,missile:5.8,bpd:4.8,concord:5.8,trout:5.0,leopard:4.5};
 const GLB_TEXTURES={}; let GLB_ERROR='';
 function loadCarGLBs(done,progress){
   const data=(typeof GLB_DATA!=='undefined')?GLB_DATA:{}; const ids=Object.keys(data);
@@ -4905,7 +4906,7 @@ class Rain{
 
 // ===== CAR: arcade physics + visual state =====
 const GRAV=30;
-const DRIFT_TIERS=[1.0,2.0,3.2], DRIFT_BOOST=[0.7,1.1,1.6];
+const DRIFT_TIERS=[1.1,2.1,3.3], DRIFT_BOOST=[0.55,0.85,1.2];
 const TIER_COL=[[0.35,0.75,1.0],[1.0,0.6,0.15],[1.0,0.25,0.85]];
 class Car{
   constructor(race,v,idx,isPlayer){
@@ -4959,7 +4960,7 @@ class Car{
     }
     if(this.drifting){
       if(!inp.drift || vF<9 || this.spin>0){ this.endDrift(); }
-      else if(this.grounded){ this.driftT+=dt*(0.6+0.4*Math.abs(s)+(s*this.driftDir>0?0.35:0));
+      else if(this.grounded){ this.driftT+=dt*(0.6+0.4*Math.abs(s)+(s*this.driftDir>0?0.3:0))*clamp(Math.abs(this.yaw)/1.0,0.3,1.1);
         const t=DRIFT_TIERS.findIndex((x,k)=>this.driftT>=x && (k===2||this.driftT<DRIFT_TIERS[k+1]));
         if(t>this.tier){ this.tier=t; if(this.isPlayer) R.sfx('tier',t); } }
     }
@@ -4976,7 +4977,7 @@ class Car{
     vF=this.vx*fx+this.vz*fz; vS=this.vx*rx+this.vz*rz;
     // --- longitudinal ---
     const boosting=this.boost>0; if(boosting) this.boost-=dt;
-    let top=ph.top*this.rubber*this.skill*(this.offroad?0.6:1)*(boosting?1.28:1)*(this.spin>0?0.5:1);
+    let top=ph.top*this.rubber*this.skill*(this.offroad?0.6:1)*(boosting?(this.boostMul||1.28):1)*(this.spin>0?0.5:1);
     const vF0=vF;
     if(this.grounded){
       if(boosting){ if(vF<top) vF+=Math.max(ph.accel,40)*dt; }
@@ -5050,10 +5051,10 @@ class Car{
   }
   endDrift(cancel){
     if(!this.drifting) return; this.drifting=false;
-    if(!cancel && this.tier>=0){ this.giveBoost(DRIFT_BOOST[this.tier]); if(this.isPlayer) this.race.sfx('boost',0.6+this.tier*0.2); }
+    if(!cancel && this.tier>=0){ this.giveBoost(DRIFT_BOOST[this.tier],1.2); if(this.isPlayer) this.race.sfx('boost',0.6+this.tier*0.2); }
     this.tier=-1; this.driftT=0;
   }
-  giveBoost(t){ this.boost=Math.max(this.boost,t); this.boostMax=Math.max(t,0.5); }
+  giveBoost(t,mul=1.28){ this.boostMul=this.boost>0?Math.max(this.boostMul||1,mul):mul; this.boost=Math.max(this.boost,t); this.boostMax=Math.max(t,0.5); }
   spinOut(dur){ if(this.shield>0){ this.shield=0; this.race.sfx3d('shieldPop',this); return false; } this.spin=dur; this.spinDir=Math.random()<0.5?-1:1; this.endDrift(true); this.boost=0; this.vx*=0.45; this.vz*=0.45; return true; }
   // --- visuals ---
   visual(dt,t){
@@ -5155,7 +5156,8 @@ class AIDriver{
     this.lane=0; this.laneT=0; this.laneTimer=Math.random()*0.2; this.stuck=0; this.revT=0; this.stuckTotal=0; this.itemHold=0;
     this.wob=Math.random()*100; this.follow=null; this.cornerAcc=0; this.inCorner=false;
     const d=race.opt?race.opt.diff:'normal'; this.diff=d;
-    this.corner=({easy:0.9,normal:0.955,hard:0.985})[d]||0.95; if(car.isPlayer) this.corner=0.96;
+    this.corner=({easy:0.92,normal:1.0,hard:1.08})[d]||1.0; if(car.isPlayer) this.corner=0.97;
+    this.driftSkill=0; this.boostSkill=car.isPlayer?0:(({easy:0,normal:0.5,hard:1})[d]||0);
   }
   update(dt){
     const c=this.car, R=this.race, P=R.P, A=R.A, inp=c.inp, N=P.N, sp=P.spacing;
@@ -5203,15 +5205,27 @@ class AIDriver{
     steer=clamp(steer,-1,1);
     // ---------- speed ----------
     let vT=1e9; const la=Math.round((4+v*0.4)/sp); for(let k=0;k<=la;k+=2){ vT=Math.min(vT,this.prof[(i+k)%N]); }
-    vT*=this.corner;
+    vT*=this.corner*(1+Math.max(0,c.rubber-1)*0.5);
     if(this.follow){ const f=this.follow; const gap=f.d-c.halfL*2-0.8; const allowed=f.v+Math.max(0,gap)*0.8-(gap<0?3:0); const dlNow=f.dl-(this.lane-this.laneT)*0; if(Math.abs(f.dl)<2.4) vT=Math.min(vT,allowed); }
     let thr=1,brk=0;
     if(v>vT+1.2){ thr=0; brk=clamp((v-vT)/5,0.2,1); } else if(v>vT-0.5){ thr=0.4; }
     if(Math.abs(e)>4 && v>20){ thr=Math.min(thr,0.5); }
-    // corner-exit "drift boost" emulation (skilled drivers)
-    const cornerNow=this.prof[i]<c.ph.top*0.72;
-    if(cornerNow){ this.cornerAcc+=dt; this.inCorner=true; }
-    else if(this.inCorner){ this.inCorner=false; const chance=({easy:0,normal:0.5,hard:0.9})[this.diff]||0; if((!c.isPlayer||this.expert) && this.cornerAcc>0.9 && Math.random()<chance) c.giveBoost(Math.min(1.1,0.4+this.cornerAcc*0.3)); this.cornerAcc=0; }
+    // corner-exit boost (stands in for the drift boosts a skilled player earns)
+    const cornerNow=this.prof[i]<c.ph.top*0.75;
+    if(cornerNow){ this.cornerAcc=(this.cornerAcc||0)+dt; this.inC2=true; }
+    else if(this.inC2){ this.inC2=false; if((this.boostSkill||0)>0 && this.cornerAcc>0.8 && Math.random()<this.boostSkill) c.giveBoost(Math.min(1.1,0.4+this.cornerAcc*0.3),1.2); this.cornerAcc=0; }
+    // ---------- real drifting (disabled for CPUs; kept for experiments) ----------
+    const ca=(i+6)%N, dirWant=-Math.sign(P.curv[ca]||0);
+    const cornerSoon=this.prof[ca]<c.ph.top*0.82 && Math.abs(P.curv[ca])>0.008;
+    if(cornerSoon && !this.inCorner){ this.inCorner=true; this.dRoll=Math.random(); } else if(!cornerSoon && this.prof[i]>c.ph.top*0.9) this.inCorner=false;
+    let wantDrift=false;
+    if(this.driftSkill>0 && this.revT<=0){
+      if(c.drifting){
+        const K=c.ph.steer*(0.85+c.ph.drift*0.3)/(1+Math.abs(c.vF)/48); const yd=steer*steerGain; const amt=yd*c.driftDir/Math.max(0.05,K);
+        const stillCorner=this.prof[i]<c.ph.top*0.9 || cornerSoon;
+        if(stillCorner && Math.abs(e)<3.8 && amt>0.25 && amt<1.3){ wantDrift=true; const a2=clamp(amt,0.42,1); steer=c.driftDir*(2*(a2-0.42)/0.58-1); }
+      } else if(this.inCorner && this.dRoll<this.driftSkill && v>18 && !this.follow && Math.sign(steer)===dirWant && Math.abs(steer)>0.32 && Math.abs(e)<2.5){ wantDrift=true; }
+    }
     // ---------- recovery ----------
     if(this.revT>0){ this.revT-=dt; thr=0; brk=1; steer=-Math.sign(e||1)*-1; steer=e>0?-1:1; steer=-steer; }
     else if(R.state==='race'||R.state==='finish'||R.state==='done'){
@@ -5219,7 +5233,7 @@ class AIDriver{
       if(this.stuck>1.1){ this.revT=1.1; this.stuck=0; }
       if(this.stuckTotal>4.5 || c.wrongT>2.5){ c.respawn(); this.stuckTotal=0; this.revT=0; }
     }
-    inp.thr=thr; inp.brk=brk; inp.steer=steer; inp.drift=false;
+    inp.thr=thr; inp.brk=brk; inp.steer=steer; inp.drift=wantDrift;
     // ---------- items ----------
     inp.item=false;
     if(c.item && c.itemDelay<=0){
@@ -5462,7 +5476,7 @@ function segDist(px,py,pz,ax,ay,az,bx,by,bz){ const vx=bx-ax,vy=by-ay,vz=bz-az; 
 
 // ===== RACE MANAGER =====
 const NCP=12, DT=1/120;
-const DIFFS={easy:{base:0.87,rb:0.04,label:'Easy'},normal:{base:0.95,rb:0.07,label:'Normal'},hard:{base:1.0,rb:0.1,label:'Hard'}};
+const DIFFS={easy:{base:0.9,rb:0.05,label:'Easy'},normal:{base:1.0,rb:0.1,label:'Normal'},hard:{base:1.07,rb:0.18,label:'Hard'}};
 const ITEMS={nitro:{name:'Nitro Cell',icon:'⚡',col:'#22e4ff'},aegis:{name:'Aegis Bubble',icon:'◈',col:'#7ff6ff'},slick:{name:'Glaze Slick',icon:'◍',col:'#ff4fb0'}};
 class Race{
   constructor(game,opt){
@@ -5482,10 +5496,12 @@ class Race{
     // cars
     const pv=VEHICLES[opt.vehicle]; const others=VEHICLES.filter(v=>v!==pv);
     const shuffled=others.slice().sort((a,b)=>(a.id.charCodeAt(1)*7+opt.track*13)%11-(b.id.charCodeAt(1)*7+opt.track*13)%11);
+    const field=opt.field?opt.field.map(id=>VEHICLES.find(v=>v.id===id)).filter(Boolean):shuffled.slice(0,7);
+    const total=field.length+1;
     const d=DIFFS[opt.diff]; const spread=[0.02,0.012,0.006,0,-0.006,-0.012,-0.02];
-    this.cars=[]; const playerSlot=opt.diff==='easy'?3:opt.diff==='hard'?7:5; let ai=0;
-    for(let s=0;s<8;s++){
-      const isP=s===playerSlot; const v=isP?pv:shuffled[ai]; const car=new Car(this,v,s,isP);
+    this.cars=[]; const playerSlot=Math.min(total-1,opt.diff==='easy'?3:opt.diff==='hard'?7:5); let ai=0;
+    for(let s=0;s<total;s++){
+      const isP=s===playerSlot; const v=isP?pv:field[ai]; const car=new Car(this,v,s,isP);
       car.driver=isP?'YOU':v.driver;
       car.place(this.W.grid[s].i,this.W.grid[s].lat); car.cp=0; car.cpCount=0; car.lap=0;
       if(!isP){ car.skill=d.base+spread[ai]; car.ai=new AIDriver(car,this,car.skill,(ai*37%10)/10); ai++; }
@@ -5585,7 +5601,7 @@ class Race{
       const pl=this.player;
       const rb=DIFFS[this.opt.diff].rb;
       for(const c of this.cars){ if(!c.ai) continue; const dd=(pl.score-c.score)*P.spacing; let r=1;
-        if(dd>20) r=1+rb*Math.min(1,(dd-20)/140); else if(dd<-120) r=1-Math.min(0.04,(-dd-120)/2500);
+        if(dd>15) r=1+rb*Math.min(1,(dd-15)/110); else if(dd<-120) r=1-Math.min(0.04,(-dd-120)/2500);
         if(pl.finished) r=1; c.rubber+=(r-c.rubber)*0.004; }
     }
     // wrong way
@@ -5833,19 +5849,41 @@ class Game{
   }
   pause(on){ if(!this.race) return; this.race.paused=on; if(on){ this.show('pause'); $('hud').classList.remove('on'); this.audio.play('blip'); } else { this.show('race'); $('hud').classList.add('on'); } }
   startRace(){
-    Store.set('lastCar',this.sel.vehicle); Store.set('lastTrack',this.sel.track); Store.set('lastDiff',this.sel.diff);
+    if(this.gp){ this.sel.track=TRACK_DATA.findIndex(t=>t.id===GP_TRACKS[this.gp.round]); this.sel.diff=this.gp.diff; }
+    else { Store.set('lastCar',this.sel.vehicle); Store.set('lastTrack',this.sel.track); Store.set('lastDiff',this.sel.diff); }
     const def=TRACK_DATA[this.sel.track]; $('loadName').textContent=def.name; $('loadPlace').textContent=def.place;
     this.show('loading'); this.garage.render();
     setTimeout(()=>{
       try{
         if(this.race){ this.race.dispose(); this.race=null; }
-        this.race=new Race(this,{track:this.sel.track,vehicle:this.sel.vehicle,diff:this.sel.diff});
+        this.race=new Race(this,{track:this.sel.track,vehicle:this.sel.vehicle,diff:this.sel.diff,field:this.gp?this.gp.field:null});
         this.show('race'); $('hud').classList.add('on');
       }catch(e){ this.ui.error(e); console.error(e); this.show('menu'); }
     },60);
   }
   endRace(){ if(this.race){ this.race.dispose(); this.race=null; } $('hud').classList.remove('on'); this.audio.setMusic('menu'); this.ui.touchVisible(false); }
-  showResults(res){ $('hud').classList.remove('on'); this.ui.results(res); this.show('results'); this.postOnline(res); }
+  showResults(res){ $('hud').classList.remove('on'); this.ui.results(res); if(this.gp) this.gpAfterRace(res); else { $('resGP').style.display='none'; $('resBtnsGP').style.display='none'; $('resBtns').style.display=''; } this.show('results'); this.postOnline(res); }
+  gpAfterRace(res){
+    const gp=this.gp, r=gp.round, last=r===GP_TRACKS.length-1; const rows=res.rows; const el=$('resGP'), bt=$('resBtnsGP');
+    $('resBtns').style.display='none'; el.style.display='block'; bt.style.display='flex';
+    let html=`<div class="gpt">GRAND PRIX · RACE ${r+1} OF ${GP_TRACKS.length}</div>`, btns='';
+    if(last){
+      const win=rows[0]; gp.done=true;
+      if(win.player){ html=`<div class="gpt" style="font-size:30px">🏆 GRAND PRIX CHAMPION! 🏆</div><div class="gpn">You won all the way through with the ${VEHICLES[this.sel.vehicle].name}.</div>`; this.audio.play('finish'); }
+      else html+=`<div class="gpo">${esc(win.driver)} wins the Grand Prix in the ${esc(win.car)}. You finished ${ordinal(rows.findIndex(x=>x.player)+1)} in the final.</div>`;
+      btns=`<div class="btn small gold" data-gp="new"><span>New Grand Prix</span></div><div class="btn small" data-gp="quit"><span>Main menu</span></div>`;
+    } else {
+      const k=GP_ELIM[r]; const out=rows.slice(rows.length-k); const meOut=out.some(x=>x.player);
+      html+=`<div class="gpo">Eliminated: ${out.map(x=>x.player?'<b>YOU</b>':esc(x.driver)+' ('+esc(x.car)+')').join(', ')}</div>`;
+      if(meOut){ gp.done=true; html+=`<div class="gpn">Your Grand Prix is over. Finish higher to survive the cut.</div>`; btns=`<div class="btn small gold" data-gp="new"><span>Try again</span></div><div class="btn small" data-gp="quit"><span>Main menu</span></div>`; }
+      else { gp.field=rows.slice(0,rows.length-k).filter(x=>!x.player).map(x=>x.color.id); gp.round++; const nt=TRACK_DATA.find(t=>t.id===GP_TRACKS[gp.round]);
+        html+=`<div class="gpn">You survive! Next: <b>${nt.name}</b> with ${gp.field.length+1} racers${gp.round===GP_TRACKS.length-1?' · FINAL':''}.</div>`;
+        btns=`<div class="btn small gold" data-gp="next"><span>${gp.round===GP_TRACKS.length-1?'Start the final':'Next race'}</span></div><div class="btn small" data-gp="quit"><span>Quit Grand Prix</span></div>`; }
+    }
+    el.innerHTML=html; bt.innerHTML=btns;
+    bt.querySelectorAll('[data-gp]').forEach(b=>b.addEventListener('click',()=>this.ui.act('gp_'+b.dataset.gp)));
+  }
+  newGP(){ const others=VEHICLES.filter((v,i)=>i!==this.sel.vehicle).map(v=>v.id).sort(()=>Math.random()-0.5); this.gp={round:0,diff:this.sel.diff,field:others.slice(0,7)}; this.startRace(); }
   async postOnline(res){
     const el=$('resOnline'); el.className='msg'; el.textContent='';
     if(!res.finished || res.posted) return; res.posted=true;
@@ -5937,6 +5975,7 @@ class UI{
     if(name==='garage'){ g.garage.setCar(g.sel.vehicle); this.carInfo(); g.focus=1; }
     if(name==='trackSel'){ this.buildTracks(); this.diffUI(); g.focus=g.sel.track; }
     if(name==='records') this.records();
+    if(name==='gpIntro') this.gpIntroUI();
     if(name==='account'){ this.acctUI(); $('acctMsg').textContent=''; if(!this.g.online.user) setTimeout(()=>{ if(!this.isTouch()) $('aUser').focus(); },50); }
     if(name==='boards'){ this.buildBoardTabs(); this.loadBoard(); }
     $('acctTag').style.display=(name==='menu'||name==='title')&&this.g.online.user?'block':'none';
@@ -5963,7 +6002,13 @@ class UI{
   act(a){
     const g=this.g, au=g.audio;
     switch(a){
-      case 'race': au.play('select'); g.show('garage'); break;
+      case 'race': au.play('select'); g.mode='single'; g.gp=null; g.show('garage'); break;
+      case 'gp': au.play('select'); g.mode='gp'; g.gp=null; g.show('garage'); break;
+      case 'gpBack': au.play('back'); g.show('garage'); break;
+      case 'gpStart': au.play('select'); g.newGP(); break;
+      case 'gp_next': au.play('select'); g.startRace(); break;
+      case 'gp_new': au.play('select'); g.endRace(); g.newGP(); break;
+      case 'gp_quit': au.play('back'); g.gp=null; g.mode='single'; g.endRace(); g.show('menu'); break;
       case 'settings': au.play('select'); g.fromPause=g.screen==='pause'; g.show('settings'); break;
       case 'howto': au.play('select'); g.show('howto'); break;
       case 'records': au.play('select'); g.show('records'); break;
@@ -5973,13 +6018,13 @@ class UI{
         g.show(g.screen==='trackSel'?'garage':'menu'); break;
       case 'prevCar': g.sel.vehicle=(g.sel.vehicle+VEHICLES.length-1)%VEHICLES.length; g.garage.setCar(g.sel.vehicle); this.carInfo(); au.play('blip'); break;
       case 'nextCar': g.sel.vehicle=(g.sel.vehicle+1)%VEHICLES.length; g.garage.setCar(g.sel.vehicle); this.carInfo(); au.play('blip'); break;
-      case 'pickCar': au.play('select'); g.show('trackSel'); break;
+      case 'pickCar': au.play('select'); g.show(g.mode==='gp'?'gpIntro':'trackSel'); break;
       case 'go': au.play('select'); g.startRace(); break;
       case 'resume': au.play('select'); g.pause(false); break;
       case 'restart': au.play('select'); g.startRace(); break;
-      case 'changeTrack': au.play('select'); g.endRace(); g.show('trackSel'); break;
-      case 'changeCar': au.play('select'); g.endRace(); g.show('garage'); break;
-      case 'quit': au.play('back'); g.endRace(); g.show('menu'); break;
+      case 'changeTrack': au.play('select'); g.gp=null; g.mode='single'; g.endRace(); g.show('trackSel'); break;
+      case 'changeCar': au.play('select'); g.gp=null; g.mode='single'; g.endRace(); g.show('garage'); break;
+      case 'quit': au.play('back'); g.gp=null; g.mode='single'; g.endRace(); g.show('menu'); break;
       case 'account': au.play('select'); g.show('account'); break;
       case 'boards': au.play('select'); g.show('boards'); break;
       case 'refreshBoards': au.play('blip'); this.loadBoard(); break;
@@ -6010,6 +6055,10 @@ class UI{
       if(on.user && !rows.some(r=>r.username===on.user)){ const mine=await on.myBest(track,kind); if(mine&&req===this.boardReq){ const rk=await on.rankOf(track,kind,mine.time_ms); m.innerHTML=`Your best: <b>${fmtTime(mine.time_ms/1000)}</b> in the ${carName(mine.car)} · rank #${rk}`; } }
     }catch(e){ if(req!==this.boardReq) return; m.className='msg bad'; m.textContent=e.message; }
   }
+  gpIntroUI(){ const g=this.g; const sizes=[8]; GP_ELIM.forEach((k,i)=>sizes.push(sizes[i]-k));
+    $('gpRounds').innerHTML=GP_TRACKS.map((id,i)=>{ const t=TRACK_DATA.find(x=>x.id===id); return `<div class="gpr"><div class="n">Race ${i+1}${i===GP_TRACKS.length-1?' · Final':''}</div><canvas width="300" height="240"></canvas><h3>${t.name}</h3><div class="f">${sizes[i]} racers${i<GP_ELIM.length?' · '+GP_ELIM[i]+' knocked out':' · winner takes all'}</div></div>`; }).join('');
+    $('gpRounds').querySelectorAll('canvas').forEach((cv,i)=>drawTrackThumb(cv,TRACK_DATA.find(x=>x.id===GP_TRACKS[i])));
+    $('gpDiff').querySelectorAll('button').forEach(b=>{ b.classList.toggle('on',b.dataset.d===g.sel.diff); b.onclick=()=>{ g.sel.diff=b.dataset.d; g.audio.play('blip'); this.gpIntroUI(); }; }); }
   carDots(){ $('carDots').innerHTML=VEHICLES.map(()=>'<b></b>').join(''); }
   carInfo(){
     const v=VEHICLES[this.g.sel.vehicle], s=v.stats;
@@ -6043,7 +6092,7 @@ class UI{
   roulette(){ this.rollT=1.0; }
   hud(R){
     const c=R.player; const rank=c.finished?c.finishPos:c.rank;
-    if(rank!==this.lastPos){ $('hPos').innerHTML=`${rank}<sup>${ordSuffix(rank)}</sup><small>/8</small>`; this.lastPos=rank; }
+    if(rank!==this.lastPos){ $('hPos').innerHTML=`${rank}<sup>${ordSuffix(rank)}</sup><small>/${R.cars.length}</small>`; this.lastPos=rank; }
     $('hLap').innerHTML=`LAP ${clamp(c.lap,1,R.laps)}<span>/${R.laps}</span>`;
     const rt=R.state==='race'||R.state==='finish'||R.state==='done'?(c.finished?c.finishTime:R.raceTime):0;
     $('hTime').textContent=fmtTime(rt); $('hLapT').textContent=fmtTime(c.lap>=1&&!c.finished?R.raceTime-c.lapStart:(c.lapTimes[c.lapTimes.length-1]||0)); $('hBest').textContent=fmtTime(c.bestLap!=null?c.bestLap:R.best.lap);
@@ -6083,6 +6132,7 @@ class UI{
     $('resTable').innerHTML=res.rows.map(r=>`<tr class="${r.player?'me':''}"><td class="p">${r.pos}</td><td>${r.player?'<b>YOU</b>':r.driver}</td><td style="color:var(--dim)">${r.car}</td><td class="t">${r.est?'<span style="color:var(--dim)">~</span>':''}${fmtTime(r.time)}</td><td class="t" style="color:var(--dim)">${r.best?'lap '+fmtTime(r.best):''}</td></tr>`).join('');
   }
 }
+const GP_TRACKS=['sweet','mesa','neon','alondra'], GP_ELIM=[2,1,1];
 function esc(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function drawTrackThumb(cv,def){
   const g=cv.getContext('2d'), w=cv.width,h=cv.height;

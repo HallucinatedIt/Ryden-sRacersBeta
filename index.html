@@ -142,6 +142,9 @@ table.lb{border-collapse:collapse;width:100%;font-size:15px}table.lb td{padding:
 table.lb td.p{font-family:var(--disp);font-size:19px;color:var(--cyan);width:36px}table.lb td.t{text-align:right;font-variant-numeric:tabular-nums}table.lb tr.me td{background:rgba(255,46,151,.28);color:#fff}
 #bTracks button{padding:8px 12px;font-size:14px}
 #acctTag{position:fixed;right:14px;top:max(12px,env(safe-area-inset-top));font-size:12px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;display:none}#acctTag b{color:var(--pink)}
+.gpr{padding:12px;border-radius:8px;border:2px solid rgba(255,255,255,.12);background:var(--panel)}.gpr canvas{width:100%;aspect-ratio:1.25;display:block;border-radius:4px}.gpr h3{margin:8px 0 2px;font-family:var(--disp);font-style:italic;font-size:17px;color:#fff}.gpr .n{font-size:11px;letter-spacing:.18em;color:var(--cyan);text-transform:uppercase}.gpr .f{font-size:12px;color:var(--gold);margin-top:4px}.gpr.done{opacity:.45}.gpr.now{border-color:var(--pink);box-shadow:0 0 18px rgba(255,46,151,.5)}
+#resGP .gpt{font-family:var(--disp);font-style:italic;font-size:20px;color:var(--gold);letter-spacing:.06em}#resGP .gpo{font-size:14px;color:#ff8a8a;margin-top:4px}#resGP .gpn{font-size:13px;color:var(--cyan);margin-top:4px}
+@media (max-height:520px){#gpRounds{gap:6px}.gpr{padding:6px}.gpr h3{font-size:13px}}
 #err{position:fixed;left:10px;bottom:10px;right:10px;color:#ff8080;font-size:12px;display:none;background:rgba(0,0,0,.8);padding:8px;z-index:99}
 </style></head>
 <body>
@@ -156,7 +159,8 @@ table.lb td.p{font-family:var(--disp);font-size:19px;color:var(--cyan);width:36p
 <div class="screen" id="menu">
   <div class="logo" style="transform:rotate(-4deg) scale(.62);margin-bottom:-4vh"><span class="r">Ryden's</span><span class="x">RACERS</span></div>
   <div class="menu">
-    <div class="btn" data-act="race"><span>Race</span></div>
+    <div class="btn" data-act="race"><span>Quick race</span></div>
+    <div class="btn" data-act="gp"><span>Grand Prix</span></div>
     <div class="btn" data-act="boards"><span>Leaderboards</span></div>
     <div class="btn" data-act="records"><span>My records</span></div>
     <div class="btn" data-act="account" id="acctBtn"><span>Log in</span></div>
@@ -253,6 +257,15 @@ table.lb td.p{font-family:var(--disp);font-size:19px;color:var(--cyan);width:36p
   <div class="row" style="margin-top:14px"><div class="btn small" data-act="back"><span>Back</span></div><div class="btn small" data-act="refreshBoards"><span>Refresh</span></div></div>
 </div>
 
+<div class="screen" id="gpIntro" style="background:rgba(8,2,20,.62)">
+  <div class="title">Grand Prix</div>
+  <div class="hint" style="margin-top:4px">4 races back to back · the slowest racers are knocked out after each race</div>
+  <div id="gpRounds" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;width:min(1100px,96vw);margin-top:16px"></div>
+  <div class="row" style="margin-top:16px;align-items:center"><span style="letter-spacing:.2em;font-size:12px;color:var(--dim)">DIFFICULTY</span>
+    <div class="seg" id="gpDiff"><button data-d="easy">Easy</button><button data-d="normal">Normal</button><button data-d="hard">Hard</button></div></div>
+  <div class="row" style="margin-top:14px"><div class="btn small" data-act="gpBack"><span>Back</span></div><div class="btn gold" data-act="gpStart"><span>Start Grand Prix</span></div></div>
+</div>
+
 <div class="screen" id="loading"><div class="title" id="loadName">Loading</div><div class="hint" id="loadPlace"></div><div class="bar2"><i></i></div></div>
 
 <div class="screen" id="pause" style="background:rgba(8,2,20,.6)">
@@ -271,7 +284,9 @@ table.lb td.p{font-family:var(--disp);font-size:19px;color:var(--cyan);width:36p
   <div id="resRec" style="margin:8px 0;text-align:center"></div>
   <div id="resOnline" class="msg" style="margin:-2px 0 8px;text-align:center"></div>
   <div class="panel" style="padding:8px 12px;max-height:48vh;overflow:auto"><table id="resTable"></table></div>
-  <div class="row" style="margin-top:14px"><div class="btn small gold" data-act="restart"><span>Race again</span></div><div class="btn small" data-act="changeTrack"><span>Change track</span></div><div class="btn small" data-act="changeCar"><span>Change car</span></div><div class="btn small" data-act="quit"><span>Main menu</span></div></div>
+  <div id="resGP" style="display:none;text-align:center;margin:0 0 8px"></div>
+  <div class="row" id="resBtns" style="margin-top:14px"><div class="btn small gold" data-act="restart"><span>Race again</span></div><div class="btn small" data-act="changeTrack"><span>Change track</span></div><div class="btn small" data-act="changeCar"><span>Change car</span></div><div class="btn small" data-act="quit"><span>Main menu</span></div></div>
+  <div class="row" id="resBtnsGP" style="margin-top:14px;display:none"></div>
 </div>
 
 <div id="hud">
@@ -297,5 +312,5 @@ table.lb td.p{font-family:var(--disp);font-size:19px;color:var(--cyan);width:36p
 <div id="acctTag"></div>
 <div id="err"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="js/game.js?v=1790369362"></script>
+<script src="js/game.js?v=1790374723"></script>
 </body></html>
