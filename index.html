@@ -120,6 +120,14 @@ input[type=range]{width:100%;accent-color:var(--pink)}
 @keyframes load{0%{transform:translateX(-100%)}100%{transform:translateX(260%)}}
 body.touch #board{display:none}body.touch #miniBox{bottom:auto;top:96px}body.touch #mini{width:120px;height:120px}body.touch #spdBox{bottom:auto;top:112px}#rot{position:fixed;inset:0;background:#150a2e;z-index:50;display:none;align-items:center;justify-content:center;text-align:center;font-family:var(--disp);font-size:26px;padding:30px;color:#fff}@media (orientation:portrait){body.touch.racing #rot{display:flex}}body.touch #miniName{display:none}
 @media (max-height:520px){.btn{padding:7px 18px;font-size:17px}.menu{gap:7px;margin-top:0}#menu .logo{margin-bottom:-8vh!important;transform:rotate(-4deg) scale(.5)!important}.tcard p,.tcard .pl{display:none}#tracks{grid-template-columns:repeat(5,minmax(0,1fr));margin-top:6px;gap:6px}.tcard{padding:6px}.tcard h3{font-size:14px}.title{font-size:26px}#carInfo{padding:10px}#carInfo .desc{display:none}.stat{margin:2px 0}}
+label.fl{display:block;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin:8px 0}
+label.fl input{display:block;width:100%;margin-top:6px;font-family:var(--body);font-size:18px;color:#fff;background:rgba(0,0,0,.4);border:2px solid rgba(255,255,255,.2);border-radius:4px;padding:10px 12px;outline:none;user-select:text;-webkit-user-select:text;letter-spacing:.02em;text-transform:none}
+label.fl input:focus{border-color:var(--pink);box-shadow:0 0 12px rgba(255,46,151,.4)}
+.msg{font-size:13px;min-height:18px;margin-top:10px;color:var(--cyan);letter-spacing:.03em}.msg.bad{color:#ff6b6b}
+table.lb{border-collapse:collapse;width:100%;font-size:15px}table.lb td{padding:7px 8px;border-bottom:1px solid rgba(255,255,255,.08);white-space:nowrap}
+table.lb td.p{font-family:var(--disp);font-size:19px;color:var(--cyan);width:36px}table.lb td.t{text-align:right;font-variant-numeric:tabular-nums}table.lb tr.me td{background:rgba(255,46,151,.28);color:#fff}
+#bTracks button{padding:8px 12px;font-size:14px}
+#acctTag{position:fixed;right:14px;top:max(12px,env(safe-area-inset-top));font-size:12px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;display:none}#acctTag b{color:var(--pink)}
 #err{position:fixed;left:10px;bottom:10px;right:10px;color:#ff8080;font-size:12px;display:none;background:rgba(0,0,0,.8);padding:8px;z-index:99}
 </style></head>
 <body>
@@ -135,7 +143,9 @@ body.touch #board{display:none}body.touch #miniBox{bottom:auto;top:96px}body.tou
   <div class="logo" style="transform:rotate(-4deg) scale(.62);margin-bottom:-4vh"><span class="r">Ryden's</span><span class="x">RACERS</span></div>
   <div class="menu">
     <div class="btn" data-act="race"><span>Race</span></div>
-    <div class="btn" data-act="records"><span>Records</span></div>
+    <div class="btn" data-act="boards"><span>Leaderboards</span></div>
+    <div class="btn" data-act="records"><span>My records</span></div>
+    <div class="btn" data-act="account" id="acctBtn"><span>Log in</span></div>
     <div class="btn" data-act="settings"><span>Settings</span></div>
     <div class="btn" data-act="howto"><span>How to play</span></div>
   </div>
@@ -199,6 +209,34 @@ body.touch #board{display:none}body.touch #miniBox{bottom:auto;top:96px}body.tou
   <div class="row" style="margin-top:16px"><div class="btn small" data-act="back"><span>Back</span></div><div class="btn small" data-act="clearRec"><span>Clear records</span></div></div>
 </div>
 
+<div class="screen" id="account" style="background:rgba(8,2,20,.6)">
+  <div class="title">Racer account</div>
+  <div class="panel" style="margin-top:14px;width:min(420px,92vw)">
+    <div id="acctIn">
+      <label class="fl">Username<input id="aUser" maxlength="16" autocomplete="username" autocapitalize="off" spellcheck="false" placeholder="3–16 letters, numbers or _"></label>
+      <label class="fl">Password<input id="aPass" type="password" autocomplete="current-password" placeholder="at least 6 characters"></label>
+      <div class="row" style="margin-top:14px"><div class="btn small gold" data-act="login"><span>Log in</span></div><div class="btn small" data-act="signup"><span>Create account</span></div></div>
+      <div class="hint" style="text-transform:none;letter-spacing:.04em">No email needed. Only your username is shown publicly. There is no password reset, so remember it!</div>
+    </div>
+    <div id="acctOut" style="display:none;text-align:center">
+      <div class="hint" style="margin-top:0">Logged in as</div><div id="acctName" style="font-family:var(--disp);font-size:34px;font-style:italic;margin:6px 0 14px"></div>
+      <div class="hint" style="text-transform:none;letter-spacing:.04em;margin-bottom:14px">Finish a race on <b style="color:var(--pink)">Hard</b> and your race time and best lap post to the leaderboards automatically.</div>
+      <div class="btn small" data-act="logout"><span>Log out</span></div>
+    </div>
+    <div id="acctMsg" class="msg"></div>
+  </div>
+  <div class="row" style="margin-top:16px"><div class="btn small" data-act="back"><span>Back</span></div></div>
+</div>
+
+<div class="screen" id="boards" style="background:rgba(8,2,20,.6)">
+  <div class="title">Leaderboards</div>
+  <div class="hint" style="margin-top:4px">Hard difficulty only · best time per racer</div>
+  <div class="seg" id="bTracks" style="margin-top:10px;flex-wrap:wrap;justify-content:center"></div>
+  <div class="seg" id="bKind" style="margin-top:10px"><button data-k="race" class="on">Race record</button><button data-k="lap">Lap record</button></div>
+  <div class="panel" style="margin-top:12px;width:min(640px,94vw);padding:8px 12px;max-height:52vh;overflow:auto"><table id="bTable" class="lb"></table><div id="bMsg" class="msg" style="text-align:center"></div></div>
+  <div class="row" style="margin-top:14px"><div class="btn small" data-act="back"><span>Back</span></div><div class="btn small" data-act="refreshBoards"><span>Refresh</span></div></div>
+</div>
+
 <div class="screen" id="loading"><div class="title" id="loadName">Loading</div><div class="hint" id="loadPlace"></div><div class="bar2"><i></i></div></div>
 
 <div class="screen" id="pause" style="background:rgba(8,2,20,.6)">
@@ -215,6 +253,7 @@ body.touch #board{display:none}body.touch #miniBox{bottom:auto;top:96px}body.tou
   <div class="big" id="resPlace"></div>
   <div class="hint" id="resTrack" style="margin-top:0"></div>
   <div id="resRec" style="margin:8px 0;text-align:center"></div>
+  <div id="resOnline" class="msg" style="margin:-2px 0 8px;text-align:center"></div>
   <div class="panel" style="padding:8px 12px;max-height:48vh;overflow:auto"><table id="resTable"></table></div>
   <div class="row" style="margin-top:14px"><div class="btn small gold" data-act="restart"><span>Race again</span></div><div class="btn small" data-act="changeTrack"><span>Change track</span></div><div class="btn small" data-act="changeCar"><span>Change car</span></div><div class="btn small" data-act="quit"><span>Main menu</span></div></div>
 </div>
@@ -239,6 +278,7 @@ body.touch #board{display:none}body.touch #miniBox{bottom:auto;top:96px}body.tou
   <div class="tb" data-k="item" style="right:118px;bottom:100px;width:62px;height:62px">ITEM</div>
 </div>
 <div id="rot">Rotate your phone to landscape to race ⟳</div>
+<div id="acctTag"></div>
 <div id="err"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="js/game.js"></script>

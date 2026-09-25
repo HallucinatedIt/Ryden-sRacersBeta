@@ -5624,7 +5624,7 @@ class Race{
     list.forEach(c=>{ if(!c.finished){ const remain=(this.laps+1)*P.N - (c.score); c.estTime=this.raceTime+Math.max(0,remain)*P.spacing/avg(c); } else c.estTime=c.finishTime; });
     list.sort((a,b)=>{ if(a.finished&&b.finished) return a.finishPos-b.finishPos; if(a.finished) return -1; if(b.finished) return 1; return a.estTime-b.estTime; });
     return {track:this.def, place:list.indexOf(this.player)+1, rows:list.map((c,k)=>({pos:k+1,driver:c.driver,car:c.v.name,time:c.estTime,est:!c.finished,best:c.bestLap,player:c.isPlayer,color:c.v})),
-      playerTime:this.player.finishTime, playerBest:this.player.bestLap, newRace:!!this.newRaceRecord, newLap:!!this.newLapRecord, best:this.best};
+      finished:this.player.finished, playerTime:this.player.finishTime, playerBest:this.player.bestLap, newRace:!!this.newRaceRecord, newLap:!!this.newLapRecord, best:this.best};
   }
   buildMiniPath(){ const P=this.P; let minx=1e9,maxx=-1e9,minz=1e9,maxz=-1e9; for(let i=0;i<P.N;i++){minx=Math.min(minx,P.x[i]);maxx=Math.max(maxx,P.x[i]);minz=Math.min(minz,P.z[i]);maxz=Math.max(maxz,P.z[i]);}
     this.mini={minx,maxx,minz,maxz}; }
@@ -5672,6 +5672,58 @@ class ChaseCam{
   }
 }
 
+// ===== ONLINE: username/password accounts + Hard-mode leaderboards (Supabase REST) =====
+const SB_URL='https://pnnuxsjjdkluphvwknqt.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBubnV4c2pqZGtsdXBodndrbnF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzNDg5MjQsImV4cCI6MjEwNTkyNDkyNH0.Y9ZTT5p3k4ND8vpzl2qQniTlltCabEb24c4WdHJnf_8';
+const USER_RE=/^[A-Za-z0-9_]{3,16}$/;
+class Online{
+  constructor(){ this.session=Store.get('session',null); this.listeners=[]; }
+  get user(){ return this.session&&this.session.username?this.session.username:null; }
+  emailFor(u){ return u.toLowerCase()+'@players.rydensracers.com'; }
+  onChange(f){ this.listeners.push(f); } emit(){ this.listeners.forEach(f=>{ try{ f(this.user); }catch(e){} }); }
+  async req(path,{method='GET',body,auth=false,headers={}}={}){
+    const h=Object.assign({apikey:SB_KEY,'Content-Type':'application/json'},headers);
+    if(auth){ await this.ensureFresh(); if(!this.session) throw new Error('Please log in again.'); h.Authorization='Bearer '+this.session.access_token; }
+    else h.Authorization='Bearer '+SB_KEY;
+    let r; try{ r=await fetch(SB_URL+path,{method,headers:h,body:body!==undefined?JSON.stringify(body):undefined}); }
+    catch(e){ throw new Error('Can\u2019t reach the leaderboard server. Online features work on the GitHub version of the game.'); }
+    const txt=await r.text(); let data=null; try{ data=txt?JSON.parse(txt):null; }catch(e){ data=txt; }
+    if(!r.ok){ const msg=(data&&(data.msg||data.message||data.error_description||data.error))||('Server error '+r.status); const err=new Error(msg); err.status=r.status; err.code=data&&(data.error_code||data.code); throw err; }
+    return {data,res:r};
+  }
+  saveSession(d,username){ this.session={access_token:d.access_token,refresh_token:d.refresh_token,expires_at:Date.now()/1000+(d.expires_in||3600),user_id:d.user&&d.user.id,username}; Store.set('session',this.session); this.emit(); }
+  async ensureFresh(){
+    const s=this.session; if(!s) return; if(s.expires_at-Date.now()/1000>90) return;
+    try{ const {data}=await this.req('/auth/v1/token?grant_type=refresh_token',{method:'POST',body:{refresh_token:s.refresh_token}}); this.saveSession(data,s.username); }
+    catch(e){ if(e.status===400||e.status===401){ this.session=null; Store.set('session',null); this.emit(); } throw e; }
+  }
+  validate(u,p){ if(!USER_RE.test(u||'')) return 'Username must be 3\u201316 letters, numbers or _'; if(!p||p.length<6) return 'Password must be at least 6 characters'; return null; }
+  async signUp(u,p){
+    const bad=this.validate(u,p); if(bad) throw new Error(bad);
+    const {data:free}=await this.req('/rest/v1/rpc/username_available',{method:'POST',body:{name:u}});
+    if(free===false) throw new Error('That username is taken.');
+    let d; try{ d=(await this.req('/auth/v1/signup',{method:'POST',body:{email:this.emailFor(u),password:p,data:{username:u}}})).data; }
+    catch(e){ if(/already registered|already exists/i.test(e.message)) throw new Error('That username is taken.'); if(/database error/i.test(e.message)) throw new Error('That username can\u2019t be used. Try another.'); throw e; }
+    if(!d||!d.access_token) throw new Error('Account created, but email confirmation is still switched on in Supabase (Authentication \u2192 Email \u2192 Confirm email).');
+    this.saveSession(d,u); return u;
+  }
+  async logIn(u,p){
+    if(!u||!p) throw new Error('Enter your username and password.');
+    let d; try{ d=(await this.req('/auth/v1/token?grant_type=password',{method:'POST',body:{email:this.emailFor(u),password:p}})).data; }
+    catch(e){ if(e.status===400) throw new Error('Wrong username or password.'); throw e; }
+    let name=u; try{ const {data:pr}=await this.req('/rest/v1/profiles?select=username&id=eq.'+d.user.id); if(pr&&pr[0]) name=pr[0].username; }catch(e){}
+    this.saveSession(d,name); return name;
+  }
+  logOut(){ const s=this.session; this.session=null; Store.set('session',null); this.emit(); if(s) fetch(SB_URL+'/auth/v1/logout',{method:'POST',headers:{apikey:SB_KEY,Authorization:'Bearer '+s.access_token}}).catch(()=>{}); }
+  async submit(track,car,raceMs,lapMs){
+    const rows=[]; if(raceMs) rows.push({track,car,kind:'race',time_ms:Math.round(raceMs)}); if(lapMs) rows.push({track,car,kind:'lap',time_ms:Math.round(lapMs)});
+    if(!rows.length) return; await this.req('/rest/v1/race_results',{method:'POST',auth:true,body:rows,headers:{Prefer:'return=minimal'}});
+  }
+  async board(track,kind,limit=10){ const {data}=await this.req(`/rest/v1/leaderboard?select=username,car,time_ms,created_at&track=eq.${track}&kind=eq.${kind}&order=time_ms.asc,created_at.asc&limit=${limit}`); return data||[]; }
+  async myBest(track,kind){ if(!this.user) return null; const {data}=await this.req(`/rest/v1/leaderboard?select=username,car,time_ms&track=eq.${track}&kind=eq.${kind}&username=eq.${encodeURIComponent(this.user)}`); return data&&data[0]||null; }
+  async rankOf(track,kind,ms){ const {res}=await this.req(`/rest/v1/leaderboard?select=username&track=eq.${track}&kind=eq.${kind}&time_ms=lt.${Math.round(ms)}`,{headers:{Prefer:'count=exact',Range:'0-0'}}); const cr=res.headers.get('content-range')||''; const n=parseInt(cr.split('/')[1]); return isNaN(n)?null:n+1; }
+}
+
 // ===== GAME / UI =====
 const QUALITY={
   low:{pr:0.75,shadows:false,shadowSize:512,terrainCell:9,density:0.45,fogMul:0.75},
@@ -5682,7 +5734,7 @@ const $=id=>document.getElementById(id);
 class Input{
   constructor(game){
     this.g=game; this.keys={}; this.touch={}; this.pressed=[]; this.padPrev={};
-    addEventListener('keydown',e=>{ if(e.repeat&&this.keys[e.code]) { this.prevent(e); return; } this.keys[e.code]=true; this.pressed.push(e.code); this.prevent(e); game.onAnyInput(); });
+    addEventListener('keydown',e=>{ if(e.target&&e.target.tagName==='INPUT'){ if(e.code==='Enter'){ const a=game.screen==='account'&&!game.online.user?'login':null; if(a){ e.preventDefault(); game.ui.act(a); } } else if(e.code==='Escape'){ e.target.blur(); } return; } if(e.repeat&&this.keys[e.code]) { this.prevent(e); return; } this.keys[e.code]=true; this.pressed.push(e.code); this.prevent(e); game.onAnyInput(); });
     addEventListener('keyup',e=>{ this.keys[e.code]=false; });
     addEventListener('blur',()=>{ this.keys={}; });
     document.querySelectorAll('#touch .tb').forEach(b=>{ const k=b.dataset.k;
@@ -5719,7 +5771,7 @@ class Game{
     const canvas=$('gl'); this.renderer=new THREE.WebGLRenderer({canvas,antialias:true,powerPreference:'high-performance'});
     const r=this.renderer; r.outputEncoding=THREE.sRGBEncoding; r.toneMapping=THREE.ACESFilmicToneMapping; r.shadowMap.type=THREE.PCFSoftShadowMap;
     this.camera=new THREE.PerspectiveCamera(66,1,0.1,3200);
-    this.audio=new AudioEngine(this.S); this.input=new Input(this); this.ui=new UI(this);
+    this.online=new Online(); this.audio=new AudioEngine(this.S); this.input=new Input(this); this.ui=new UI(this);
     this.applyQuality(); addEventListener('resize',()=>this.resize()); this.resize();
     this.garage=new Garage(this); this.race=null; this.screen='title'; this.focus=0; this.last=performance.now();
     this.fps=60; this.frames=0; this.fpsT=0;
@@ -5764,7 +5816,21 @@ class Game{
     },60);
   }
   endRace(){ if(this.race){ this.race.dispose(); this.race=null; } $('hud').classList.remove('on'); this.audio.setMusic('menu'); this.ui.touchVisible(false); }
-  showResults(res){ $('hud').classList.remove('on'); this.ui.results(res); this.show('results'); }
+  showResults(res){ $('hud').classList.remove('on'); this.ui.results(res); this.show('results'); this.postOnline(res); }
+  async postOnline(res){
+    const el=$('resOnline'); el.className='msg'; el.textContent='';
+    if(!res.finished || res.posted) return; res.posted=true;
+    if(this.sel.diff!=='hard'){ el.textContent='Leaderboards count Hard difficulty only.'; return; }
+    if(!this.online.user){ el.textContent='Log in from the main menu to post Hard times to the leaderboards.'; return; }
+    if(this.autopilot){ return; }
+    const tr=res.track.id, car=VEHICLES[this.sel.vehicle].id;
+    el.textContent='Posting to leaderboards…';
+    try{
+      await this.online.submit(tr,car,res.playerTime*1000,res.playerBest?res.playerBest*1000:null);
+      const [rr,lr]=await Promise.all([this.online.rankOf(tr,'race',res.playerTime*1000),res.playerBest?this.online.rankOf(tr,'lap',res.playerBest*1000):null]);
+      el.innerHTML=`Posted as <b>${this.online.user}</b> · this race would rank <b>#${rr||'?'}</b>`+(lr?` · best lap <b>#${lr}</b>`:'')+' on the online board';
+    }catch(e){ el.className='msg bad'; el.textContent='Couldn’t post to leaderboards: '+e.message; }
+  }
 }
 // ---------------- neon garage (menu backdrop + showroom) ----------------
 class Garage{
@@ -5825,7 +5891,7 @@ class UI{
     document.querySelectorAll('#settings input[type=range]').forEach(inp=>{ const k=inp.dataset.s; inp.value=g.S[k]; const lab=inp.nextElementSibling; lab.textContent=Math.round(g.S[k]*100);
       inp.addEventListener('input',()=>{ g.S[k]=+inp.value; lab.textContent=Math.round(g.S[k]*100); g.saveSettings(); }); });
     document.querySelectorAll('#settings .seg').forEach(seg=>{ const k=seg.dataset.t; seg.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{ let v=b.dataset.v; if(k==='musicOn'||k==='shake') v=v==='1'; g.S[k]=v; g.audio.init(); g.audio.play('blip'); if(k==='quality') g.applyQuality(); g.saveSettings(); this.settingsUI(); })); });
-    this.settingsUI(); this.buildTracks(); this.carDots();
+    this.settingsUI(); this.buildTracks(); this.carDots(); g.online.onChange(()=>this.acctUI()); this.acctUI();
     this.lastItem=null; this.rollT=0;
     if('ontouchstart' in window) $('pressTxt').textContent='Tap to start';
   }
@@ -5842,6 +5908,9 @@ class UI{
     if(name==='garage'){ g.garage.setCar(g.sel.vehicle); this.carInfo(); g.focus=1; }
     if(name==='trackSel'){ this.buildTracks(); this.diffUI(); g.focus=g.sel.track; }
     if(name==='records') this.records();
+    if(name==='account'){ this.acctUI(); $('acctMsg').textContent=''; if(!this.g.online.user) setTimeout(()=>{ if(!this.isTouch()) $('aUser').focus(); },50); }
+    if(name==='boards'){ this.buildBoardTabs(); this.loadBoard(); }
+    $('acctTag').style.display=(name==='menu'||name==='title')&&this.g.online.user?'block':'none';
     if(name==='settings'){ this.settingsUI(); document.querySelectorAll('#settings input[type=range]').forEach(inp=>{ inp.value=g.S[inp.dataset.s]; inp.nextElementSibling.textContent=Math.round(g.S[inp.dataset.s]*100); }); }
     this.touchVisible(name==='race'); document.body.classList.toggle('racing',name==='race');
     $('pauseBtn').style.display=(name==='race'&&this.isTouch())?'block':'none';
@@ -5882,7 +5951,35 @@ class UI{
       case 'changeTrack': au.play('select'); g.endRace(); g.show('trackSel'); break;
       case 'changeCar': au.play('select'); g.endRace(); g.show('garage'); break;
       case 'quit': au.play('back'); g.endRace(); g.show('menu'); break;
+      case 'account': au.play('select'); g.show('account'); break;
+      case 'boards': au.play('select'); g.show('boards'); break;
+      case 'refreshBoards': au.play('blip'); this.loadBoard(); break;
+      case 'login': case 'signup': this.doAuth(a); break;
+      case 'logout': au.play('back'); g.online.logOut(); this.acctUI(); break;
     }
+  }
+  acctUI(){ const u=this.g.online.user; $('acctIn').style.display=u?'none':'block'; $('acctOut').style.display=u?'block':'none'; $('acctName').textContent=u||'';
+    $('acctBtn').firstElementChild.textContent=u?'Account':'Log in'; $('acctTag').innerHTML=u?'Racing as <b>'+u+'</b>':''; }
+  async doAuth(kind){
+    const g=this.g, m=$('acctMsg'), u=$('aUser').value.trim(), p=$('aPass').value; if(this.busy) return; this.busy=true;
+    m.className='msg'; m.textContent=kind==='signup'?'Creating account…':'Logging in…';
+    try{ const name=kind==='signup'?await g.online.signUp(u,p):await g.online.logIn(u,p); $('aPass').value=''; g.audio.play('select'); this.acctUI(); m.textContent=(kind==='signup'?'Account created. ':'')+'Welcome, '+name+'!'; }
+    catch(e){ g.audio.play('back'); m.className='msg bad'; m.textContent=e.message; }
+    this.busy=false;
+  }
+  buildBoardTabs(){ if(this.bSel==null) this.bSel={track:TRACK_DATA[this.g.sel.track].id,kind:'race'}; const el=$('bTracks');
+    el.innerHTML=TRACK_DATA.map(t=>`<button data-t="${t.id}" class="${t.id===this.bSel.track?'on':''}">${t.name}</button>`).join('');
+    el.querySelectorAll('button').forEach(b=>b.onclick=()=>{ this.bSel.track=b.dataset.t; this.g.audio.play('blip'); this.buildBoardTabs(); this.loadBoard(); });
+    $('bKind').querySelectorAll('button').forEach(b=>{ b.classList.toggle('on',b.dataset.k===this.bSel.kind); b.onclick=()=>{ this.bSel.kind=b.dataset.k; this.g.audio.play('blip'); this.buildBoardTabs(); this.loadBoard(); }; }); }
+  async loadBoard(){
+    const {track,kind}=this.bSel||{track:'sweet',kind:'race'}, tb=$('bTable'), m=$('bMsg'), on=this.g.online; const req=this.boardReq=(this.boardReq||0)+1;
+    tb.innerHTML=''; m.className='msg'; m.textContent='Loading…';
+    try{ const rows=await on.board(track,kind,10); if(req!==this.boardReq) return;
+      const carName=id=>(VEHICLES.find(v=>v.id===id)||{name:id}).name;
+      tb.innerHTML=rows.map((r,k)=>`<tr class="${r.username===on.user?'me':''}"><td class="p">${k+1}</td><td>${esc(r.username)}</td><td style="color:var(--dim)">${carName(r.car)}</td><td class="t">${fmtTime(r.time_ms/1000)}</td></tr>`).join('');
+      m.textContent=rows.length?'':'No times yet. Finish a race on Hard to set the first record!';
+      if(on.user && !rows.some(r=>r.username===on.user)){ const mine=await on.myBest(track,kind); if(mine&&req===this.boardReq){ const rk=await on.rankOf(track,kind,mine.time_ms); m.innerHTML=`Your best: <b>${fmtTime(mine.time_ms/1000)}</b> in the ${carName(mine.car)} · rank #${rk}`; } }
+    }catch(e){ if(req!==this.boardReq) return; m.className='msg bad'; m.textContent=e.message; }
   }
   carDots(){ $('carDots').innerHTML=VEHICLES.map(()=>'<b></b>').join(''); }
   carInfo(){
@@ -5957,6 +6054,7 @@ class UI{
     $('resTable').innerHTML=res.rows.map(r=>`<tr class="${r.player?'me':''}"><td class="p">${r.pos}</td><td>${r.player?'<b>YOU</b>':r.driver}</td><td style="color:var(--dim)">${r.car}</td><td class="t">${r.est?'<span style="color:var(--dim)">~</span>':''}${fmtTime(r.time)}</td><td class="t" style="color:var(--dim)">${r.best?'lap '+fmtTime(r.best):''}</td></tr>`).join('');
   }
 }
+function esc(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function drawTrackThumb(cv,def){
   const g=cv.getContext('2d'), w=cv.width,h=cv.height;
   const th=THEMES[def.theme]; const bgs={dusk:['#ff9a6a','#2c2f78'],city:['#f5c98a','#3f86d8'],desert:['#f0b27a','#c2562a'],coast:['#ffbe86','#1c5a8a'],night:['#3d1656','#05041a']}[def.sky||def.theme];
