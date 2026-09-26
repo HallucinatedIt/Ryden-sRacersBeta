@@ -3628,7 +3628,7 @@
 
 } )();
 
-const GLB_DATA={"env_coast": "models/env/env_coast.glb?v=1790457650", "env_mesa": "models/env/env_mesa.glb?v=1790446322", "env_sweet": "models/env/env_sweet.glb?v=1790439367", "grandstand": "models/props/grandstand.glb?v=1790402370", "rrsign": "models/props/rrsign.glb?v=1790402370", "dolly": "models/props/dolly.glb?v=1790402370", "knives": "models/props/knives.glb?v=1790402370", "trio": "models/props/trio.glb?v=1790402370", "gate": "models/props/gate.glb?v=1790402370", "solocup": "models/props/solocup.glb?v=1790402370", "church": "models/props/church.glb?v=1790402370", "donkeys": "models/props/donkeys.glb?v=1790402370", "hijoe": "models/props/hijoe.glb?v=1790402370", "palm": "models/props/palm.glb?v=1790402370", "mrblack": "models/props/mrblack.glb?v=1790402370", "ak": "models/props/ak.glb?v=1790402370", "hellcat": "models/cars/hellcat.glb?v=1790402370", "brcc": "models/cars/rotor.glb?v=1790402370", "fdc": "models/cars/rrpickup.glb?v=1790402370", "shoe_factory": "models/props/shoe_factory.glb?v=1790402370", "claw_can": "models/props/claw_can.glb?v=1790402370", "echelon_can": "models/props/echelon_can.glb?v=1790402370", "watch_shop": "models/props/watch_shop.glb?v=1790402370", "watch_sign": "models/props/watch_sign.glb?v=1790402370", "range_sign": "models/props/range_sign.glb?v=1790402370", "bpd": "models/cars/bpd_69.glb?v=1790402370", "concord": "models/cars/concordance.glb?v=1790402370", "donut": "models/cars/donut_patrol.glb?v=1790402370", "duck": "models/cars/duck_plasma.glb?v=1790402370", "gt44": "models/cars/gt40.glb?v=1790402370", "missile": "models/cars/missile_commander.glb?v=1790402370", "leopard": "models/cars/night_leopard.glb?v=1790402370", "trout": "models/cars/trout_protocol.glb?v=1790402370"};
+const GLB_DATA={"showroom": "models/env/showroom.glb?v=1790463204", "env_coast": "models/env/env_coast.glb?v=1790457650", "env_mesa": "models/env/env_mesa.glb?v=1790446322", "env_sweet": "models/env/env_sweet.glb?v=1790439367", "grandstand": "models/props/grandstand.glb?v=1790402370", "rrsign": "models/props/rrsign.glb?v=1790402370", "dolly": "models/props/dolly.glb?v=1790402370", "knives": "models/props/knives.glb?v=1790402370", "trio": "models/props/trio.glb?v=1790402370", "gate": "models/props/gate.glb?v=1790402370", "solocup": "models/props/solocup.glb?v=1790402370", "church": "models/props/church.glb?v=1790402370", "donkeys": "models/props/donkeys.glb?v=1790402370", "hijoe": "models/props/hijoe.glb?v=1790402370", "palm": "models/props/palm.glb?v=1790402370", "mrblack": "models/props/mrblack.glb?v=1790402370", "ak": "models/props/ak.glb?v=1790402370", "hellcat": "models/cars/hellcat.glb?v=1790402370", "brcc": "models/cars/rotor.glb?v=1790402370", "fdc": "models/cars/rrpickup.glb?v=1790402370", "shoe_factory": "models/props/shoe_factory.glb?v=1790402370", "claw_can": "models/props/claw_can.glb?v=1790402370", "echelon_can": "models/props/echelon_can.glb?v=1790402370", "watch_shop": "models/props/watch_shop.glb?v=1790402370", "watch_sign": "models/props/watch_sign.glb?v=1790402370", "range_sign": "models/props/range_sign.glb?v=1790402370", "bpd": "models/cars/bpd_69.glb?v=1790402370", "concord": "models/cars/concordance.glb?v=1790402370", "donut": "models/cars/donut_patrol.glb?v=1790402370", "duck": "models/cars/duck_plasma.glb?v=1790402370", "gt44": "models/cars/gt40.glb?v=1790402370", "missile": "models/cars/missile_commander.glb?v=1790402370", "leopard": "models/cars/night_leopard.glb?v=1790402370", "trout": "models/cars/trout_protocol.glb?v=1790402370"};
 const GLB_TEX={};
 "use strict";
 // ===== UTILITIES =====
@@ -6149,6 +6149,7 @@ class Game{
   }
   pause(on){ if(!this.race) return; this.race.paused=on; if(on){ this.show('pause'); $('hud').classList.remove('on'); this.audio.play('blip'); } else { this.show('race'); $('hud').classList.add('on'); } }
   startRace(){
+    if(!window.CARS_READY){ this.show('loading'); $('loadName').textContent='Warming up'; $('loadPlace').textContent='Loading cars…'; window.CARS_WAIT.push(()=>this.startRace()); return; }
     if(this.gp){ this.sel.track=TRACK_DATA.findIndex(t=>t.id===this.gp.tracks[this.gp.round]); this.sel.diff=this.gp.diff; }
     else { Store.set('lastCar',this.sel.vehicle); Store.set('lastTrack',this.sel.track); Store.set('lastDiff',this.sel.diff); }
     this.goLandscape();
@@ -6207,52 +6208,154 @@ class Game{
     }catch(e){ el.className='msg bad'; el.textContent='Couldn’t post to leaderboards: '+e.message; }
   }
 }
-// ---------------- neon garage (menu backdrop + showroom) ----------------
+// ---------------- neon showroom (menu backdrop + car select) ----------------
+// The main menu always presents a fixed showcase car. It is independent of GAME.sel.vehicle (the player's racing car),
+// so visiting the menu, changing cars or finishing a race never changes what the menu shows.
+const SHOWCASE_CAR_ID='gt44';            // the red 1966 GT40 from the trailer
+const SHOWCASE_SCREENS=new Set(['title','device','menu','boards','records','account','settings','controls','howto']);
+function showroomFloorTex(){
+  // glossy dark floor with large, deliberate colour pieces (trailer motif); alpha lets the mirrored scene show through
+  return canvasTex(2048,1536,(g,w,h)=>{
+    g.clearRect(0,0,w,h); g.fillStyle='rgba(10,6,20,0.55)'; g.fillRect(0,0,w,h);
+    // floor spans x -17..17 (34 m), z -9..16 (25 m); car at x=0,z=0
+    const X=x=>(x+17)/34*w, Z=z=>(z+9)/25*h; let s=11; const rnd=()=>{ s=(s*16807)%2147483647; return (s-1)/2147483646; };
+    const cols=['#a81d27','#b88f16','#128784','#2253a8','#bf2273','#5c26bf'];
+    const blob=(cx,cz,r,col,k)=>{ const n=9, pts=[]; for(let i=0;i<n;i++){ const a=i/n*TAU+rnd()*0.3; const rr=r*(0.72+rnd()*0.5); pts.push([X(cx+Math.cos(a)*rr*1.25),Z(cz+Math.sin(a)*rr)]); }
+      g.beginPath(); for(let i=0;i<=n;i++){ const p=pts[i%n], q=pts[(i+1)%n]; const mx=(p[0]+q[0])/2, my=(p[1]+q[1])/2; if(i===0) g.moveTo(mx,my); else g.quadraticCurveTo(p[0],p[1],mx,my); } g.closePath();
+      const gr=g.createLinearGradient(X(cx-r),Z(cz-r),X(cx+r),Z(cz+r)); gr.addColorStop(0,col); gr.addColorStop(1,shade(col,-0.25));
+      g.fillStyle=gr; g.globalAlpha=0.66; g.fill(); g.globalAlpha=1; g.lineWidth=10; g.strokeStyle='rgba(8,4,16,0.8)'; g.stroke(); };
+    const shade=(hex,f)=>{ const c=parseInt(hex.slice(1),16); let r=c>>16,gg=(c>>8)&255,b=c&255; r=Math.round(r*(1+f)); gg=Math.round(gg*(1+f)); b=Math.round(b*(1+f)); return 'rgb('+r+','+gg+','+b+')'; };
+    // pieces grouped under and in front of the car, sparse toward the far walls and the menu side
+    [[1.5,1.2,3.4,0],[-2.8,2.6,2.6,1],[4.8,-0.6,2.8,2],[6.5,3.8,3.2,3],[-0.4,5.6,3.0,2],[2.8,7.6,2.4,1],[-5.6,6.8,2.8,4],[9.8,1.2,2.2,1],[-7.8,1.0,2.0,3],[8.4,7.8,2.6,0],[-1.8,-3.6,2.2,5],[5.2,-4.8,2.0,4],[-10.5,9,2.4,2],[12,-3,2.2,0],[0.6,11.5,3.2,3]]
+      .forEach(([x,z,r,c])=>blob(x,z,r,cols[c]));
+    // specular sheen fading toward the back wall
+    const sh=g.createLinearGradient(0,0,0,h); sh.addColorStop(0,'rgba(255,255,255,0.05)'); sh.addColorStop(0.4,'rgba(255,255,255,0)'); g.fillStyle=sh; g.fillRect(0,0,w,h);
+  },{srgb:true,aniso:8});
+}
+function glowBandTex(){ return canvasTex(8,64,(g,w,h)=>{ const gr=g.createLinearGradient(0,0,0,h); gr.addColorStop(0,'rgba(255,255,255,0)'); gr.addColorStop(0.42,'rgba(255,255,255,0.35)'); gr.addColorStop(0.5,'rgba(255,255,255,1)'); gr.addColorStop(0.58,'rgba(255,255,255,0.35)'); gr.addColorStop(1,'rgba(255,255,255,0)'); g.fillStyle=gr; g.fillRect(0,0,w,h); },{srgb:false}); }
+function softBlobTex(){ return canvasTex(128,128,(g,w,h)=>{ const gr=g.createRadialGradient(64,64,0,64,64,64); gr.addColorStop(0,'rgba(0,0,0,0.9)'); gr.addColorStop(0.55,'rgba(0,0,0,0.55)'); gr.addColorStop(1,'rgba(0,0,0,0)'); g.fillStyle=gr; g.fillRect(0,0,w,h); },{srgb:false}); }
+function hazeTex(){ return canvasTex(256,128,(g,w,h)=>{ for(let k=0;k<40;k++){ const x=Math.random()*w, y=h*0.35+Math.random()*h*0.5, r=20+Math.random()*50; const gr=g.createRadialGradient(x,y,0,x,y,r); gr.addColorStop(0,'rgba(255,255,255,0.18)'); gr.addColorStop(1,'rgba(255,255,255,0)'); g.fillStyle=gr; g.fillRect(0,0,w,h); }
+  const m=g.createLinearGradient(0,0,w,0); m.addColorStop(0,'rgba(0,0,0,1)'); m.addColorStop(0.2,'rgba(0,0,0,0)'); m.addColorStop(0.8,'rgba(0,0,0,0)'); m.addColorStop(1,'rgba(0,0,0,1)'); g.globalCompositeOperation='destination-out'; g.fillStyle=m; g.fillRect(0,0,w,h); },{srgb:false}); }
 class Garage{
   constructor(game){
-    this.g=game; const s=this.scene=new THREE.Scene(); s.background=new THREE.Color(0x0b0520); s.fog=new THREE.Fog(0x0b0520,20,60);
-    s.add(new THREE.HemisphereLight(0x8a6cff,0x1a0830,0.35));
-    const key=new THREE.SpotLight(0xffffff,2.2,40,0.6,0.5,1.2); key.position.set(3,11,6); key.castShadow=true; key.shadow.mapSize.set(1024,1024); s.add(key); s.add(key.target);
-    const pink=new THREE.PointLight(0xff2e97,2.2,30); pink.position.set(-7,4,-2); s.add(pink);
-    const cyan=new THREE.PointLight(0x22e4ff,2.0,30); cyan.position.set(7,4,-2); s.add(cyan);
-    // splatter floor
-    const ft=canvasTex(1024,1024,(g,w,h)=>{ noiseFill(g,w,h,'#17102a',18); const cs=['#ff2e97','#22e4ff','#ffc23d','#9b1cff','#ffffff'];
-      for(let k=0;k<70;k++){ g.fillStyle=cs[k%5]; g.globalAlpha=0.35+Math.random()*0.4; const x=Math.random()*w,y=Math.random()*h,r=6+Math.random()*34; g.beginPath(); g.arc(x,y,r,0,TAU); g.fill();
-        for(let d=0;d<10;d++){ const a=Math.random()*TAU,l=r+Math.random()*60; g.beginPath(); g.arc(x+Math.cos(a)*l,y+Math.sin(a)*l,1+Math.random()*5,0,TAU); g.fill(); } } g.globalAlpha=1; },{repeat:true});
-    ft.repeat.set(3,3);
-    const floor=new THREE.Mesh(new THREE.CircleGeometry(40,48),new THREE.MeshStandardMaterial({map:ft,roughness:0.35,metalness:0.2})); floor.rotation.x=-Math.PI/2; floor.receiveShadow=true; s.add(floor);
-    const tt=new THREE.Mesh(new THREE.CylinderGeometry(4.2,4.4,0.18,48),new THREE.MeshStandardMaterial({color:0x1d1233,metalness:0.7,roughness:0.3})); tt.position.y=0.09; tt.receiveShadow=true; s.add(tt);
-    const ring=new THREE.Mesh(new THREE.TorusGeometry(4.3,0.05,8,64),new THREE.MeshBasicMaterial({color:0xff2e97})); ring.rotation.x=Math.PI/2; ring.position.y=0.18; s.add(ring);
-    // back walls with neon tubes
-    const wallM=new THREE.MeshStandardMaterial({color:0x0a0514,roughness:0.95});
-    for(let k=0;k<6;k++){ const a=-Math.PI*0.75+k*Math.PI*0.3; const w=new THREE.Mesh(new THREE.PlaneGeometry(12,10),wallM); w.position.set(Math.sin(a)*16,5,-Math.cos(a)*16); w.lookAt(0,5,0); s.add(w);
-      [2.2,7.8].forEach((y,j)=>{ const tube=new THREE.Mesh(new THREE.BoxGeometry(11,0.12,0.12),new THREE.MeshBasicMaterial({color:(k+j)%2?0xff2e97:0x22e4ff})); tube.position.copy(w.position).multiplyScalar(0.98); tube.position.y=y; tube.lookAt(0,y,0); s.add(tube); }); }
-    const sign=new THREE.Mesh(new THREE.PlaneGeometry(10,3.4),new THREE.MeshBasicMaterial({map:textPanelTex([{text:"Ryden's",font:'150px Yellowtail, cursive',color:'#ff4fb0',glow:'#ff2e97',y:0.5}],{w:1024,h:350,bg:'rgba(0,0,0,0)'}),transparent:true}));
-    sign.position.set(0,6.8,-15.5); s.add(sign);
-    // env for car reflections
-    const es=new THREE.Scene(); es.background=new THREE.Color(0x0b0520);
-    [[0xff2e97,-8],[0x22e4ff,8],[0xffffff,0]].forEach(([c,x])=>{ const p=new THREE.Mesh(new THREE.PlaneGeometry(x?4:14,x?14:3),new THREE.MeshBasicMaterial({color:c,side:THREE.DoubleSide})); p.position.set(x,x?3:10,x?0:0); p.lookAt(0,1,0); es.add(p); });
-    const pm=new THREE.PMREMGenerator(game.renderer); this.env=pm.fromScene(es,0.03).texture; pm.dispose();
-    this.turn=new THREE.Group(); this.turn.position.y=0.18; s.add(this.turn); this.carIdx=-1; this.models={}; this.t=0; this.spin=0.4; this.drag=null;
-    this.cam=new THREE.PerspectiveCamera(40,1,0.1,200);
-    this.setCar(game.sel.vehicle);
+    this.g=game; const s=this.scene=new THREE.Scene(); s.background=new THREE.Color(0x07030f); s.fog=new THREE.Fog(0x0a0418,26,70);
+    // --- environment map for paint and chrome: overhead softbox, pink and cyan side strips (keeps the red paint red)
+    const es=new THREE.Scene(); es.background=new THREE.Color(0x0c0618);
+    const ep=(w,h,c,x,y,z)=>{ const p=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({color:c,side:THREE.DoubleSide})); p.position.set(x,y,z); p.lookAt(0,0.6,0); es.add(p); };
+    ep(12,6,0xffffff,0,9,1); ep(3,10,0xff2e97,-9,3,-2); ep(3,10,0x22e4ff,9,3,-2); ep(20,3,0x3a2468,0,1.5,-10); ep(6,2,0xfff1e6,-4,3,9);
+    const pm=new THREE.PMREMGenerator(game.renderer); this.env=pm.fromScene(es,0.04).texture; pm.dispose();
+    // --- lights: soft key from front-left above, cool fill, restrained pink/cyan rims, mirrored key for the floor reflection
+    s.add(new THREE.HemisphereLight(0x6a58c8,0x12081e,0.28));
+    const key=this.key=new THREE.SpotLight(0xfff3ec,2.2,40,0.36,0.75,1.0); key.position.set(-1.8,9.5,3.2); key.target.position.set(0,0.4,0); key.castShadow=true; key.shadow.mapSize.set(1024,1024); key.shadow.bias=-0.0004; key.shadow.radius=4; s.add(key); s.add(key.target);
+    const fill=new THREE.DirectionalLight(0xb9c4ff,0.3); fill.position.set(4,3,10); s.add(fill);
+    const rimP=new THREE.SpotLight(0xff2e97,2.6,30,0.5,0.7,1.0); rimP.position.set(-7,3.2,-6); rimP.target.position.set(0,0.6,0); s.add(rimP); s.add(rimP.target);
+    const rimC=new THREE.SpotLight(0x22e4ff,2.2,30,0.5,0.7,1.0); rimC.position.set(8,3.0,-5); rimC.target.position.set(0,0.6,0); s.add(rimC); s.add(rimC.target);
+    const under=new THREE.DirectionalLight(0xffe8f2,0.9); under.position.set(-1.8,-9.5,3.2); s.add(under);
+    // --- room (Blender-built showroom.glb) and its mirror image under the glossy floor
+    this.room=this.buildRoom(); s.add(this.room);
+    this.mirror=new THREE.Group(); this.mirror.scale.y=-1; s.add(this.mirror);
+    const rm=this.room.clone(true); const dim=new Map();
+    rm.traverse(o=>{ if(!o.isMesh) return; o.castShadow=false; o.receiveShadow=false; const m=o.material;
+      if(m&&m.isMeshBasicMaterial){ if(!dim.has(m)){ const c=m.clone(); c.color.multiplyScalar(0.55); if(c.transparent) c.opacity*=0.45; dim.set(m,c); } o.material=dim.get(m); } }); this.mirror.add(rm);
+    // --- floor: translucent glossy layer over the mirrored scene; opaque black backing far below
+    const floorM=new THREE.MeshBasicMaterial({map:showroomFloorTex(),transparent:true,depthWrite:true,color:0xa89fbd});   // gloss comes from the mirrored scene, no specular hot spots
+    const floor=new THREE.Mesh(new THREE.PlaneGeometry(34,25),floorM); floor.rotation.x=-Math.PI/2; floor.position.set(0,0,3.5); floor.receiveShadow=true; floor.renderOrder=1; s.add(floor);
+    const pit=new THREE.Mesh(new THREE.PlaneGeometry(80,80),new THREE.MeshBasicMaterial({color:0x040208})); pit.rotation.x=-Math.PI/2; pit.position.y=-14; s.add(pit);
+    // --- haze low behind the car (two soft additive cards)
+    const hz0=hazeTex(); this.haze=[];
+    [[-2,2.0,-5.5,16,3.2,0xb04cff,0.2],[7,1.7,-6.5,16,3.0,0xff4fb0,0.14]].forEach(([x,y,z,w,h,c,o])=>{ const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:this.haze.length?Object.assign(hz0.clone(),{needsUpdate:true}):hz0,color:c,transparent:true,opacity:o,blending:THREE.AdditiveBlending,depthWrite:false,fog:false})); m.position.set(x,y,z); m.userData.x0=x; m.renderOrder=3; s.add(m); this.haze.push(m); });
+    // --- stages: fixed showcase car, and the player's selection on a turntable (car select / race setup)
+    this.blobTex=softBlobTex();
+    this.showcase=new THREE.Group(); s.add(this.showcase); this.showMirror=new THREE.Group(); this.mirror.add(this.showMirror);
+    this.showIdx=Math.max(0,VEHICLES.findIndex(v=>v.id===SHOWCASE_CAR_ID)); this.showYaw=0.66;
+    this.turn=new THREE.Group(); this.turn.position.y=0.06; s.add(this.turn); this.turnMirror=new THREE.Group(); this.turnMirror.position.y=0.06; this.mirror.add(this.turnMirror);
+    const disc=new THREE.Mesh(new THREE.CylinderGeometry(3.6,3.7,0.12,64),new THREE.MeshStandardMaterial({color:0x160c28,metalness:0.8,roughness:0.28,envMap:this.env})); disc.position.y=-0.03; disc.receiveShadow=true;
+    const ring=new THREE.Mesh(new THREE.TorusGeometry(3.66,0.035,8,96),new THREE.MeshBasicMaterial({color:0xff2e97,toneMapped:false})); ring.rotation.x=Math.PI/2; ring.position.y=0.03;
+    this.platform=new THREE.Group(); this.platform.add(disc,ring); s.add(this.platform); this.platMirror=this.platform.clone(); this.mirror.add(this.platMirror);
+    this.carIdx=-1; this.models={}; this.t=0; this.spin=0.4; this.drag=null; this.mode=null; this.frameKey=''; this.fit={d:9,ox:0,oy:0};
+    this.cam=new THREE.PerspectiveCamera(30,1,0.1,200); this.base=new THREE.Vector3(0,0.55,0);
+    this.buildShowcase();
     const cv=$('gl'); cv.addEventListener('pointerdown',e=>{ if(this.g.screen==='garage'){ this.drag=e.clientX; this.swX=e.clientX; this.swT=performance.now(); } }); addEventListener('pointerup',e=>{ if(this.swX!=null&&this.g.screen==='garage'&&this.g.ui.isMobile()){ const dx=e.clientX-this.swX; if(Math.abs(dx)>45&&performance.now()-this.swT<600) this.g.ui.act(dx<0?'nextCar':'prevCar'); } this.swX=null; }); addEventListener('pointermove',e=>{ if(this.drag!=null){ this.spin=0; this.turn.rotation.y+=(e.clientX-this.drag)*0.01; this.drag=e.clientX; } }); addEventListener('pointerup',()=>{ if(this.drag!=null){ this.drag=null; this.spin=0.4; } });
   }
-  setCar(i){ if(this.carIdx===i) return; this.carIdx=i; this.turn.children.slice().forEach(c=>this.turn.remove(c));
-    if(!this.models[i]){ setEnvOnCarMats(this.env); const m=buildCarModel(VEHICLES[i],this.env); m.root.traverse(o=>{ if(o.isMesh) o.castShadow=true; }); this.models[i]=m; }
-    const m=this.models[i]; this.turn.add(m.root); this.pop=0; }
-  update(dt){
-    this.t+=dt; this.turn.rotation.y+=this.spin*dt; this.pop=Math.min(1,this.pop+dt*3); const k=1-Math.pow(1-this.pop,3); this.turn.scale.setScalar(0.7+0.3*k);
-    const m=this.models[this.carIdx]; if(m&&m.anims) m.anims.forEach(f=>f(dt,this.t,null)); if(m&&m.lightbar){ const f=Math.sin(this.t*12)>0; m.lightbar.red.color.setHex(f?0xff1030:0x300008); m.lightbar.blue.color.setHex(f?0x10103a:0x1a55ff); }
-    const scr=this.g.screen; const aspect=innerWidth/innerHeight; this.cam.aspect=aspect;
-    let tx,ty,tz,lx=0;
-    if(scr==='garage'){ tx=aspect>1.1?-2.2:0; ty=2.6; tz=10.5+(aspect<1?5:0); lx=aspect>1.1?-2.6:0; }
-    else { const a=this.t*0.12; tx=Math.sin(a)*12; ty=4+Math.sin(this.t*0.3); tz=Math.cos(a)*12; }
-    const tgt=new THREE.Vector3(tx,ty,tz); this.cam.position.lerp(tgt,Math.min(1,dt*2.5));
-    this.cam.lookAt(lx,scr==='garage'?0.9:2.6,0); this.cam.fov=aspect<1?52:40; this.cam.updateProjectionMatrix();
-    if(this.g.renderer.shadowMap.enabled!==true){} 
+  buildRoom(){
+    const G=new THREE.Group(); const src=CAR_GLTF['showroom'];
+    const neon={m_neon_pink:0xff3aa0,m_neon_cyan:0x3ae8ff,m_neon_white:0xfff4fb};
+    const band=glowBandTex();
+    const cove=canvasTex(8,256,(g,w,h)=>{ const gr=g.createLinearGradient(0,0,0,h); gr.addColorStop(0,'#05020c'); gr.addColorStop(0.45,'#1c0a3a'); gr.addColorStop(0.85,'#5a1a78'); gr.addColorStop(1,'#a0287a'); g.fillStyle=gr; g.fillRect(0,0,w,h); });
+    if(src){
+      const root=src.clone(true); const cache=new Map();
+      root.traverse(o=>{ if(!o.isMesh) return; const n=(o.material&&o.material.name)||''; o.castShadow=false; o.receiveShadow=/m_panel|m_wall/.test(n);
+        if(!cache.has(n)){ let m;
+          if(neon[n]!=null) m=new THREE.MeshBasicMaterial({color:neon[n],toneMapped:false});
+          else if(/m_glow_/.test(n)) m=new THREE.MeshBasicMaterial({color:/pink/.test(n)?0xff2e97:0x22e4ff,map:band,transparent:true,opacity:0.55,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide,toneMapped:false});
+          else if(/m_cove/.test(n)) m=new THREE.MeshBasicMaterial({map:cove,fog:false});
+          else { m=o.material; const base={m_wall:0x08050f,m_panel:0x130c24,m_frame:0x171229,m_trim:0x8a86a8}[n]; if(base!=null) m.color.setHex(base);
+            if(n==='m_panel'){ m.roughness=0.5; m.metalness=0.2; } m.envMap=this.env; m.envMapIntensity=/m_frame|m_trim/.test(n)?0.55:0.12; m.needsUpdate=true; }
+          cache.set(n,m); }
+        o.material=cache.get(n); if(/m_glow_/.test(n)) o.renderOrder=2; o.matrixAutoUpdate=false; o.updateMatrix(); });
+      G.add(root);
+    } else {
+      // fallback if the showroom model failed to load: simple dark room with neon bars
+      const wall=new THREE.Mesh(new THREE.PlaneGeometry(60,12),new THREE.MeshStandardMaterial({color:0x100822,roughness:0.9})); wall.position.set(0,6,-9); G.add(wall);
+      [[6.2,0xff3aa0],[1.05,0x3ae8ff]].forEach(([y,c])=>[-12,-6.5,6.5,12].forEach(x=>{ const b=new THREE.Mesh(new THREE.BoxGeometry(4.6,0.1,0.1),new THREE.MeshBasicMaterial({color:c,toneMapped:false})); b.position.set(x,y,-8.8); G.add(b); }));
+    }
+    return G;
   }
-  render(){ const r=this.g.renderer; r.toneMappingExposure=1.1; r.render(this.scene,this.cam); }
+  // soft contact shadow: footprint blob + a darker patch at each tyre
+  contactShadow(m){ const d=m.dims||{L:4.4,W:1.9}; const grp=new THREE.Group(); const mat=new THREE.MeshBasicMaterial({map:this.blobTex,transparent:true,depthWrite:false,opacity:0.85,color:0x000000});
+    const add=(w,l,x,z,o)=>{ const q=new THREE.Mesh(new THREE.PlaneGeometry(w,l),o===1?mat:mat.clone()); if(o!==1) q.material.opacity=o; q.rotation.x=-Math.PI/2; q.position.set(x,0.012,z); q.renderOrder=2; grp.add(q); };
+    add(d.W*1.35,d.L*1.18,0,0,0.9);
+    (m.wheels||[]).forEach(wh=>{ const p=new THREE.Vector3(); wh.parent.getWorldPosition(p); m.root.worldToLocal(p); add(0.75,0.95,p.x,p.z,1); });
+    return grp; }
+  buildShowcase(){
+    const v=VEHICLES[this.showIdx]; setEnvOnCarMats(this.env); const m=buildCarModel(v,this.env); m.root.traverse(o=>{ if(o.isMesh) o.castShadow=true; });
+    (m.steerPivots||[]).forEach(p=>p.rotation.y=-0.32);          // wheels turned toward the camera, showroom pose
+    m.root.updateMatrixWorld(true); this.showModel=m;
+    this.showcase.add(m.root); this.showcase.add(this.contactShadow(m)); this.showcase.rotation.y=this.showYaw;
+    const mc=m.root.clone(true); this.showMirror.add(mc); this.showMirror.rotation.y=this.showYaw;
+    this.showBox=new THREE.Box3().setFromObject(m.root);
+    // silhouette sample points (model space) for tight framing
+    const pts=[]; const tv=new THREE.Vector3(); m.root.traverse(o=>{ if(!o.isMesh||!o.visible) return; let p=o, vis=true; while(p){ if(p.visible===false) vis=false; p=p.parent; } if(!vis) return; const a=o.geometry.attributes.position; const st=Math.max(1,Math.floor(a.count/400)); for(let i=0;i<a.count;i+=st){ tv.fromBufferAttribute(a,i).applyMatrix4(o.matrixWorld); pts.push(tv.clone()); } });
+    this.showPts=pts.length?pts:null; }
+  setCar(i){ if(this.carIdx===i) return; this.carIdx=i; [this.turn,this.turnMirror].forEach(g=>g.children.slice().forEach(c=>g.remove(c)));
+    const v=VEHICLES[i]; if(!window.CARS_READY && GLB_DATA[v.id] && !CAR_GLTF[v.id]){ window.CARS_WAIT.push(()=>{ if(this.carIdx===i){ this.carIdx=-1; this.setCar(i); } }); return; }
+    if(!this.models[i]){ setEnvOnCarMats(this.env); const m=buildCarModel(VEHICLES[i],this.env); m.root.traverse(o=>{ if(o.isMesh) o.castShadow=true; }); m.root.updateMatrixWorld(true); m.shadow=this.contactShadow(m); m.mirrorRoot=m.root.clone(true); this.models[i]=m; }
+    const m=this.models[i]; this.turn.add(m.root); this.turn.add(m.shadow); this.turnMirror.add(m.mirrorRoot); this.pop=0; this.frameKey=''; }
+  // where on screen the car should sit, from the live layout of the current screen
+  stageFor(scr){ const W=innerWidth,H=innerHeight, land=W/H>=1.15;
+    if(scr==='menu'){ const c=document.querySelector('#menu .mcol'), lg=document.querySelector('#menu .mlogo'); if(c&&c.offsetParent){ const r=c.getBoundingClientRect();
+        if(land) return {x:r.right+W*0.03,y:H*0.1,w:Math.max(W*0.3,W-r.right-W*0.09),h:H*0.8,fx:0.8,fy:0.56};
+        const top=lg?lg.getBoundingClientRect().top+c.scrollTop:H*0.35; return {x:W*0.04,y:H*0.03,w:W*0.92,h:Math.max(H*0.22,top-H*0.05),fx:0.92,fy:0.85}; } }
+    if(scr==='title'){ const pr=$('pressTxt'); const b=pr?pr.getBoundingClientRect().bottom:H*0.45; const y=Math.min(H*0.7,b+H*0.02); return {x:W*0.08,y,w:W*0.84,h:H-y-H*0.03,fx:0.75,fy:0.8}; }
+    if(scr==='garage'){ const c=$('carInfo'); const r=c?c.getBoundingClientRect():null;
+      if(land&&r&&r.width&&r.right<W*0.6) return {x:r.right+20,y:H*0.14,w:W-r.right-100,h:H*0.72,fx:0.86,fy:0.62};
+      return {x:W*0.04,y:H*0.1,w:W*0.92,h:Math.max(H*0.3,(r&&r.top>0?r.top:H*0.6)-H*0.12),fx:0.9,fy:0.75}; }
+    if(SHOWCASE_SCREENS.has(scr)) return land?{x:W*0.42,y:H*0.12,w:W*0.56,h:H*0.8,fx:0.85,fy:0.6}:{x:W*0.04,y:H*0.05,w:W*0.92,h:H*0.4,fx:0.9,fy:0.8};
+    return {x:W*0.1,y:H*0.15,w:W*0.8,h:H*0.75,fx:0.8,fy:0.6}; }
+  // choose camera distance and view offset so the car fills the stage rectangle
+  frameCar(st,showcase){ const W=innerWidth,H=innerHeight, cam=this.cam; cam.aspect=W/H; cam.clearViewOffset(); cam.fov=30; cam.updateProjectionMatrix();
+    const pts=[]; if(showcase){ const up=new THREE.Vector3(0,1,0); if(this.showPts) this.showPts.forEach(p=>pts.push(p.clone().applyAxisAngle(up,this.showYaw))); else { const b=this.showBox; for(const x of [b.min.x,b.max.x]) for(const y of [b.min.y,b.max.y]) for(const z of [b.min.z,b.max.z]) pts.push(new THREE.Vector3(x,y,z).applyAxisAngle(up,this.showYaw)); } }
+    else { const m=this.models[this.carIdx]; const d=(m&&m.dims)||{L:4.5,W:1.9,H:1.3}; const r=0.5*Math.hypot(d.L,d.W); for(let k=0;k<12;k++){ const a=k/12*TAU; pts.push(new THREE.Vector3(Math.cos(a)*r,0,Math.sin(a)*r),new THREE.Vector3(Math.cos(a)*r,(d.H||1.3)+0.06,Math.sin(a)*r)); } }
+    const bb=new THREE.Box3().setFromPoints(pts), c=new THREE.Vector3(); bb.getCenter(c); this.base.set(c.x,Math.max(0.45,c.y),c.z);
+    let d=9, ex=0, ey=0;
+    for(let it=0;it<4;it++){ this.placeCam(d,0); let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9; pts.forEach(p=>{ const q=p.clone().project(cam); x0=Math.min(x0,q.x); x1=Math.max(x1,q.x); y0=Math.min(y0,q.y); y1=Math.max(y1,q.y); });
+      const pw=(x1-x0)/2*W, ph=(y1-y0)/2*H; ex=(x0+x1)/4*W; ey=-(y0+y1)/4*H; if(!(pw>0&&ph>0&&st.w>0&&st.h>0)) break; const k=Math.max(pw/(st.w*st.fx),ph/(st.h*st.fy)); d=Math.min(40,Math.max(4.5,d*k)); }
+    // centre the car's silhouette (not the look-at point) in the stage
+    this.fit={d,cx:st.x+st.w/2-ex,cy:st.y+st.h*0.5-ey}; }
+  placeCam(d,a){ const cam=this.cam; const el=0.012; cam.position.set(this.base.x+Math.sin(a)*d*Math.cos(el),this.base.y+Math.sin(el)*d+0.1,this.base.z+Math.cos(a)*d*Math.cos(el)); cam.lookAt(this.base); cam.updateMatrixWorld(true); }
+  update(dt){
+    this.t+=dt; const scr=this.g.screen; const show=SHOWCASE_SCREENS.has(scr) || scr==='error';
+    if(show!==this.mode){ this.mode=show; this.frameKey=''; this.showcase.visible=this.showMirror.visible=show; this.turn.visible=this.turnMirror.visible=this.platform.visible=this.platMirror.visible=!show; }
+    if(!show){ this.turn.rotation.y+=this.spin*dt; this.turnMirror.rotation.y=this.turn.rotation.y; this.pop=Math.min(1,(this.pop||0)+dt*3); const k=1-Math.pow(1-this.pop,3); this.turn.scale.setScalar(0.7+0.3*k); this.turnMirror.scale.setScalar(0.7+0.3*k);
+      const m=this.models[this.carIdx]; if(m&&m.anims) m.anims.forEach(f=>f(dt,this.t,null)); if(m&&m.lightbar){ const f=Math.sin(this.t*12)>0; m.lightbar.red.color.setHex(f?0xff1030:0x300008); m.lightbar.blue.color.setHex(f?0x10103a:0x1a55ff); } }
+    const st=this.stageFor(scr); const key=[scr,innerWidth,innerHeight,Math.round(st.x),Math.round(st.y),Math.round(st.w),Math.round(st.h),show?1:this.carIdx].join(',');
+    if(key!==this.frameKey){ this.frameKey=key; this.frameCar(st,show); }
+    // gentle idle drift: a few degrees of camera sway, never swinging the car behind the menu
+    const a=Math.sin(this.t*0.26)*0.045, W=innerWidth,H=innerHeight; this.placeCam(this.fit.d*(1+0.012*Math.sin(this.t*0.19)),a);
+    this.cam.setViewOffset(W,H,W/2-this.fit.cx,H/2-this.fit.cy,W,H); this.cam.updateProjectionMatrix();
+    this.haze.forEach((h,k)=>{ h.position.x=h.userData.x0+Math.sin(this.t*0.05+k*2)*0.8; });
+  }
+  render(){ const r=this.g.renderer; r.toneMappingExposure=1.0; r.render(this.scene,this.cam); }
 }
 // ---------------- UI (menus + HUD) ----------------
 class UI{
@@ -6281,7 +6384,7 @@ class UI{
   settingsUI(){ const S=this.g.S; const dl=$('devLabel'); if(dl) dl.textContent=(this.isMobile()?'📱 Phone':'💻 Computer')+' · change'; document.querySelectorAll('#settings input[type=range], #controls input[type=range]').forEach(inp=>{ inp.value=S[inp.dataset.s]; inp.nextElementSibling.textContent=Math.round(S[inp.dataset.s]*100); }); document.querySelectorAll('#settings .seg[data-t], #controls .seg[data-t]').forEach(seg=>{ const k=seg.dataset.t; seg.querySelectorAll('button').forEach(b=>{ let v=b.dataset.v; if(k==='musicOn'||k==='shake'||k==='autogas') v=v==='1'; b.classList.toggle('on',S[k]===v); }); }); }
   diffUI(){ $('diffSeg').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.d===this.g.sel.diff)); this.onlineHints(); }
   items(){ return [...document.querySelectorAll('.screen.on .devCard, .screen.on .btn, .screen.on .tcard, .screen.on .arrow')].filter(b=>b.offsetParent!==null&&!b.classList.contains('arrow')); }
-  refocus(){ const it=this.items(); it.forEach((b,k)=>b.classList.toggle('focus',k===this.g.focus)); }
+  refocus(){ const it=this.items(); it.forEach((b,k)=>b.classList.toggle('focus',k===this.g.focus)); const f=it[this.g.focus]; if(f&&f.closest('.mcol')&&f.scrollIntoView) try{ f.scrollIntoView({block:'nearest'}); }catch(e){} }
   enter(name){
     const g=this.g;
     if(name==='garage'){ g.garage.setCar(g.sel.vehicle); this.carInfo(); g.focus=1; }
@@ -6291,7 +6394,7 @@ class UI{
     if(name==='gpIntro'){ GP_TRACKS=rollGPTracks(GP_TRACKS); this.gpIntroUI(); }
     if(name==='account'){ this.acctUI(); $('acctMsg').textContent=''; if(!this.g.online.user) setTimeout(()=>{ if(!this.isTouch()) $('aUser').focus(); },50); }
     if(name==='boards'){ this.buildBoardTabs(); this.loadBoard(); }
-    $('acctTag').style.display=(name==='menu'||name==='title')&&this.g.online.user?'block':'none';
+    $('acctTag').style.display=name==='title'&&this.g.online.user?'block':'none';
     if(name==='settings'){ this.settingsUI(); document.querySelectorAll('#settings input[type=range]').forEach(inp=>{ inp.value=g.S[inp.dataset.s]; inp.nextElementSibling.textContent=Math.round(g.S[inp.dataset.s]*100); }); }
     if(name==='device'){ g.focus=this.guessMobile()?1:0; }
     if(name==='controls'){ this.settingsUI(); }
@@ -6365,7 +6468,8 @@ class UI{
     }
   }
   acctUI(){ const u=this.g.online.user; $('acctIn').style.display=u?'none':'block'; $('acctOut').style.display=u?'block':'none'; $('acctName').textContent=u||'';
-    $('acctBtn').firstElementChild.textContent=u?'Account':'Log in'; $('acctTag').innerHTML=u?'Racing as <b>'+u+'</b>':''; }
+    $('acctBtn').firstElementChild.textContent=u?'Account':'Log in'; $('acctTag').innerHTML=u?'Racing as <b>'+u+'</b>':'';
+    const ma=$('menuAcct'); if(ma) ma.innerHTML=u?'<i class="dot"></i>Racing as <b>'+esc(u)+'</b>':'<i class="dot off"></i>Not signed in · times save on this device'; }
   async doAuth(kind){
     const g=this.g, m=$('acctMsg'), u=$('aUser').value.trim(), p=$('aPass').value; if(this.busy) return; this.busy=true;
     m.className='msg'; m.textContent=kind==='signup'?'Creating account…':'Logging in…';
@@ -6377,7 +6481,7 @@ class UI{
   async flushPending(){ const g=this.g; const pend=Store.get('pending',[]); if(!pend.length||!g.online.user) return 0; let n=0; const keep=[];
     for(const p of pend){ try{ await g.online.submit(p.track,p.car,p.race,p.lap); n++; }catch(e){ if(!/violates|check constraint/i.test(e.message)) keep.push(p); } }
     Store.set('pending',keep); return n; }
-  onlineHints(){ const g=this.g, u=g.online.user; const jb=$('joinBanner'); if(jb) jb.style.display=u?'none':'block';
+  onlineHints(){ const g=this.g, u=g.online.user; const jb=$('joinBanner'); if(jb) jb.style.display=u?'none':'flex';
     const lh=$('lbHint'); if(lh){ if(g.sel.diff!=='hard') lh.innerHTML='🏆 Online leaderboard counts <b>Hard</b> races only'; else if(!u) lh.innerHTML='🏆 Hard race: <b>log in</b> to post your time online (it’s saved until you do)'; else lh.innerHTML='✓ Hard race · your time will post to the online leaderboard as <b>'+esc(u)+'</b>'; } }
   buildBoardTabs(){ if(this.bSel==null) this.bSel={track:TRACK_DATA[this.g.sel.track].id,kind:'race'}; const el=$('bTracks');
     el.innerHTML=TRACK_DATA.map(t=>`<button data-t="${t.id}" class="${t.id===this.bSel.track?'on':''}">${t.name}</button>`).join('');
@@ -6496,7 +6600,13 @@ function drawTrackThumb(cv,def){
 window.addEventListener('load',()=>{
   if(typeof THREE==='undefined'){ document.body.innerHTML='<div style="color:#fff;font-family:sans-serif;padding:40px">Could not load the 3D engine (three.js) from cdnjs.cloudflare.com. Check your internet connection and reload.</div>'; return; }
   const pt=document.getElementById('pressTxt'); const keep=pt.textContent; pt.textContent='Loading cars…';
-  loadCarGLBs(()=>{ pt.textContent=keep; if(GLB_ERROR){ const el=document.getElementById('err'); el.style.display='block'; el.textContent='Some custom car models could not load ('+GLB_ERROR+'), using fallback cars.'; } try{ window.GAME=new Game(); }catch(e){ const el=document.getElementById('err'); el.style.display='block'; el.textContent='Startup error: '+e.message; console.error(e); } },(a,b)=>{ pt.textContent='Loading cars… '+a+'/'+b; });
+  // the showroom and the showcase GT40 load first so the menu is usable right away; the other cars stream in behind it
+  const FIRST=['showroom',SHOWCASE_CAR_ID].filter(id=>GLB_DATA[id]); const REST=Object.keys(GLB_DATA).filter(id=>!PROP_IDS.has(id)&&!FIRST.includes(id));
+  window.CARS_READY=false; window.CARS_WAIT=[];
+  const carsDone=()=>{ window.CARS_READY=true; const bl=document.getElementById('bootLoad'); if(bl) bl.style.display='none'; const w=window.CARS_WAIT; window.CARS_WAIT=[]; w.forEach(f=>{ try{ f(); }catch(e){ console.error(e); } });
+    if(GLB_ERROR){ const el=document.getElementById('err'); el.style.display='block'; el.textContent='Some custom car models could not load ('+GLB_ERROR+'), using fallback cars.'; } };
+  loadCarGLBs(()=>{ pt.textContent=keep; try{ window.GAME=new Game(); }catch(e){ const el=document.getElementById('err'); el.style.display='block'; el.textContent='Startup error: '+e.message; console.error(e); return; }
+    const bl=document.getElementById('bootLoad'); loadCarGLBs(carsDone,(a,b)=>{ if(bl){ bl.style.display='block'; bl.textContent='Loading cars '+a+'/'+b; } },REST); },(a,b)=>{ pt.textContent='Loading showroom… '+a+'/'+b; },FIRST);
   return;
   try{ window.GAME=new Game(); }catch(e){ const el=document.getElementById('err'); el.style.display='block'; el.textContent='Startup error: '+e.message; console.error(e); }
 });
