@@ -3628,8 +3628,8 @@
 
 } )();
 
-const GLB_DATA={"grandstand": "models/props/grandstand.glb?v=1790389827", "rrsign": "models/props/rrsign.glb?v=1790389827", "dolly": "models/props/dolly.glb?v=1790389827", "knives": "models/props/knives.glb?v=1790389827", "trio": "models/props/trio.glb?v=1790389827", "gate": "models/props/gate.glb?v=1790389827", "solocup": "models/props/solocup.glb?v=1790389827", "church": "models/props/church.glb?v=1790389827", "donkeys": "models/props/donkeys.glb?v=1790389827", "hijoe": "models/props/hijoe.glb?v=1790389827", "palm": "models/props/palm.glb?v=1790389827", "mrblack": "models/props/mrblack.glb?v=1790389827", "ak": "models/props/ak.glb?v=1790389827", "hellcat": "models/cars/hellcat.glb?v=1790389827", "brcc": "models/cars/rotor.glb?v=1790389827", "fdc": "models/cars/rrpickup.glb?v=1790389827", "shoe_factory": "models/props/shoe_factory.glb?v=1790389827", "claw_can": "models/props/claw_can.glb?v=1790389827", "echelon_can": "models/props/echelon_can.glb?v=1790389827", "watch_shop": "models/props/watch_shop.glb?v=1790389827", "watch_sign": "models/props/watch_sign.glb?v=1790389827", "range_sign": "models/props/range_sign.glb?v=1790389827", "bpd": "models/cars/bpd_69.glb?v=1790389827", "concord": "models/cars/concordance.glb?v=1790389827", "donut": "models/cars/donut_patrol.glb?v=1790389827", "duck": "models/cars/duck_plasma.glb?v=1790389827", "gt44": "models/cars/gt40.glb?v=1790389827", "missile": "models/cars/missile_commander.glb?v=1790389827", "leopard": "models/cars/night_leopard.glb?v=1790389827", "trout": "models/cars/trout_protocol.glb?v=1790389827"};
-const GLB_TEX={"grandstand": {"base": "models/props/grandstand_base.jpg?v=1790389827", "normal": "models/props/grandstand_normal.jpg?v=1790389827", "mr": "models/props/grandstand_mr.jpg?v=1790389827"}, "rrsign": {"base": "models/props/rrsign_base.jpg?v=1790389827", "normal": "models/props/rrsign_normal.jpg?v=1790389827", "mr": "models/props/rrsign_mr.jpg?v=1790389827"}, "dolly": {"base": "models/props/dolly_base.jpg?v=1790389827", "normal": "models/props/dolly_normal.jpg?v=1790389827", "mr": "models/props/dolly_mr.jpg?v=1790389827"}, "knives": {"base": "models/props/knives_base.jpg?v=1790389827", "normal": "models/props/knives_normal.jpg?v=1790389827", "mr": "models/props/knives_mr.jpg?v=1790389827"}, "trio": {"base": "models/props/trio_base.jpg?v=1790389827", "normal": "models/props/trio_normal.jpg?v=1790389827", "mr": "models/props/trio_mr.jpg?v=1790389827"}, "gate": {"base": "models/props/gate_base.jpg?v=1790389827", "normal": "models/props/gate_normal.jpg?v=1790389827", "mr": "models/props/gate_mr.jpg?v=1790389827"}, "solocup": {"base": "models/props/solocup_base.jpg?v=1790389827", "mr": "models/props/solocup_mr.jpg?v=1790389827"}, "church": {"base": "models/props/church_base.jpg?v=1790389827", "normal": "models/props/church_normal.jpg?v=1790389827", "mr": "models/props/church_mr.jpg?v=1790389827"}, "donkeys": {"base": "models/props/donkeys_base.jpg?v=1790389827", "mr": "models/props/donkeys_mr.jpg?v=1790389827"}, "hijoe": {"base": "models/props/hijoe_base.jpg?v=1790389827", "mr": "models/props/hijoe_mr.jpg?v=1790389827"}, "palm": {"base": "models/props/palm_base.jpg?v=1790389827", "normal": "models/props/palm_normal.jpg?v=1790389827", "mr": "models/props/palm_mr.jpg?v=1790389827"}, "mrblack": {"base": "models/props/mrblack_base.jpg?v=1790389827", "normal": "models/props/mrblack_normal.jpg?v=1790389827", "mr": "models/props/mrblack_mr.jpg?v=1790389827"}, "ak": {"base": "models/props/ak_base.jpg?v=1790389827", "normal": "models/props/ak_normal.jpg?v=1790389827", "mr": "models/props/ak_mr.jpg?v=1790389827"}, "hellcat": {"base": "models/cars/hellcat_base.jpg?v=1790389827", "normal": "models/cars/hellcat_normal.jpg?v=1790389827", "mr": "models/cars/hellcat_mr.jpg?v=1790389827"}, "brcc": {"base": "models/cars/rotor_base.jpg?v=1790389827", "normal": "models/cars/rotor_normal.jpg?v=1790389827", "mr": "models/cars/rotor_mr.jpg?v=1790389827"}, "fdc": {"base": "models/cars/rrpickup_base.jpg?v=1790389827", "normal": "models/cars/rrpickup_normal.jpg?v=1790389827", "mr": "models/cars/rrpickup_mr.jpg?v=1790389827"}, "shoe_factory": {"base": "models/props/shoe_factory_base.jpg?v=1790389827", "normal": "models/props/shoe_factory_normal.jpg?v=1790389827", "mr": "models/props/shoe_factory_mr.jpg?v=1790389827"}, "claw_can": {"base": "models/props/claw_can_base.jpg?v=1790389827", "normal": "models/props/claw_can_normal.jpg?v=1790389827", "mr": "models/props/claw_can_mr.jpg?v=1790389827"}, "echelon_can": {"base": "models/props/echelon_can_base.jpg?v=1790389827", "normal": "models/props/echelon_can_normal.jpg?v=1790389827", "mr": "models/props/echelon_can_mr.jpg?v=1790389827"}, "watch_shop": {"base": "models/props/watch_shop_base.jpg?v=1790389827", "normal": "models/props/watch_shop_normal.jpg?v=1790389827", "mr": "models/props/watch_shop_mr.jpg?v=1790389827"}, "watch_sign": {"base": "models/props/watch_sign_base.jpg?v=1790389827", "normal": "models/props/watch_sign_normal.jpg?v=1790389827", "mr": "models/props/watch_sign_mr.jpg?v=1790389827"}, "range_sign": {"base": "models/props/range_sign_base.jpg?v=1790389827", "normal": "models/props/range_sign_normal.jpg?v=1790389827", "mr": "models/props/range_sign_mr.jpg?v=1790389827"}, "bpd": {"base": "models/cars/bpd_69_base.jpg?v=1790389827", "normal": "models/cars/bpd_69_normal.jpg?v=1790389827", "mr": "models/cars/bpd_69_mr.jpg?v=1790389827"}, "concord": {"base": "models/cars/concordance_base.jpg?v=1790389827", "normal": "models/cars/concordance_normal.jpg?v=1790389827", "mr": "models/cars/concordance_mr.jpg?v=1790389827"}, "donut": {"base": "models/cars/donut_patrol_base.jpg?v=1790389827", "normal": "models/cars/donut_patrol_normal.jpg?v=1790389827", "mr": "models/cars/donut_patrol_mr.jpg?v=1790389827"}, "duck": {"base": "models/cars/duck_plasma_base.jpg?v=1790389827", "normal": "models/cars/duck_plasma_normal.jpg?v=1790389827", "mr": "models/cars/duck_plasma_mr.jpg?v=1790389827"}, "gt44": {"base": "models/cars/gt40_base.jpg?v=1790389827", "normal": "models/cars/gt40_normal.jpg?v=1790389827", "mr": "models/cars/gt40_mr.jpg?v=1790389827"}, "missile": {"base": "models/cars/missile_commander_base.jpg?v=1790389827", "normal": "models/cars/missile_commander_normal.jpg?v=1790389827", "mr": "models/cars/missile_commander_mr.jpg?v=1790389827"}, "leopard": {"base": "models/cars/night_leopard_base.jpg?v=1790389827", "normal": "models/cars/night_leopard_normal.jpg?v=1790389827", "mr": "models/cars/night_leopard_mr.jpg?v=1790389827"}, "trout": {"base": "models/cars/trout_protocol_base.jpg?v=1790389827", "normal": "models/cars/trout_protocol_normal.jpg?v=1790389827", "mr": "models/cars/trout_protocol_mr.jpg?v=1790389827"}};
+const GLB_DATA={"grandstand": "models/props/grandstand.glb?v=1790398520", "rrsign": "models/props/rrsign.glb?v=1790398520", "dolly": "models/props/dolly.glb?v=1790398520", "knives": "models/props/knives.glb?v=1790398520", "trio": "models/props/trio.glb?v=1790398520", "gate": "models/props/gate.glb?v=1790398520", "solocup": "models/props/solocup.glb?v=1790398520", "church": "models/props/church.glb?v=1790398520", "donkeys": "models/props/donkeys.glb?v=1790398520", "hijoe": "models/props/hijoe.glb?v=1790398520", "palm": "models/props/palm.glb?v=1790398520", "mrblack": "models/props/mrblack.glb?v=1790398520", "ak": "models/props/ak.glb?v=1790398520", "hellcat": "models/cars/hellcat.glb?v=1790398520", "brcc": "models/cars/rotor.glb?v=1790398520", "fdc": "models/cars/rrpickup.glb?v=1790398520", "shoe_factory": "models/props/shoe_factory.glb?v=1790398520", "claw_can": "models/props/claw_can.glb?v=1790398520", "echelon_can": "models/props/echelon_can.glb?v=1790398520", "watch_shop": "models/props/watch_shop.glb?v=1790398520", "watch_sign": "models/props/watch_sign.glb?v=1790398520", "range_sign": "models/props/range_sign.glb?v=1790398520", "bpd": "models/cars/bpd_69.glb?v=1790398520", "concord": "models/cars/concordance.glb?v=1790398520", "donut": "models/cars/donut_patrol.glb?v=1790398520", "duck": "models/cars/duck_plasma.glb?v=1790398520", "gt44": "models/cars/gt40.glb?v=1790398520", "missile": "models/cars/missile_commander.glb?v=1790398520", "leopard": "models/cars/night_leopard.glb?v=1790398520", "trout": "models/cars/trout_protocol.glb?v=1790398520"};
+const GLB_TEX={};
 "use strict";
 // ===== UTILITIES =====
 const TAU=Math.PI*2;
@@ -3778,6 +3778,7 @@ const TRACK_DATA = [
   tunnels:[{cp:20,f:0.75,len:44}],
   creek:[[-420,-60],[-236,-78],[-120,-120],[40,-190],[148,-210],[320,-250],[520,-300]],
   monument:{x:-95,z:124},
+  mud:{cp:18,f:0.5,len:72}, mudBoxes:{cp:18,f:0.1},
 },
 ];
 if (typeof module!=='undefined') module.exports = {TRACK_DATA};
@@ -3797,7 +3798,7 @@ function buildTrackPath(def){
     x:new Float32Array(N), z:new Float32Array(N), y:new Float32Array(N),
     tx:new Float32Array(N), tz:new Float32Array(N), rx:new Float32Array(N), rz:new Float32Array(N),
     w:new Float32Array(N), wl:new Float32Array(N), wr:new Float32Array(N),
-    curv:new Float32Array(N), gap:new Uint8Array(N), tunnel:new Uint8Array(N), median:new Float32Array(N),
+    curv:new Float32Array(N), gap:new Uint8Array(N), tunnel:new Uint8Array(N), mud:new Uint8Array(N), median:new Float32Array(N),
     slope:new Float32Array(N), s:new Float32Array(N), cpIdx:[] };
   for(let i=0;i<N;i++){ P.x[i]=raw[i].x; P.z[i]=raw[i].z; P.y[i]=raw[i].y; P.s[i]=i*spacing; }
   // control point sample indices
@@ -3848,6 +3849,7 @@ function buildTrackPath(def){
     const c=P.curv[i]; if(Math.abs(c)>1e-4){ const R=1/Math.abs(c); if(c>0) wr=Math.min(wr,R*0.8); else wl=Math.min(wl,R*0.8); }
     P.wl[i]=Math.max(wl,P.w[i]/2+0.8); P.wr[i]=Math.max(wr,P.w[i]/2+0.8);
   }
+  if(def.mud){ const i0=idxAt(def.mud.cp,def.mud.f); const n=Math.round(def.mud.len/spacing); for(let k=0;k<n;k++) P.mud[(i0+k)%N]=1; P.mudStart=i0; }
   (def.tunnels||[]).forEach(t=>{ const i0=idxAt(t.cp,t.f); const n=Math.round(t.len/spacing); for(let k=0;k<n;k++){ const i=(i0+k)%N; P.tunnel[i]=1; P.wl[i]=Math.min(P.wl[i],P.w[i]/2+1.2); P.wr[i]=Math.min(P.wr[i],P.w[i]/2+1.2);} t.i0=i0; t.n=n; });
   (def.medians||[]).forEach(m=>{ const i0=idxAt(m.cp,m.f); const n=Math.round(m.len/spacing); for(let k=0;k<n;k++){ const i=(i0+k)%N; const e=Math.min(k,n-k)/6; P.median[i]=m.w/2*Math.min(1,e);} m.i0=i0; m.n=n; });
   // helpers
@@ -3883,19 +3885,19 @@ const VEHICLES=[
  {id:'duck',driver:'Nic',name:'Duck Plasma',cls:'Rubber duck on wheels',desc:'A giant yellow rubber duck bolted onto a pocket-sized hatchback chassis. Squeaky, bouncy, surprisingly quick.',tag:'Quack. Quack. Gone.',body:'duckmini',livery:'duckskin',rim:0xd8d8d8,stats:{speed:9,accel:7,handling:6,drift:8,weight:4}},
  {id:'gt44',driver:'Eli',name:'GT40',cls:'Endurance racer, 1966',desc:'Low, loud and built to win the long race. Twin stripes, zero apologies.',tag:'Old money. New records.',body:'gt',livery:'stripes',num:40,rim:0xcfd3d6,stats:{speed:8,accel:8,handling:8,drift:6,weight:5}},
  {id:'donut',driver:'Donut',name:'Donut Patrol',cls:'Pursuit cruiser',desc:'Sprinkle-coated interceptor. Its plate says GLAZE EM, and it means it.',tag:'Protect. Serve. Snack.',body:'coupe',livery:'sprinkles',rim:0xf4f4f4,plate:'GLAZE EM',stats:{speed:7,accel:9,handling:8,drift:7,weight:5}},
- {id:'missile',driver:'Ethan',name:'Missile Commander',cls:'Heavy-duty pickup',desc:'Lifted gunmetal pickup with warning-yellow stripes, a grille full of missiles and rocket-fin bed rails.',tag:'Right of way, always.',body:'truck',livery:'missile',rim:0x1c1c1c,stats:{speed:7,accel:6,handling:5,drift:6,weight:10}},
+ {id:'missile',allTerrain:true,driver:'Ethan',name:'Missile Commander',cls:'Heavy-duty pickup',desc:'Lifted gunmetal pickup with warning-yellow stripes, a grille full of missiles and rocket-fin bed rails.',tag:'Right of way, always.',body:'truck',livery:'missile',rim:0x1c1c1c,stats:{speed:7,accel:6,handling:5,drift:6,weight:10}},
  {id:'brcc',driver:'JT',name:'BRCC',cls:'Rally hatchback',desc:'Black Rifle Coffee rally car in black-and-gold camo. Short, stiff and happiest sideways.',tag:'Fueled by dark roast.',body:'gtcoupe',livery:'goldcamo',num:15,rim:0x1a1a1a,stats:{speed:7,accel:9,handling:8,drift:9,weight:4}},
- {id:'fdc',driver:'Chris',name:'Firearms Direct Club',cls:'Desert pickup',desc:'Sand-tan Firearms Direct Club pickup with a roll bar and a mount in the bed. Tough, heavy and hard to push around.',tag:'Members only.',body:'truck',livery:'goldcamo',rim:0x222222,stats:{speed:7,accel:6,handling:6,drift:5,weight:9}},
+ {id:'fdc',allTerrain:true,driver:'Chris',name:'Firearms Direct Club',cls:'Desert pickup',desc:'Sand-tan Firearms Direct Club pickup with a roll bar and a mount in the bed. Tough, heavy and hard to push around.',tag:'Members only.',body:'truck',livery:'goldcamo',rim:0x222222,stats:{speed:7,accel:6,handling:6,drift:5,weight:9}},
  {id:'hellcat',driver:'CordIsLoud',name:'Colonial Hellcat',cls:'Supercharged muscle car',desc:'Navy-blue muscle car with twin white stripes, a 13-star flag and 1776 on the doors. Monster straight-line speed; it takes some muscle in the corners.',tag:'Loud since 1776.',body:'gtcoupe',livery:'stripes',num:76,rim:0x151515,stats:{speed:10,accel:8,handling:5,drift:7,weight:7}},
  {id:'bpd',driver:'Rich',name:'BPD 69',cls:'Detective cruiser',desc:'Unmarked, unbothered. A boxy 80s cruiser that corners like it has a warrant.',tag:'Case closed at 180.',body:'sedan',livery:'filigree',rim:0x9aa0a6,plate:'BPD 69',stats:{speed:8,accel:7,handling:7,drift:7,weight:7}},
  {id:'concord',driver:'Brandon',name:'Concordance',cls:'Luxury limousine',desc:'Silk-black stretch luxury sedan of a decorated war hero and soon-to-be congressman. Gold crossed-rifle crests, AK-47 hood ornament, flags on the fenders.',tag:'Served. Now serving.',body:'yacht',livery:'silkblack',rim:0x111111,plate:'HERO 1',stats:{speed:8,accel:6,handling:6,drift:9,weight:8}},
  {id:'trout',driver:'Trout',name:'Trout Protocol',cls:'Rainbow trout hypercar',desc:'A mid-engine hypercar that is basically a rainbow trout: speckled olive back, pink stripe, fins, gills and a tail.',tag:'Swims upstream at 300.',body:'hyper',livery:'trout',rim:0x2b2b2b,stats:{speed:9,accel:8,handling:7,drift:5,weight:4}},
  {id:'leopard',driver:'Pix',name:'Night Leopard',cls:'Turbo GT coupe',desc:'Rosette-printed street GT that stalks the inside line at every corner.',tag:'Spots you from the apex.',body:'gtcoupe',livery:'leopard',rim:0x1c1c1c,stats:{speed:8,accel:8,handling:8,drift:7,weight:5}},
 ];
-function vehiclePhysics(v){
+function vehiclePhysics(v){ const _at=!!v.allTerrain;
   const s=v.stats;
   return { top:44+s.speed*1.05, accel:15+s.accel*1.5, steer:2.25+s.handling*0.07, grip:6.5+s.handling*0.45,
-    drift:0.75+s.drift*0.06, mass:0.8+s.weight*0.12 };
+    drift:0.75+s.drift*0.06, mass:0.8+s.weight*0.12, allTerrain:_at };
 }
 const BODIES={
  proto:{L:4.7,W:2.0,ride:0.16,wr:0.36,ww:0.34,aF:1.45,aR:-1.35,nose:0.36,bev:0.14,
@@ -4299,13 +4301,18 @@ const CAR_GLTF={}, GLB_PROC={};
 const GLB_ROT={brcc:Math.PI/2, fdc:Math.PI/2, hellcat:Math.PI/2};
 const GLB_LEN={hellcat:4.9,brcc:4.4,fdc:5.3,duck:3.9,gt44:4.4,donut:4.5,missile:5.8,bpd:4.8,concord:5.8,trout:5.0,leopard:4.5};
 const GLB_TEXTURES={}; let GLB_ERROR='';
-function loadCarGLBs(done,progress){
-  const data=(typeof GLB_DATA!=='undefined')?GLB_DATA:{}; const ids=Object.keys(data);
+const PROP_IDS=new Set(['grandstand','rrsign','dolly','knives','trio','gate','solocup','church','donkeys','hijoe','palm','mrblack','ak','shoe_factory','claw_can','echelon_can','watch_shop','watch_sign','range_sign']);
+function propsForTrack(def){ const need=new Set(['grandstand','rrsign']);
+  for(const id in PROP_INFO){ const i=PROP_INFO[id]; if((i.themes&&i.themes[def.id])||(i.median&&i.median[def.id])) need.add(id); }
+  if(def.theme==='city') need.add('palm'); if(def.shooters){ need.add('mrblack'); need.add('ak'); } if(def.monument){ need.add('solocup'); need.add('dolly'); }
+  return [...need].filter(id=>typeof GLB_DATA!=='undefined'&&GLB_DATA[id]&&!CAR_GLTF[id]); }
+function loadCarGLBs(done,progress,only){
+  const data=(typeof GLB_DATA!=='undefined')?GLB_DATA:{}; const ids=only?only.filter(id=>data[id]&&!CAR_GLTF[id]):Object.keys(data).filter(id=>!PROP_IDS.has(id));
   if(!ids.length){ done(); return; }
   if(!THREE.GLTFLoader){ GLB_ERROR='model loader missing'; done(); return; }
   const texSrc=(typeof GLB_TEX!=='undefined')?GLB_TEX:{};
   // 1) decode textures through plain <img> data URIs (works under strict hosting rules)
-  const jobs=[]; ids.forEach(id=>{ GLB_TEXTURES[id]={}; Object.entries(texSrc[id]||{}).forEach(([slot,uri])=>{ jobs.push(new Promise(res=>{ const im=new Image(); im.onload=()=>{ const t=new THREE.Texture(im); t.flipY=false; if(slot==='base') t.encoding=THREE.sRGBEncoding; t.anisotropy=4; t.needsUpdate=true; GLB_TEXTURES[id][slot]=t; res(); }; im.onerror=()=>{ GLB_ERROR='texture '+id+'/'+slot; res(); }; im.src=uri; })); }); });
+  const jobs=[]; ids.forEach(id=>{ GLB_TEXTURES[id]=GLB_TEXTURES[id]||{}; Object.entries(texSrc[id]||{}).forEach(([slot,uri])=>{ jobs.push(new Promise(res=>{ const im=new Image(); im.onload=()=>{ const t=new THREE.Texture(im); t.flipY=false; if(slot==='base') t.encoding=THREE.sRGBEncoding; t.anisotropy=4; t.needsUpdate=true; GLB_TEXTURES[id][slot]=t; res(); }; im.onerror=()=>{ GLB_ERROR='texture '+id+'/'+slot; res(); }; im.src=uri; })); }); });
   Promise.all(jobs).then(()=>{
     const L=new THREE.GLTFLoader(); let left=ids.length, k=0;
     const next=()=>{ if(k>=ids.length) return; const id=ids[k++];
@@ -4343,7 +4350,7 @@ function applyGlbModel(m,v,env){
   // hide the procedural car, keep the effect rig (boost flames, shield bubble)
   const keep=new Set([m.shield,...m.flames]);
   m.root.traverse(o=>{ if(o!==m.root && o!==m.chassis && (o.isMesh||o.isSprite||o.isLine) && !keep.has(o)) o.visible=false; });
-  const mats=new Map(); const matFor=mt=>{ if(!mats.has(mt)){ const c=mt.clone(); c.envMap=env||null; c.envMapIntensity=0.9; mats.set(mt,c); } return mats.get(mt); };
+  const mats=new Map(); const matFor=mt=>{ if(!mats.has(mt)){ const c=mt.clone(); glbAniso(c); c.envMap=env||null; c.envMapIntensity=0.9; mats.set(mt,c); } return mats.get(mt); };
   const bodyMeshes=[];
   P.body.forEach(b=>{ const o=new THREE.Mesh(b.geo,matFor(b.mat)); o.castShadow=true; o.receiveShadow=false; m.chassis.add(o); bodyMeshes.push(o); });
   const wheels=[], steer=[];
@@ -4380,12 +4387,13 @@ const PROP_INFO={
   claw_can:{h:6, kind:'billboard', face:1, themes:{sweet:1, alondra:1}, median:{sweet:[22,40,58]}},
   echelon_can:{h:6, kind:'billboard', face:-1, themes:{sweet:1, alondra:1}, median:{sweet:[31,49]}},
 };
+function glbAniso(m){ const a=(window.GAME&&GAME.renderer)?Math.min(8,GAME.renderer.capabilities.getMaxAnisotropy()):8; ['map','normalMap','roughnessMap','metalnessMap'].forEach(k=>{ if(m[k]){ m[k].anisotropy=a; m[k].needsUpdate=true; } }); }
 const PROP_PROC={}; const PROP_DBG={fp:0,cand:0};
 function propTemplate(id){
   if(PROP_PROC[id]) return PROP_PROC[id]; if(!CAR_GLTF[id]) return null;
   const sc=CAR_GLTF[id]; sc.updateMatrixWorld(true); const parts=[]; const box=new THREE.Box3();
   sc.traverse(o=>{ if(!o.isMesh) return; const g=o.geometry.clone(); g.applyMatrix4(o.matrixWorld); if(!g.attributes.normal) g.computeVertexNormals(); g.computeBoundingBox(); box.union(g.boundingBox);
-    const mt=o.material.clone(); const T=GLB_TEXTURES[id]||{}; if(T.base){ mt.map=T.base; mt.color.setHex(0xffffff); } if(T.normal) mt.normalMap=T.normal; if(T.mr){ mt.roughnessMap=T.mr; mt.metalnessMap=T.mr; } mt.flatShading=false; if((PROP_INFO[id]||{}).kind==='billboard' && mt.map){ mt.emissiveMap=mt.map; mt.emissive=new THREE.Color(0xffffff); mt.emissiveIntensity=0.35; } mt.needsUpdate=true; parts.push({g,mt}); });
+    const mt=o.material.clone(); const T=GLB_TEXTURES[id]||{}; if(T.base){ mt.map=T.base; mt.color.setHex(0xffffff); } if(T.normal) mt.normalMap=T.normal; if(T.mr){ mt.roughnessMap=T.mr; mt.metalnessMap=T.mr; } mt.flatShading=false; glbAniso(mt); if((PROP_INFO[id]||{}).kind==='billboard' && mt.map){ mt.emissiveMap=mt.map; mt.emissive=new THREE.Color(0xffffff); mt.emissiveIntensity=0.35; } mt.needsUpdate=true; parts.push({g,mt}); });
   const info=PROP_INFO[id]||{}; const size=box.getSize(new THREE.Vector3()); const s=info.len?info.len/Math.max(size.x,size.z):(info.h||size.y)/size.y; const cx=(box.min.x+box.max.x)/2, cz=(box.min.z+box.max.z)/2;
   parts.forEach(p=>{ p.g.translate(-cx,-box.min.y,-cz); p.g.scale(s,s,s); });
   const T={parts,w:size.x*s,d:size.z*s,h:size.y*s}; PROP_PROC[id]=T; return T;
@@ -4628,6 +4636,32 @@ function buildWorld(def,P,Q){
   (def.items||[]).forEach(it=>{ const i=P.idxAt(it.cp,it.f); const n=Math.max(3,Math.floor(P.w[i]/4)); for(let k=0;k<n;k++){ const lat=(k-(n-1)/2)*(P.w[i]-3)/(n-1); const p=ptAt(i,lat,1.2);
     const grp=new THREE.Group(); const m=new THREE.Mesh(prismGeo,prismMat); m.castShadow=true; grp.add(m); const c=new THREE.Mesh(new THREE.IcosahedronGeometry(0.28,0),coreMat); grp.add(c); grp.position.set(p[0],p[1],p[2]); G.add(grp);
     W.items.push({x:p[0],y:p[1],z:p[2],i,lat,active:true,t:0,grp,spin:k}); } });
+  // ---------- mud patch + mud-tire station ----------
+  W.mudBoxes=[];
+  if(def.mud){ const inc=(i,j)=>P.mud[i]&&P.mud[j];
+    const mt=canvasTex(256,256,(g,w2,h2)=>{ noiseFill(g,w2,h2,'#4a3020',26); for(let k=0;k<40;k++){ g.fillStyle=`rgba(${Math.random()<0.5?'30,18,10':'95,65,40'},0.5)`; g.beginPath(); g.ellipse(Math.random()*w2,Math.random()*h2,8+Math.random()*30,4+Math.random()*14,Math.random()*3,0,TAU); g.fill(); }
+      g.strokeStyle='rgba(20,12,6,0.6)'; g.lineWidth=6; [60,100,156,196].forEach(x=>{ g.beginPath(); g.moveTo(x,0); for(let y=0;y<=h2;y+=16) g.lineTo(x+Math.sin(y*0.05)*4,y); g.stroke(); });
+      for(let k=0;k<10;k++){ g.fillStyle='rgba(120,100,80,0.45)'; g.beginPath(); g.ellipse(Math.random()*w2,Math.random()*h2,10+Math.random()*20,5+Math.random()*8,0,0,TAU); g.fill(); } },{repeat:true});
+    const mm=new THREE.MeshStandardMaterial({map:mt,roughness:0.35,metalness:0.1,polygonOffset:true,polygonOffsetFactor:-4});
+    const mg=ribbon(inc,i=>-P.w[i]/2-3,i=>P.w[i]/2+3,0.06,0.06,0,1,5); const mesh=new THREE.Mesh(mg,mm); mesh.receiveShadow=true; G.add(mesh);
+    // splatter heaps at the edges
+    const heaps=[]; for(let i=0;i<P.N;i+=3){ if(!P.mud[i]) continue; for(const sd of [-1,1]){ const p=ptAt(i,sd*(P.w[i]/2+rr(2.5,4.5)),0); heaps.push({x:p[0],y:p[1]-0.2,z:p[2],ry:rnd()*TAU,s:[rr(0.8,1.8),rr(0.25,0.5),rr(0.8,1.8)],c:0x4a3020}); } }
+    G.add(instanced(new THREE.SphereGeometry(1,8,5),new THREE.MeshStandardMaterial({color:0xffffff,roughness:0.5}),heaps,false,true));
+    // warning sign
+    const si=(P.mudStart-40+P.N)%P.N; const sp=ptAt(si,-(P.wl[si]+1.2),0); const sg=new THREE.Group(); sg.position.set(sp[0],sp[1],sp[2]); sg.rotation.y=Math.atan2(-P.tx[si],-P.tz[si]); G.add(sg);
+    const post=new THREE.Mesh(new THREE.BoxGeometry(0.2,3.4,0.2),new THREE.MeshStandardMaterial({color:0x5a3a20})); post.position.y=1.7; sg.add(post);
+    const pan=new THREE.Mesh(new THREE.PlaneGeometry(4.2,2.1),new THREE.MeshStandardMaterial({map:textPanelTex([{text:'MUD AHEAD',font:'bold 92px "Racing Sans One", Impact',color:'#1a1000',y:0.4},{text:'GRAB MUD TIRES',font:'bold 56px "Chakra Petch", sans-serif',color:'#1a1000',y:0.78}],{w:512,h:256,bg:'#ffc23d'}),side:THREE.DoubleSide}));
+    pan.position.y=3.5; sg.add(pan);
+    // the station: five identical mud-tire boxes across the road
+    if(def.mudBoxes){ const i=P.idxAt(def.mudBoxes.cp,def.mudBoxes.f); const n=5;
+      const boxMat=new THREE.MeshStandardMaterial({color:0xff7a10,emissive:0xff4a00,emissiveIntensity:0.75,roughness:0.35,metalness:0.1,transparent:true,opacity:0.9});
+      const tireMat=new THREE.MeshStandardMaterial({color:0x1a1a1a,roughness:0.8}), rimM=new THREE.MeshStandardMaterial({color:0xd8d8d8,metalness:0.8,roughness:0.3});
+      for(let k=0;k<n;k++){ const lat=(k-(n-1)/2)*(P.w[i]-3)/(n-1); const p=ptAt(i,lat,1.3);
+        const grp=new THREE.Group(); const cube=new THREE.Mesh(new THREE.BoxGeometry(1.5,1.5,1.5),boxMat); cube.castShadow=true; grp.add(cube);
+        const tire=new THREE.Mesh(new THREE.TorusGeometry(0.42,0.18,10,20),tireMat); grp.add(tire); const rim=new THREE.Mesh(new THREE.CylinderGeometry(0.25,0.25,0.16,14),rimM); rim.rotation.x=Math.PI/2; grp.add(rim);
+        grp.position.set(p[0],p[1],p[2]); G.add(grp); W.mudBoxes.push({x:p[0],y:p[1],z:p[2],i,lat,active:true,t:0,grp,spin:k}); } }
+  }
+  W.updaters.push((dt,t)=>{ W.mudBoxes.forEach(b=>{ if(!b.active){ b.t-=dt; if(b.t<=0){ b.active=true; b.grp.visible=true; } } b.grp.rotation.y=t*1.4+b.spin; b.grp.position.y=b.y+Math.sin(t*2+b.spin)*0.15; }); });
   W.updaters.push((dt,t)=>{ W.items.forEach(b=>{ if(!b.active){ b.t-=dt; if(b.t<=0){b.active=true;b.grp.visible=true; b.grp.scale.setScalar(0.01);} } else { const s=b.grp.scale.x; if(s<1) b.grp.scale.setScalar(Math.min(1,s+dt*3)); } b.grp.rotation.y=t*1.6+b.spin; b.grp.rotation.x=Math.sin(t*1.2+b.spin)*0.3; b.grp.position.y=b.y+Math.sin(t*2+b.spin)*0.18; }); });
   // theme scenery
   W.nat=nat; buildScenery(W,def,P,Q,{heightAt,clearOfRoad,ptAt,hash,nat,ribbon,notGap});
@@ -5116,7 +5150,7 @@ class Car{
     this.susp=0;this.suspV=0;this.lonA=0;this.latA=0;this.visYaw=0;this.pitch=0;
     this.lap=0;this.cp=0;this.cpCount=0;this.finished=false;this.finishTime=0;this.lapStart=0;this.lapTimes=[];this.bestLap=null;
     this.score=0;this.rank=1;this.wrongT=0;this.stuckT=0;this.lastSafe=0;this.wallHit=0;this.skidAmt=0;this.lastImpact=0;
-    this.prevWheel=[null,null]; this.airTime=0; this.itemDelay=0; this.rubber=1; this.skill=1;
+    this.prevWheel=[null,null]; this.airTime=0; this.mudT=0; this.onMud=false; this.mudSlow=false; this.mudWarn=-1; this.itemDelay=0; this.rubber=1; this.skill=1;
   }
   place(i,lat){
     const P=this.race.P; this.i=i; this.x=P.x[i]+P.rx[i]*lat; this.z=P.z[i]+P.rz[i]*lat; this.y=P.y[i];
@@ -5138,7 +5172,10 @@ class Car{
     let fx=Math.sin(this.h),fz=Math.cos(this.h),rx=-fz,rz=fx;
     let vF=this.vx*fx+this.vz*fz, vS=this.vx*rx+this.vz*rz;
     this.i=P.nearest(this.x,this.z,this.i,8); P.project(this.x,this.z,this.i,pr);
-    const halfRoad=pr.w/2+0.9; this.offroad=Math.abs(pr.lat)>halfRoad && !P.tunnel[pr.i];
+    const halfRoad=pr.w/2+0.9; this.offroadRaw=Math.abs(pr.lat)>halfRoad && !P.tunnel[pr.i]; this.offroad=this.offroadRaw && !ph.allTerrain;
+    if(this.mudT>0) this.mudT-=dt;
+    this.onMud=!!(P.mud && P.mud[pr.i]) && Math.abs(pr.lat)<pr.w/2+4 && this.grounded;
+    this.mudSlow=this.onMud && !ph.allTerrain && !(this.mudT>0);
     const onMedian=pr.median>0.3 && Math.abs(pr.lat)<pr.median+0.2;
     // --- steering input smoothing ---
     let st=inp.steer; if(this.spin>0) st=0;
@@ -5168,7 +5205,7 @@ class Car{
     vF=this.vx*fx+this.vz*fz; vS=this.vx*rx+this.vz*rz;
     // --- longitudinal ---
     const boosting=this.boost>0; if(boosting) this.boost-=dt;
-    let top=ph.top*this.rubber*this.skill*(this.offroad?0.6:1)*(boosting?(this.boostMul||1.28):1)*(this.spin>0?0.5:1);
+    let top=ph.top*this.rubber*this.skill*(this.offroad?0.6:1)*(this.mudSlow?0.42:1)*(boosting?(this.boostMul||1.28):1)*(this.spin>0?0.5:1);
     const vF0=vF;
     if(this.grounded){
       if(boosting){ if(vF<top) vF+=Math.max(ph.accel,40)*dt; }
@@ -5177,6 +5214,7 @@ class Car{
       if(inp.brk>0){ if(vF>0.5) vF-=40*inp.brk*dt*(this.drifting?0.3:1); else if(vF>-14) vF-=14*inp.brk*dt; }
       if(inp.thr<=0 && inp.brk<=0) vF-=vF*0.35*dt+Math.sign(vF)*Math.min(Math.abs(vF),2.5*dt*60/60);
       if(this.offroad && vF>top*0.8) vF-=vF*0.9*dt;
+      if(this.mudSlow && vF>top*0.7) vF-=vF*1.6*dt;
       if(this.drifting) vF-=vF*0.04*dt;
       // lateral grip
       const g= this.drifting? 3.0+ph.drift*1.0 : (this.offroad?4.2:ph.grip) * (inp.drift&&!this.drifting?0.55:1);
@@ -5291,8 +5329,9 @@ class Car{
         const n=this.tier>=0?2:1;
         for(let q=0;q<n;q++) fx.sparks.emit(wx,wy+0.1,wz,-this.vx*0.1+rxv*sd*rr(1,4)+rr(-1,1),rr(1.5,4),-this.vz*0.1+rzv*sd*rr(1,4)+rr(-1,1),rr(0.2,0.4),this.tier>=0?0.35:0.22,0.05,c[0],c[1],c[2],1,2,9);
       }
-      if((this.offroad && Math.abs(this.vF)>6) || (slide && Math.random()<0.4)){
-        const dc=R.W.th.night?[0.35,0.33,0.45]:(this.offroad?R.dustCol:[0.85,0.85,0.85]);
+      if(this.onMud && Math.abs(this.vF)>4 && Math.random()<0.8){ fx.dust.emit(wx,wy+0.2,wz,-this.vx*0.1+rr(-2,2),rr(1.5,4.5),-this.vz*0.1+rr(-2,2),rr(0.5,0.9),0.35,1.4,0.33,0.2,0.1,0.9,1.2,6); }
+      if(((this.offroad||(this.offroadRaw&&this.ph.allTerrain)) && Math.abs(this.vF)>6) || (slide && Math.random()<0.4)){
+        const dc=R.W.th.night?[0.35,0.33,0.45]:((this.offroad||this.offroadRaw)?R.dustCol:[0.85,0.85,0.85]);
         if(Math.random()<(this.offroad?0.7:0.35)) fx.dust.emit(wx,wy+0.2,wz,-this.vx*0.15+rr(-1,1),rr(0.5,2),-this.vz*0.15+rr(-1,1),rr(0.6,1.1),0.5,2.4,dc[0],dc[1],dc[2],this.offroad?0.45:0.25,1.5,-0.3);
       }
     }
@@ -5672,7 +5711,7 @@ class Shooters{
 function segDist(px,py,pz,ax,ay,az,bx,by,bz){ const vx=bx-ax,vy=by-ay,vz=bz-az; const wx=px-ax,wy=py-ay,wz=pz-az; const L=vx*vx+vy*vy+vz*vz; const t=L>0?clamp((wx*vx+wy*vy+wz*vz)/L,0,1):0; const dx=wx-vx*t,dy=wy-vy*t,dz=wz-vz*t; return Math.sqrt(dx*dx+dy*dy+dz*dz); }
 
 // ===== RACE MANAGER =====
-const NCP=12, DT=1/120;
+const NCP=12, DT=1/120, MUD_TIRE_TIME=5;
 const DIFFS={easy:{base:0.9,rb:0.05,label:'Easy'},normal:{base:1.0,rb:0.1,label:'Normal'},hard:{base:1.07,rb:0.18,label:'Hard'}};
 const ITEMS={nitro:{name:'Nitro Cell',icon:'⚡',col:'#22e4ff'},aegis:{name:'Aegis Bubble',icon:'◈',col:'#7ff6ff'},slick:{name:'Glaze Slick',icon:'◍',col:'#ff4fb0'}};
 class Race{
@@ -5783,6 +5822,10 @@ class Race{
       for(const b of this.W.items){ if(!b.active) continue; const dx=c.x-b.x,dz=c.z-b.z; if(dx*dx+dz*dz<5.3 && Math.abs(c.y+0.6-b.y)<2.5){ b.active=false; b.t=4; b.grp.visible=false;
         for(let k=0;k<16;k++) this.fx.sparks.emit(b.x,b.y,b.z,rr(-6,6),rr(-2,6),rr(-6,6),0.5,0.4,0.05,1,0.4,0.9,1,3,6);
         if(!c.item){ c.item=this.rollItem(c); c.itemDelay=c.isPlayer?1.0:0.6; if(c.isPlayer){ this.sfx('pickup'); this.game.ui.roulette(); } } } }
+      for(const b of this.W.mudBoxes){ if(!b.active) continue; const dx=c.x-b.x,dz=c.z-b.z; if(dx*dx+dz*dz<5.8 && Math.abs(c.y+0.6-b.y)<2.5){ b.active=false; b.t=1.2; b.grp.visible=false; c.mudT=MUD_TIRE_TIME;
+          for(let k=0;k<14;k++) this.fx.dust.emit(b.x,b.y,b.z,rr(-5,5),rr(0,5),rr(-5,5),0.6,0.5,1.2,0.78,0.47,0.17,0.9,2,4);
+          if(c.isPlayer){ this.sfx('pickup'); this.game.ui.flash(c.ph.allTerrain?'MUD TIRES (YOU ALREADY HAVE 4x4)':'MUD TIRES!','#ffc23d',1.4); } } }
+      if(c.isPlayer && c.mudSlow && c.mudWarn!==c.lap){ c.mudWarn=c.lap; this.game.ui.flash('STUCK IN THE MUD!','#c8782a',1.2); }
       if(c.itemDelay>0){ c.itemDelay-=DT; if(c.isPlayer && c.itemDelay<=0) this.sfx('item'); }
       if(c.inp.item){ c.inp.item=false; if(c.item && c.itemDelay<=0 && !c.finished) this.useItem(c); }
       // slicks
@@ -6050,6 +6093,11 @@ class Game{
     else { Store.set('lastCar',this.sel.vehicle); Store.set('lastTrack',this.sel.track); Store.set('lastDiff',this.sel.diff); }
     const def=TRACK_DATA[this.sel.track]; $('loadName').textContent=def.name; $('loadPlace').textContent=def.place;
     this.show('loading'); this.garage.render();
+    const need=propsForTrack(def); const lp=$('loadPlace');
+    if(need.length){ lp.textContent=def.place+' · loading scenery 0/'+need.length; loadCarGLBs(()=>{ lp.textContent=def.place; this.buildRaceNow(); },(a,b)=>{ lp.textContent=def.place+' · loading scenery '+a+'/'+b; },need); return; }
+    this.buildRaceNow();
+  }
+  buildRaceNow(){
     setTimeout(()=>{
       try{
         if(this.race){ this.race.dispose(); this.race=null; }
@@ -6272,7 +6320,7 @@ class UI{
   carInfo(){
     const v=VEHICLES[this.g.sel.vehicle], s=v.stats;
     const bars=[['Speed',s.speed],['Accel',s.accel],['Handling',s.handling],['Drift',s.drift],['Weight',s.weight]].map(([n,x])=>`<div class="stat"><span>${n}</span><div class="bar"><i style="width:${x*10}%"></i></div></div>`).join('');
-    $('carInfo').innerHTML=`<div class="cls">${v.cls} · Driver: ${v.driver}</div><h2>${v.name}</h2><div class="tag">${v.tag}</div><div class="desc">${v.desc}</div><div style="margin-top:12px">${bars}</div>`;
+    $('carInfo').innerHTML=`<div class="cls">${v.cls} · Driver: ${v.driver}${v.allTerrain?' · <b style="color:#ffc23d">ALL-TERRAIN</b>':''}</div><h2>${v.name}</h2><div class="tag">${v.tag}</div><div class="desc">${v.desc}</div><div style="margin-top:12px">${bars}</div>`;
     [...$('carDots').children].forEach((d,k)=>d.classList.toggle('on',k===this.g.sel.vehicle));
   }
   buildTracks(){
@@ -6318,6 +6366,7 @@ class UI{
     else if(c.item){ icon=ITEMS[c.item].icon; nm=ITEMS[c.item].name; $('itemBox').style.borderColor=ITEMS[c.item].col; $('hItem').style.color=ITEMS[c.item].col; }
     else { $('itemBox').style.borderColor='rgba(255,255,255,.35)'; }
     $('hItem').textContent=icon; $('hItemN').textContent=nm;
+    const hb=$('hBuff'); if(c.mudT>0){ hb.style.display='block'; hb.textContent='🛞 MUD TIRES '+c.mudT.toFixed(1)+'s'; } else hb.style.display='none';
     // drift / boost meter
     const bar=$('boostBar').firstElementChild;
     if(c.boost>0){ bar.style.width=clamp(c.boost/Math.max(0.5,c.boostMax),0,1)*100+'%'; bar.style.background='linear-gradient(90deg,#ffc23d,#ff2e97)'; $('boostLbl').textContent='BOOST'; }
