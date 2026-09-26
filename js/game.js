@@ -3628,7 +3628,7 @@
 
 } )();
 
-const GLB_DATA={"grandstand": "models/props/grandstand.glb?v=1790398520", "rrsign": "models/props/rrsign.glb?v=1790398520", "dolly": "models/props/dolly.glb?v=1790398520", "knives": "models/props/knives.glb?v=1790398520", "trio": "models/props/trio.glb?v=1790398520", "gate": "models/props/gate.glb?v=1790398520", "solocup": "models/props/solocup.glb?v=1790398520", "church": "models/props/church.glb?v=1790398520", "donkeys": "models/props/donkeys.glb?v=1790398520", "hijoe": "models/props/hijoe.glb?v=1790398520", "palm": "models/props/palm.glb?v=1790398520", "mrblack": "models/props/mrblack.glb?v=1790398520", "ak": "models/props/ak.glb?v=1790398520", "hellcat": "models/cars/hellcat.glb?v=1790398520", "brcc": "models/cars/rotor.glb?v=1790398520", "fdc": "models/cars/rrpickup.glb?v=1790398520", "shoe_factory": "models/props/shoe_factory.glb?v=1790398520", "claw_can": "models/props/claw_can.glb?v=1790398520", "echelon_can": "models/props/echelon_can.glb?v=1790398520", "watch_shop": "models/props/watch_shop.glb?v=1790398520", "watch_sign": "models/props/watch_sign.glb?v=1790398520", "range_sign": "models/props/range_sign.glb?v=1790398520", "bpd": "models/cars/bpd_69.glb?v=1790398520", "concord": "models/cars/concordance.glb?v=1790398520", "donut": "models/cars/donut_patrol.glb?v=1790398520", "duck": "models/cars/duck_plasma.glb?v=1790398520", "gt44": "models/cars/gt40.glb?v=1790398520", "missile": "models/cars/missile_commander.glb?v=1790398520", "leopard": "models/cars/night_leopard.glb?v=1790398520", "trout": "models/cars/trout_protocol.glb?v=1790398520"};
+const GLB_DATA={"grandstand": "models/props/grandstand.glb?v=1790402370", "rrsign": "models/props/rrsign.glb?v=1790402370", "dolly": "models/props/dolly.glb?v=1790402370", "knives": "models/props/knives.glb?v=1790402370", "trio": "models/props/trio.glb?v=1790402370", "gate": "models/props/gate.glb?v=1790402370", "solocup": "models/props/solocup.glb?v=1790402370", "church": "models/props/church.glb?v=1790402370", "donkeys": "models/props/donkeys.glb?v=1790402370", "hijoe": "models/props/hijoe.glb?v=1790402370", "palm": "models/props/palm.glb?v=1790402370", "mrblack": "models/props/mrblack.glb?v=1790402370", "ak": "models/props/ak.glb?v=1790402370", "hellcat": "models/cars/hellcat.glb?v=1790402370", "brcc": "models/cars/rotor.glb?v=1790402370", "fdc": "models/cars/rrpickup.glb?v=1790402370", "shoe_factory": "models/props/shoe_factory.glb?v=1790402370", "claw_can": "models/props/claw_can.glb?v=1790402370", "echelon_can": "models/props/echelon_can.glb?v=1790402370", "watch_shop": "models/props/watch_shop.glb?v=1790402370", "watch_sign": "models/props/watch_sign.glb?v=1790402370", "range_sign": "models/props/range_sign.glb?v=1790402370", "bpd": "models/cars/bpd_69.glb?v=1790402370", "concord": "models/cars/concordance.glb?v=1790402370", "donut": "models/cars/donut_patrol.glb?v=1790402370", "duck": "models/cars/duck_plasma.glb?v=1790402370", "gt44": "models/cars/gt40.glb?v=1790402370", "missile": "models/cars/missile_commander.glb?v=1790402370", "leopard": "models/cars/night_leopard.glb?v=1790402370", "trout": "models/cars/trout_protocol.glb?v=1790402370"};
 const GLB_TEX={};
 "use strict";
 // ===== UTILITIES =====
@@ -5716,7 +5716,7 @@ const DIFFS={easy:{base:0.9,rb:0.05,label:'Easy'},normal:{base:1.0,rb:0.1,label:
 const ITEMS={nitro:{name:'Nitro Cell',icon:'⚡',col:'#22e4ff'},aegis:{name:'Aegis Bubble',icon:'◈',col:'#7ff6ff'},slick:{name:'Glaze Slick',icon:'◍',col:'#ff4fb0'}};
 class Race{
   constructor(game,opt){
-    this.game=game; this.opt=opt; this.def=TRACK_DATA[opt.track]; this.laps=this.def.laps;
+    this.game=game; this.opt=opt; this.def=TRACK_DATA[opt.track]; this.practice=!!opt.practice; this.laps=this.practice?999:this.def.laps;
     const Q=game.Q; this.time=0; this.raceTime=0; this.state='intro'; this.stateT=0; this.acc=0; this.paused=false;
     this.P=buildTrackPath(this.def); this.A=analyzeTrack(this.P);
     this.W=buildWorld(this.def,this.P,Q);
@@ -5774,7 +5774,10 @@ class Race{
     // inputs
     if(this.state==='race'||this.state==='finish'||this.state==='done'){
       if(pl.finished){ this.auto.update(dt); }
-      else { const I=pl.inp; I.thr=input.thr; I.brk=input.brk; I.steer=input.steer; I.drift=input.drift; if(input.item&&!this.itemLatch) I.item=true; this.itemLatch=input.item;
+      else { const I=pl.inp; let st=input.steer; const as=this.game.assistLevel(); const keepItem=I.item;
+        if(as>0 && !this.game.autopilot && pl.grounded && pl.speed>6 && !pl.drifting){ const A=this.auto; A.stuck=0; A.stuckTotal=0; A.revT=0; A.update(dt); const ai=clamp(I.steer,-1,1);
+          st=clamp(st+as*(ai-st)*(1-Math.min(1,Math.abs(st))*0.7),-1,1); }
+        I.thr=input.thr; I.brk=input.brk; I.steer=st; I.drift=input.drift; I.item=keepItem; if(input.item&&!this.itemLatch) I.item=true; this.itemLatch=input.item;
         if(this.game.autopilot){ this.auto.update(dt); }
         this.resetCD-=dt; if(input.reset && this.resetCD<=0){ this.resetCD=1.5; pl.respawn(); } }
       for(const c of this.cars) if(c.ai) c.ai.update(dt);
@@ -5850,12 +5853,13 @@ class Race{
   onLap(c){
     const now=this.raceTime;
     if(c.lap>1){ const lt=now-c.lapStart; c.lapTimes.push(lt); if(c.bestLap==null||lt<c.bestLap) c.bestLap=lt;
-      if(c.isPlayer && !this.game.autopilotNoRecord && (this.best.lap==null||lt<this.best.lap)){ this.best.lap=lt; this.best.lapCar=c.v.name; Store.set('best_'+this.def.id,this.best); this.newLapRecord=true; } }
+      if(c.isPlayer && !this.game.autopilotNoRecord && !this.practice && (this.best.lap==null||lt<this.best.lap)){ this.best.lap=lt; this.best.lapCar=c.v.name; Store.set('best_'+this.def.id,this.best); this.newLapRecord=true; } }
     c.lapStart=now;
     if(c.lap>this.laps){ c.finished=true; c.finishTime=now; this.finishOrder.push(c); c.finishPos=this.finishOrder.length;
       if(c.isPlayer){ this.state='finish'; this.stateT=0; this.sfx('finish'); this.game.audio.setMusic('menu'); this.game.ui.flash(ordinal(c.finishPos)+' PLACE!',c.finishPos<=3?'#ffc23d':'#22e4ff',3);
         if(this.best.race==null||now<this.best.race){ this.best.race=now; this.best.raceCar=c.v.name; this.newRaceRecord=true; Store.set('best_'+this.def.id,this.best); } }
       return; }
+    if(c.isPlayer && c.lap>1 && this.practice){ const lt=c.lapTimes[c.lapTimes.length-1]; this.sfx('lap'); this.game.ui.flash('LAP '+fmtTime(lt)+(lt<=c.bestLap+1e-6?' · BEST':''),'#22e4ff'); return; }
     if(c.isPlayer && c.lap>1){ if(c.lap===this.laps){ this.sfx('final'); this.game.ui.flash('FINAL LAP','#ff2e97'); } else { this.sfx('lap'); this.game.ui.flash('LAP '+c.lap+' / '+this.laps,'#22e4ff'); } }
   }
   rollItem(c){ const r=Math.random(), pos=c.rank/8;
@@ -5997,34 +6001,39 @@ const QUALITY={
   high:{pr:2,shadows:true,shadowSize:2048,terrainCell:5,density:1,fogMul:1.15},
 };
 const $=id=>document.getElementById(id);
+function btnScale(S){ return ({s:0.82,m:1,l:1.2})[S.btnSize||'m']||1; }
 class Input{
   constructor(game){
     this.g=game; this.keys={}; this.touch={}; this.pressed=[]; this.padPrev={};
     addEventListener('keydown',e=>{ if(e.target&&e.target.tagName==='INPUT'){ if(e.code==='Enter'){ const a=game.screen==='account'&&!game.online.user?'login':null; if(a){ e.preventDefault(); game.ui.act(a); } } else if(e.code==='Escape'){ e.target.blur(); } return; } if(e.repeat&&this.keys[e.code]) { this.prevent(e); return; } this.keys[e.code]=true; this.pressed.push(e.code); this.prevent(e); game.onAnyInput(); });
     addEventListener('keyup',e=>{ this.keys[e.code]=false; });
     addEventListener('blur',()=>{ this.keys={}; });
-    // ---- touch: floating joystick (left) + multi-touch buttons you can slide/chord between (right) ----
-    this.touches=new Map(); this.joy={id:null,x:0,y:0,sx:0,sy:0,steer:0,brake:false};
+    // ---- touch: joystick OR arrow buttons for steering + multi-touch action buttons you can slide/chord between ----
+    this.touches=new Map(); this.joy={id:null,x:0,y:0,sx:0,sy:0,steer:0,brake:false}; this.arrowSteer=0; this.lastDrive=performance.now(); this.tapSkip=false;
     const tEl=$('touch'), active=()=>tEl.classList.contains('on');
-    const hitButtons=(x,y)=>{ const out=[]; tEl.querySelectorAll('.tb').forEach(b=>{ if(b.offsetParent===null) return; const r=b.getBoundingClientRect(); const cx=r.left+r.width/2, cy=r.top+r.height/2, R=r.width/2; if(Math.hypot(x-cx,y-cy)<=R*1.22) out.push(b.dataset.k); }); return out; };
-    const refresh=()=>{ const on={}; this.touches.forEach(v=>{ if(v.type==='btn') v.keys.forEach(k=>on[k]=true); }); ['gas','brake','drift','item'].forEach(k=>this.touch[k]=!!on[k]); tEl.querySelectorAll('.tb').forEach(b=>b.classList.toggle('on',!!on[b.dataset.k])); };
+    const S=()=>game.S; const lefty=()=>S().steerSide==='right';
+    const hitButtons=(x,y)=>{ const out=[]; tEl.querySelectorAll('.tb').forEach(b=>{ if(b.offsetParent===null) return; const r=b.getBoundingClientRect(); const cx=r.left+r.width/2, cy=r.top+r.height/2, R=r.width/2; if(Math.hypot(x-cx,y-cy)<=R*1.25) out.push(b.dataset.k); }); return out; };
+    const refresh=()=>{ const on={}; this.touches.forEach(v=>{ if(v.type==='btn') v.keys.forEach(k=>on[k]=true); }); ['gas','brake','drift','item','left','right'].forEach(k=>this.touch[k]=!!on[k]); tEl.querySelectorAll('.tb').forEach(b=>b.classList.toggle('on',!!on[b.dataset.k])); };
     const joyEl=$('joy'), knob=$('joyK');
-    const joyMove=(x,y)=>{ const J=this.joy, R=58; let dx=x-J.sx, dy=y-J.sy; const d=Math.hypot(dx,dy); if(d>R){ dx*=R/d; dy*=R/d; } knob.style.transform=`translate(${dx}px,${dy}px)`;
-      let s=dx/R; s=Math.abs(s)<0.1?0:Math.sign(s)*Math.pow((Math.abs(s)-0.1)/0.9,1.15); J.steer=clamp(s,-1,1); J.brake=dy/R>0.6; };
-    const start=e=>{ if(!active()) return; let used=false;
+    const joyR=()=>58*(1.55-0.55*clamp(S().steerSens||1,0.5,1.5))*btnScale(S());
+    const joyMove=(x,y)=>{ const J=this.joy, R=joyR(); let dx=x-J.sx, dy=y-J.sy; const d=Math.hypot(dx,dy); if(d>R){ dx*=R/d; dy*=R/d; } knob.style.transform=`translate(${dx}px,${dy}px)`;
+      const expo=1.5-0.6*clamp(S().steerSens||1,0.5,1.5); let s=dx/R; s=Math.abs(s)<0.08?0:Math.sign(s)*Math.pow((Math.abs(s)-0.08)/0.92,expo); J.steer=clamp(s,-1,1); J.brake=dy/R>0.62; };
+    const inSteerZone=(x,y)=>{ const w=innerWidth; return (lefty()? x>w*0.54 : x<w*0.46) && y>innerHeight*0.25; };
+    const start=e=>{ if(!active()) return; let used=false; const R=game.race;
       for(const t of e.changedTouches){ if(t.target && t.target.closest && t.target.closest('#pauseBtn')) continue; const x=t.clientX,y=t.clientY; used=true; game.audio.init();
-        if(x<innerWidth*0.46 && y>innerHeight*0.28 && this.joy.id===null){ const J=this.joy; J.id=t.identifier; J.sx=x; J.sy=y; joyEl.style.left=x+'px'; joyEl.style.top=y+'px'; joyEl.classList.add('on'); joyMove(x,y); this.touches.set(t.identifier,{type:'joy'}); }
+        if(R && R.state==='intro') this.tapSkip=true;
+        if(S().steerMode!=='arrows' && inSteerZone(x,y) && this.joy.id===null){ const J=this.joy; J.id=t.identifier; J.sx=x; J.sy=y; const jr=joyR()+8; joyEl.style.width=joyEl.style.height=(jr*2)+'px'; joyEl.style.marginLeft=joyEl.style.marginTop=(-jr)+'px'; joyEl.style.left=x+'px'; joyEl.style.top=y+'px'; joyEl.classList.add('on'); joyMove(x,y); this.touches.set(t.identifier,{type:'joy'}); }
         else this.touches.set(t.identifier,{type:'btn',keys:hitButtons(x,y)}); }
       if(used){ e.preventDefault(); refresh(); } };
     const move=e=>{ if(!active()||!this.touches.size) return; let used=false;
       for(const t of e.changedTouches){ const v=this.touches.get(t.identifier); if(!v) continue; used=true; if(v.type==='joy') joyMove(t.clientX,t.clientY); else v.keys=hitButtons(t.clientX,t.clientY); }
       if(used){ e.preventDefault(); refresh(); } };
-    const end=e=>{ let used=false; for(const t of e.changedTouches){ const v=this.touches.get(t.identifier); if(!v) continue; used=true; this.touches.delete(t.identifier);
-        if(v.type==='joy'){ const J=this.joy; J.id=null; J.steer=0; J.brake=false; knob.style.transform=''; joyEl.classList.remove('on'); joyEl.style.left=''; joyEl.style.top=''; } }
+    const resetJoy=()=>{ const J=this.joy; J.id=null; J.steer=0; J.brake=false; knob.style.transform=''; joyEl.classList.remove('on'); ['left','top','width','height','marginLeft','marginTop'].forEach(k=>joyEl.style[k]=''); };
+    const end=e=>{ let used=false; for(const t of e.changedTouches){ const v=this.touches.get(t.identifier); if(!v) continue; used=true; this.touches.delete(t.identifier); if(v.type==='joy') resetJoy(); }
       if(used){ if(e.cancelable) e.preventDefault(); refresh(); } };
     document.addEventListener('touchstart',start,{passive:false}); document.addEventListener('touchmove',move,{passive:false});
     document.addEventListener('touchend',end,{passive:false}); document.addEventListener('touchcancel',end,{passive:false});
-    this.clearTouch=()=>{ this.touches.clear(); const J=this.joy; J.id=null; J.steer=0; J.brake=false; knob.style.transform=''; joyEl.classList.remove('on'); refresh(); };
+    this.clearTouch=()=>{ this.touches.clear(); resetJoy(); this.arrowSteer=0; refresh(); };
   }
   prevent(e){ if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space','Tab'].includes(e.code)) e.preventDefault(); }
   pad(){ const ps=navigator.getGamepads?navigator.getGamepads():[]; for(const p of ps){ if(p&&p.connected) return p; } return null; }
@@ -6038,9 +6047,12 @@ class Input{
   }
   drive(){
     const K=this.keys,T=this.touch; const o={thr:0,brk:0,steer:0,drift:false,item:false,reset:false,skip:false};
-    const J=this.joy||{steer:0,brake:false};
+    const J=this.joy||{steer:0,brake:false}; const now=performance.now(), ddt=Math.min(0.1,(now-this.lastDrive)/1000); this.lastDrive=now;
     if(K.KeyW||K.ArrowUp||T.gas) o.thr=1; if(K.KeyS||K.ArrowDown||T.brake||J.brake) o.brk=1;
     if(K.KeyA||K.ArrowLeft) o.steer-=1; if(K.KeyD||K.ArrowRight) o.steer+=1; if(J.steer) o.steer=clamp(o.steer+J.steer,-1,1);
+    { const want=(T.right?1:0)-(T.left?1:0), sens=clamp(this.g.S.steerSens||1,0.5,1.5); const rate=(want===0?9:(2.5+4*sens))*ddt;
+      this.arrowSteer+=clamp(want-this.arrowSteer,-rate,rate); if(want!==0 && Math.sign(want)!==Math.sign(this.arrowSteer)) this.arrowSteer=0; if(this.arrowSteer) o.steer=clamp(o.steer+this.arrowSteer,-1,1); }
+    if(this.tapSkip){ o.skip=true; this.tapSkip=false; }
     const R=this.g.race; if(this.g.S.autogas && this.g.ui.isTouch() && !o.brk && R && R.state!=='intro' && R.state!=='countdown') o.thr=1;
     o.drift=!!(K.Space||T.drift); o.item=!!(K.ShiftLeft||K.ShiftRight||K.KeyE||T.item); o.reset=!!K.KeyR;
     const p=this.pad(); if(p){ const ax=p.axes[0]||0; if(Math.abs(ax)>0.15) o.steer=clamp(o.steer+Math.sign(ax)*(Math.abs(ax)-0.15)/0.85,-1,1);
@@ -6051,7 +6063,7 @@ class Input{
 }
 class Game{
   constructor(){
-    this.S=Object.assign({master:0.8,sfx:0.9,music:0.6,musicOn:true,quality:'medium',shake:true,units:'mph',touch:'auto',autogas:true},Store.get('settings',{}));
+    this.S=Object.assign({master:0.8,sfx:0.9,music:0.6,musicOn:true,quality:'medium',shake:true,units:'mph',touch:'auto',autogas:true,device:null,steerMode:'joy',steerSens:1,assist:'low',btnSize:'m',steerSide:'left'},Store.get('settings',{}));
     this.sel={vehicle:Store.get('lastCar',2),track:Store.get('lastTrack',0),diff:Store.get('lastDiff','normal')};
     const canvas=$('gl'); this.renderer=new THREE.WebGLRenderer({canvas,antialias:true,powerPreference:'high-performance'});
     const r=this.renderer; r.outputEncoding=THREE.sRGBEncoding; r.toneMapping=THREE.ACESFilmicToneMapping; r.shadowMap.type=THREE.PCFSoftShadowMap;
@@ -6067,7 +6079,10 @@ class Game{
   applyQuality(){ const Q=this.Q; this.renderer.setPixelRatio(Math.min(devicePixelRatio||1,Q.pr)); this.renderer.shadowMap.enabled=Q.shadows; this.resize(); }
   resize(){ const w=innerWidth,h=innerHeight; this.renderer.setSize(w,h,false); this.camera.aspect=w/h; this.camera.updateProjectionMatrix(); }
   saveSettings(){ Store.set('settings',this.S); this.audio.apply(); this.ui.touchMode(); }
-  onAnyInput(){ this.audio.init(); if(this.screen==='title'){ this.audio.play('select'); this.show('menu'); this.swallow=true; } }
+  onAnyInput(){ this.audio.init(); if(this.screen==='title'){ this.audio.play('select'); this.show(this.S.device?'menu':'device'); this.swallow=true; } }
+  assistLevel(){ if(!this.ui.isTouch()) return 0; return ({off:0,low:0.3,high:0.6})[this.S.assist]||0; }
+  goLandscape(){ if(!this.ui.isMobile()) return; try{ const d=document.documentElement; const lock=()=>{ try{ if(screen.orientation&&screen.orientation.lock) screen.orientation.lock('landscape').catch(()=>{}); }catch(e){} };
+      if(document.fullscreenEnabled && !document.fullscreenElement && this.S.fullscreen!==false){ d.requestFullscreen({navigationUI:'hide'}).then(lock).catch(()=>{}); } else lock(); }catch(e){} }
   show(name){
     this.screen=name; document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('on',s.id===name));
     this.focus=0; this.ui.enter(name); this.ui.refocus();
@@ -6076,11 +6091,12 @@ class Game{
     const now=performance.now(); let dt=(now-this.last)/1000; this.last=now; if(dt>0.25) dt=0.25;
     this.frames++; this.fpsT+=dt; if(this.fpsT>=1){ this.fps=this.frames/this.fpsT; this.frames=0; this.fpsT=0; }
     let ev=this.input.events(); if(this.swallow){ ev=[]; this.swallow=false; }
-    if(this.race && (this.screen==='race'||this.screen==='pause'||this.screen==='results'||(this.screen==='settings'&&this.fromPause))){
+    if(this.race && this.screen==='race' && this.ui.isMobile() && innerHeight>innerWidth*1.05 && this.race.state!=='finish' && this.race.state!=='done' && !this.race.paused) this.pause(true);
+    if(this.race && (this.screen==='race'||this.screen==='pause'||this.screen==='results'||((this.screen==='settings'||this.screen==='controls')&&this.fromPause))){
       if(this.screen==='race'){ const k=ev.findIndex(e=>e==='Escape'||e==='KeyP'||e==='PadStart'); if(k>=0){ this.pause(true); this.ui.menuEvents(ev.slice(k+1)); } }
       else this.ui.menuEvents(ev);
       if(!this.race){ this.garage.update(dt); this.garage.render(); return; }
-      const inp=this.input.drive(); inp.skip=this.screen==='race'&&ev.length>0&&this.race.state==='intro';
+      const inp=this.input.drive(); inp.skip=inp.skip||(this.screen==='race'&&ev.length>0&&this.race.state==='intro');
       this.race.update(dt,this.screen==='race'?inp:{thr:0,brk:0,steer:0,drift:false,item:false,reset:false});
       return;
     }
@@ -6089,8 +6105,9 @@ class Game{
   }
   pause(on){ if(!this.race) return; this.race.paused=on; if(on){ this.show('pause'); $('hud').classList.remove('on'); this.audio.play('blip'); } else { this.show('race'); $('hud').classList.add('on'); } }
   startRace(){
-    if(this.gp){ this.sel.track=TRACK_DATA.findIndex(t=>t.id===GP_TRACKS[this.gp.round]); this.sel.diff=this.gp.diff; }
+    if(this.gp){ this.sel.track=TRACK_DATA.findIndex(t=>t.id===this.gp.tracks[this.gp.round]); this.sel.diff=this.gp.diff; }
     else { Store.set('lastCar',this.sel.vehicle); Store.set('lastTrack',this.sel.track); Store.set('lastDiff',this.sel.diff); }
+    this.goLandscape();
     const def=TRACK_DATA[this.sel.track]; $('loadName').textContent=def.name; $('loadPlace').textContent=def.place;
     this.show('loading'); this.garage.render();
     const need=propsForTrack(def); const lp=$('loadPlace');
@@ -6101,7 +6118,7 @@ class Game{
     setTimeout(()=>{
       try{
         if(this.race){ this.race.dispose(); this.race=null; }
-        this.race=new Race(this,{track:this.sel.track,vehicle:this.sel.vehicle,diff:this.sel.diff,field:this.gp?this.gp.field:null});
+        this.race=new Race(this,{track:this.sel.track,vehicle:this.sel.vehicle,diff:this.sel.diff,field:this.gp?this.gp.field:(this.mode==='practice'?[]:null),practice:this.mode==='practice'});
         this.show('race'); $('hud').classList.add('on');
       }catch(e){ this.ui.error(e); console.error(e); this.show('menu'); }
     },60);
@@ -6109,9 +6126,9 @@ class Game{
   endRace(){ if(this.race){ this.race.dispose(); this.race=null; } $('hud').classList.remove('on'); this.audio.setMusic('menu'); this.ui.touchVisible(false); }
   showResults(res){ $('hud').classList.remove('on'); this.ui.results(res); if(this.gp) this.gpAfterRace(res); else { $('resGP').style.display='none'; $('resBtnsGP').style.display='none'; $('resBtns').style.display=''; } this.show('results'); this.postOnline(res); }
   gpAfterRace(res){
-    const gp=this.gp, r=gp.round, last=r===GP_TRACKS.length-1; const rows=res.rows; const el=$('resGP'), bt=$('resBtnsGP');
+    const gp=this.gp, GPT=gp.tracks, r=gp.round, last=r===GPT.length-1; const rows=res.rows; const el=$('resGP'), bt=$('resBtnsGP');
     $('resBtns').style.display='none'; el.style.display='block'; bt.style.display='flex';
-    let html=`<div class="gpt">GRAND PRIX · RACE ${r+1} OF ${GP_TRACKS.length}</div>`, btns='';
+    let html=`<div class="gpt">GRAND PRIX · RACE ${r+1} OF ${GPT.length}</div>`, btns='';
     if(last){
       const win=rows[0]; gp.done=true;
       if(win.player){ html=`<div class="gpt" style="font-size:30px">🏆 GRAND PRIX CHAMPION! 🏆</div><div class="gpn">You won all the way through with the ${VEHICLES[this.sel.vehicle].name}.</div>`; this.audio.play('finish'); }
@@ -6121,14 +6138,14 @@ class Game{
       const k=GP_ELIM[r]; const out=rows.slice(rows.length-k); const meOut=out.some(x=>x.player);
       html+=`<div class="gpo">Eliminated: ${out.map(x=>x.player?'<b>YOU</b>':esc(x.driver)+' ('+esc(x.car)+')').join(', ')}</div>`;
       if(meOut){ gp.done=true; html+=`<div class="gpn">Your Grand Prix is over. Finish higher to survive the cut.</div>`; btns=`<div class="btn small gold" data-gp="new"><span>Try again</span></div><div class="btn small" data-gp="quit"><span>Main menu</span></div>`; }
-      else { gp.field=rows.slice(0,rows.length-k).filter(x=>!x.player).map(x=>x.color.id); gp.round++; const nt=TRACK_DATA.find(t=>t.id===GP_TRACKS[gp.round]);
-        html+=`<div class="gpn">You survive! Next: <b>${nt.name}</b> with ${gp.field.length+1} racers${gp.round===GP_TRACKS.length-1?' · FINAL':''}.</div>`;
-        btns=`<div class="btn small gold" data-gp="next"><span>${gp.round===GP_TRACKS.length-1?'Start the final':'Next race'}</span></div><div class="btn small" data-gp="quit"><span>Quit Grand Prix</span></div>`; }
+      else { gp.field=rows.slice(0,rows.length-k).filter(x=>!x.player).map(x=>x.color.id); gp.round++; const nt=TRACK_DATA.find(t=>t.id===GPT[gp.round]);
+        html+=`<div class="gpn">You survive! Next: <b>${nt.name}</b> with ${gp.field.length+1} racers${gp.round===GPT.length-1?' · FINAL':''}.</div>`;
+        btns=`<div class="btn small gold" data-gp="next"><span>${gp.round===GPT.length-1?'Start the final':'Next race'}</span></div><div class="btn small" data-gp="quit"><span>Quit Grand Prix</span></div>`; }
     }
     el.innerHTML=html; bt.innerHTML=btns;
     bt.querySelectorAll('[data-gp]').forEach(b=>b.addEventListener('click',()=>this.ui.act('gp_'+b.dataset.gp)));
   }
-  newGP(){ const others=VEHICLES.filter((v,i)=>i!==this.sel.vehicle).map(v=>v.id).sort(()=>Math.random()-0.5); this.gp={round:0,diff:this.sel.diff,field:others.slice(0,7)}; this.startRace(); }
+  newGP(){ const others=VEHICLES.filter((v,i)=>i!==this.sel.vehicle).map(v=>v.id).sort(()=>Math.random()-0.5); if(this.gp&&this.gp.done) GP_TRACKS=rollGPTracks(GP_TRACKS); this.gp={round:0,diff:this.sel.diff,field:others.slice(0,7),tracks:GP_TRACKS.slice()}; this.startRace(); }
   async postOnline(res){
     const el=$('resOnline'); el.className='msg'; el.textContent='';
     if(!res.finished || res.posted) return; res.posted=true;
@@ -6175,7 +6192,7 @@ class Garage{
     this.turn=new THREE.Group(); this.turn.position.y=0.18; s.add(this.turn); this.carIdx=-1; this.models={}; this.t=0; this.spin=0.4; this.drag=null;
     this.cam=new THREE.PerspectiveCamera(40,1,0.1,200);
     this.setCar(game.sel.vehicle);
-    const cv=$('gl'); cv.addEventListener('pointerdown',e=>{ if(this.g.screen==='garage') this.drag=e.clientX; }); addEventListener('pointermove',e=>{ if(this.drag!=null){ this.spin=0; this.turn.rotation.y+=(e.clientX-this.drag)*0.01; this.drag=e.clientX; } }); addEventListener('pointerup',()=>{ if(this.drag!=null){ this.drag=null; this.spin=0.4; } });
+    const cv=$('gl'); cv.addEventListener('pointerdown',e=>{ if(this.g.screen==='garage'){ this.drag=e.clientX; this.swX=e.clientX; this.swT=performance.now(); } }); addEventListener('pointerup',e=>{ if(this.swX!=null&&this.g.screen==='garage'&&this.g.ui.isMobile()){ const dx=e.clientX-this.swX; if(Math.abs(dx)>45&&performance.now()-this.swT<600) this.g.ui.act(dx<0?'nextCar':'prevCar'); } this.swX=null; }); addEventListener('pointermove',e=>{ if(this.drag!=null){ this.spin=0; this.turn.rotation.y+=(e.clientX-this.drag)*0.01; this.drag=e.clientX; } }); addEventListener('pointerup',()=>{ if(this.drag!=null){ this.drag=null; this.spin=0.4; } });
   }
   setCar(i){ if(this.carIdx===i) return; this.carIdx=i; this.turn.children.slice().forEach(c=>this.turn.remove(c));
     if(!this.models[i]){ setEnvOnCarMats(this.env); const m=buildCarModel(VEHICLES[i],this.env); m.root.traverse(o=>{ if(o.isMesh) o.castShadow=true; }); this.models[i]=m; }
@@ -6202,20 +6219,24 @@ class UI{
     $('diffSeg').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{ this.g.sel.diff=b.dataset.d; this.g.audio.play('blip'); this.diffUI(); }));
     $('pauseBtn').addEventListener('click',()=>this.g.pause(true));
     // settings wiring
-    document.querySelectorAll('#settings input[type=range]').forEach(inp=>{ const k=inp.dataset.s; inp.value=g.S[k]; const lab=inp.nextElementSibling; lab.textContent=Math.round(g.S[k]*100);
+    document.querySelectorAll('#settings input[type=range], #controls input[type=range]').forEach(inp=>{ const k=inp.dataset.s; inp.value=g.S[k]; const lab=inp.nextElementSibling; lab.textContent=Math.round(g.S[k]*100);
       inp.addEventListener('input',()=>{ g.S[k]=+inp.value; lab.textContent=Math.round(g.S[k]*100); g.saveSettings(); }); });
-    document.querySelectorAll('#settings .seg').forEach(seg=>{ const k=seg.dataset.t; seg.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{ let v=b.dataset.v; if(k==='musicOn'||k==='shake'||k==='autogas') v=v==='1'; g.S[k]=v; g.audio.init(); g.audio.play('blip'); if(k==='quality') g.applyQuality(); g.saveSettings(); this.settingsUI(); })); });
+    document.querySelectorAll('#settings .seg[data-t], #controls .seg[data-t]').forEach(seg=>{ const k=seg.dataset.t; seg.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{ let v=b.dataset.v; if(k==='musicOn'||k==='shake'||k==='autogas') v=v==='1'; g.S[k]=v; g.audio.init(); g.audio.play('blip'); if(k==='quality') g.applyQuality(); g.saveSettings(); this.settingsUI(); })); });
     this.settingsUI(); this.buildTracks(); this.carDots(); g.online.onChange(()=>{ this.acctUI(); this.onlineHints(); }); this.acctUI(); this.onlineHints(); if(g.online.user) this.flushPending();
     this.lastItem=null; this.rollT=0;
     if('ontouchstart' in window) $('pressTxt').textContent='Tap to start';
   }
   error(e){ const el=$('err'); el.style.display='block'; el.textContent='Error: '+(e&&e.message||e); }
-  isTouch(){ const t=this.g.S.touch; return t==='on'||(t==='auto'&&(('ontouchstart' in window)||navigator.maxTouchPoints>0)&&matchMedia('(pointer:coarse)').matches); }
-  touchMode(){ document.body.classList.toggle('touch',this.isTouch()); document.body.classList.toggle('autogas',!!this.g.S.autogas); }
-  touchVisible(on){ $('touch').classList.toggle('on',on&&this.isTouch()); if(!on&&this.g.input&&this.g.input.clearTouch) this.g.input.clearTouch(); }
-  settingsUI(){ const S=this.g.S; document.querySelectorAll('#settings .seg').forEach(seg=>{ const k=seg.dataset.t; seg.querySelectorAll('button').forEach(b=>{ let v=b.dataset.v; if(k==='musicOn'||k==='shake'||k==='autogas') v=v==='1'; b.classList.toggle('on',S[k]===v); }); }); }
+  guessMobile(){ return (('ontouchstart' in window)||navigator.maxTouchPoints>0)&&matchMedia('(pointer:coarse)').matches; }
+  isMobile(){ const d=this.g.S.device; return d?d==='mobile':this.guessMobile(); }
+  isTouch(){ return this.isMobile(); }
+  touchMode(){ const S=this.g.S, b=document.body; b.classList.toggle('touch',this.isTouch()); b.classList.toggle('mobile',this.isMobile()); b.classList.toggle('autogas',!!S.autogas);
+    b.classList.toggle('arrows',S.steerMode==='arrows'); b.classList.toggle('lefty',S.steerSide==='right'); ['s','m','l'].forEach(k=>b.classList.toggle('bs-'+k,(S.btnSize||'m')===k));
+    const s=$('introSkip'); if(s) s.textContent=this.isMobile()?'TAP TO SKIP':'PRESS ANY KEY TO SKIP'; }
+  touchVisible(on,preview){ $('touch').classList.toggle('on',!!on&&this.isTouch()); $('touch').classList.toggle('preview',!on&&!!preview&&this.isTouch()); if(!on&&this.g.input&&this.g.input.clearTouch) this.g.input.clearTouch(); }
+  settingsUI(){ const S=this.g.S; const dl=$('devLabel'); if(dl) dl.textContent=(this.isMobile()?'📱 Phone':'💻 Computer')+' · change'; document.querySelectorAll('#settings input[type=range], #controls input[type=range]').forEach(inp=>{ inp.value=S[inp.dataset.s]; inp.nextElementSibling.textContent=Math.round(S[inp.dataset.s]*100); }); document.querySelectorAll('#settings .seg[data-t], #controls .seg[data-t]').forEach(seg=>{ const k=seg.dataset.t; seg.querySelectorAll('button').forEach(b=>{ let v=b.dataset.v; if(k==='musicOn'||k==='shake'||k==='autogas') v=v==='1'; b.classList.toggle('on',S[k]===v); }); }); }
   diffUI(){ $('diffSeg').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.d===this.g.sel.diff)); this.onlineHints(); }
-  items(){ return [...document.querySelectorAll('.screen.on .btn, .screen.on .tcard, .screen.on .arrow')].filter(b=>b.offsetParent!==null&&!b.classList.contains('arrow')); }
+  items(){ return [...document.querySelectorAll('.screen.on .devCard, .screen.on .btn, .screen.on .tcard, .screen.on .arrow')].filter(b=>b.offsetParent!==null&&!b.classList.contains('arrow')); }
   refocus(){ const it=this.items(); it.forEach((b,k)=>b.classList.toggle('focus',k===this.g.focus)); }
   enter(name){
     const g=this.g;
@@ -6223,12 +6244,19 @@ class UI{
     if(name==='trackSel'){ this.buildTracks(); this.diffUI(); g.focus=g.sel.track; }
     this.onlineHints();
     if(name==='records') this.records();
-    if(name==='gpIntro') this.gpIntroUI();
+    if(name==='gpIntro'){ GP_TRACKS=rollGPTracks(GP_TRACKS); this.gpIntroUI(); }
     if(name==='account'){ this.acctUI(); $('acctMsg').textContent=''; if(!this.g.online.user) setTimeout(()=>{ if(!this.isTouch()) $('aUser').focus(); },50); }
     if(name==='boards'){ this.buildBoardTabs(); this.loadBoard(); }
     $('acctTag').style.display=(name==='menu'||name==='title')&&this.g.online.user?'block':'none';
     if(name==='settings'){ this.settingsUI(); document.querySelectorAll('#settings input[type=range]').forEach(inp=>{ inp.value=g.S[inp.dataset.s]; inp.nextElementSibling.textContent=Math.round(g.S[inp.dataset.s]*100); }); }
-    this.touchVisible(name==='race'); document.body.classList.toggle('racing',name==='race');
+    if(name==='device'){ g.focus=this.guessMobile()?1:0; }
+    if(name==='controls'){ this.settingsUI(); }
+    if(name==='pause'){ $('pauseCtl').style.display=this.isMobile()?'':'none'; $('pauseTitle').textContent=g.race&&g.race.practice?'Practice paused':'Paused'; $('pauseRestart').firstElementChild.textContent=g.race&&g.race.practice?'Restart practice':'Restart race'; }
+    if(name==='trackSel'){ $('diffRow').style.display=g.mode==='practice'?'none':''; $('goBtn').firstElementChild.textContent=g.mode==='practice'?'Start practice':'Start race'; }
+    const menuish=['menu','garage','trackSel','gpIntro','records','boards','account','howto','results'].includes(name);
+    $('mGear').style.display=this.isMobile()&&menuish?'flex':'none';
+    document.body.classList.toggle('inmenu',!['race','pause','loading'].includes(name)&&!(name==='controls'&&g.fromPause));
+    this.touchVisible(name==='race',name==='controls'); document.body.classList.toggle('racing',['race','loading','pause'].includes(name)||(name==='controls'&&!!g.fromPause));
     $('pauseBtn').style.display=(name==='race'&&this.isTouch())?'block':'none';
   }
   menuEvents(ev){
@@ -6254,18 +6282,26 @@ class UI{
     const g=this.g, au=g.audio;
     switch(a){
       case 'race': au.play('select'); g.mode='single'; g.gp=null; g.show('garage'); break;
+      case 'practice': au.play('select'); g.mode='practice'; g.gp=null; g.show('garage'); break;
+      case 'devPc': case 'devMob': g.S.device=a==='devMob'?'mobile':'pc'; g.saveSettings(); au.play('select'); if(a==='devMob') g.goLandscape(); g.show('menu'); break;
+      case 'pickDevice': au.play('select'); g.show('device'); break;
+      case 'controls': au.play('select'); g.fromPause=g.screen==='pause'; g.ctlFrom=g.screen; g.show('controls'); break;
+      case 'ctlDone': au.play('back'); if(g.ctlFrom==='pause'&&g.race){ g.show('pause'); } else g.show(g.ctlFrom==='settings'?'settings':'menu'); break;
+      case 'fullscreen': au.play('blip'); if(document.fullscreenElement) document.exitFullscreen().catch(()=>{}); else { g.S.fullscreen=true; g.goLandscape(); } break;
       case 'gp': au.play('select'); g.mode='gp'; g.gp=null; g.show('garage'); break;
       case 'gpBack': au.play('back'); g.show('garage'); break;
       case 'gpStart': au.play('select'); g.newGP(); break;
+      case 'gpShuffle': au.play('blip'); GP_TRACKS=rollGPTracks(GP_TRACKS); this.gpIntroUI(); break;
       case 'gp_next': au.play('select'); g.startRace(); break;
       case 'gp_new': au.play('select'); g.endRace(); g.newGP(); break;
       case 'gp_quit': au.play('back'); g.gp=null; g.mode='single'; g.endRace(); g.show('menu'); break;
-      case 'settings': au.play('select'); g.fromPause=g.screen==='pause'; g.show('settings'); break;
+      case 'settings': au.play('select'); if(g.screen!=='controls') g.fromPause=g.screen==='pause'; g.show('settings'); break;
       case 'howto': au.play('select'); g.show('howto'); break;
       case 'records': au.play('select'); g.show('records'); break;
       case 'clearRec': TRACK_DATA.forEach(t=>Store.set('best_'+t.id,{race:null,lap:null})); this.records(); au.play('back'); break;
       case 'back': au.play('back');
         if(g.screen==='settings'&&g.fromPause){ g.fromPause=false; g.show('pause'); break; }
+        if(g.screen==='device'){ g.show('menu'); break; }
         g.show(g.screen==='trackSel'?'garage':'menu'); break;
       case 'prevCar': g.sel.vehicle=(g.sel.vehicle+VEHICLES.length-1)%VEHICLES.length; g.garage.setCar(g.sel.vehicle); this.carInfo(); au.play('blip'); break;
       case 'nextCar': g.sel.vehicle=(g.sel.vehicle+1)%VEHICLES.length; g.garage.setCar(g.sel.vehicle); this.carInfo(); au.play('blip'); break;
@@ -6273,6 +6309,7 @@ class UI{
       case 'go': au.play('select'); g.startRace(); break;
       case 'resume': au.play('select'); g.pause(false); break;
       case 'restart': au.play('select'); g.startRace(); break;
+      case 'endPractice': au.play('back'); g.mode='single'; g.endRace(); g.show('menu'); break;
       case 'changeTrack': au.play('select'); g.gp=null; g.mode='single'; g.endRace(); g.show('trackSel'); break;
       case 'changeCar': au.play('select'); g.gp=null; g.mode='single'; g.endRace(); g.show('garage'); break;
       case 'quit': au.play('back'); g.gp=null; g.mode='single'; g.endRace(); g.show('menu'); break;
@@ -6328,7 +6365,7 @@ class UI{
     TRACK_DATA.forEach((t,i)=>{ const b=Store.get('best_'+t.id,{});
       const d=document.createElement('div'); d.className='tcard'; d.dataset.i=i;
       d.innerHTML=`<canvas width="144" height="108"></canvas><div><h3>${t.name}</h3><div class="pl">${t.place}</div><div class="rec">RACE ${fmtTime(b.race)} · LAP ${fmtTime(b.lap)}</div></div>`;
-      d.addEventListener('click',()=>{ if(this.g.sel.track===i && this.lastTap && performance.now()-this.lastTap<450){ this.act('go'); return; } this.lastTap=performance.now(); this.selectTrack(i); });
+      d.addEventListener('click',()=>{ if(this.g.sel.track===i && ((this.lastTap && performance.now()-this.lastTap<450)||(this.isMobile()&&this.lastTap))){ this.act('go'); return; } this.lastTap=performance.now(); this.selectTrack(i); });
       el.appendChild(d); drawTrackThumb(d.querySelector('canvas'),t); });
     this.markTrack();
   }
@@ -6354,7 +6391,7 @@ class UI{
   hud(R){
     const c=R.player; const rank=c.finished?c.finishPos:c.rank;
     if(rank!==this.lastPos){ $('hPos').innerHTML=`${rank}<sup>${ordSuffix(rank)}</sup><small>/${R.cars.length}</small>`; this.lastPos=rank; }
-    $('hLap').innerHTML=`LAP ${clamp(c.lap,1,R.laps)}<span>/${R.laps}</span>`;
+    $('hLap').innerHTML=R.practice?`LAP ${Math.max(1,c.lap)}<span> PRACTICE</span>`:`LAP ${clamp(c.lap,1,R.laps)}<span>/${R.laps}</span>`;
     const rt=R.state==='race'||R.state==='finish'||R.state==='done'?(c.finished?c.finishTime:R.raceTime):0;
     $('hTime').textContent=fmtTime(rt); $('hLapT').textContent=fmtTime(c.lap>=1&&!c.finished?R.raceTime-c.lapStart:(c.lapTimes[c.lapTimes.length-1]||0)); $('hBest').textContent=fmtTime(c.bestLap!=null?c.bestLap:R.best.lap);
     const sp=c.speed*(this.g.S.units==='mph'?2.237:3.6); $('hSpd').textContent=Math.round(sp);
@@ -6394,7 +6431,11 @@ class UI{
     $('resTable').innerHTML=res.rows.map(r=>`<tr class="${r.player?'me':''}"><td class="p">${r.pos}</td><td>${r.player?'<b>YOU</b>':r.driver}</td><td style="color:var(--dim)">${r.car}</td><td class="t">${r.est?'<span style="color:var(--dim)">~</span>':''}${fmtTime(r.time)}</td><td class="t" style="color:var(--dim)">${r.best?'lap '+fmtTime(r.best):''}</td></tr>`).join('');
   }
 }
-const GP_TRACKS=['sweet','mesa','neon','alondra'], GP_ELIM=[2,1,1];
+const GP_ELIM=[2,1,1], GP_LEN=4;
+function rollGPTracks(prev){ const ids=TRACK_DATA.map(t=>t.id); let pick;
+  for(let tries=0;tries<20;tries++){ const a=ids.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } pick=a.slice(0,GP_LEN); if(!prev||pick.join()!==prev.join()) break; }
+  return pick; }
+let GP_TRACKS=rollGPTracks();
 function esc(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function drawTrackThumb(cv,def){
   const g=cv.getContext('2d'), w=cv.width,h=cv.height;

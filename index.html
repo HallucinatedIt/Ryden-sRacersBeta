@@ -2,6 +2,7 @@
 <html lang="en"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="theme-color" content="#150a2e">
 <title>Ryden's Racers</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Racing+Sans+One&family=Yellowtail&display=swap" rel="stylesheet">
@@ -108,14 +109,6 @@ input[type=range]{width:100%;accent-color:var(--pink)}
 .tb{position:absolute;pointer-events:auto;border-radius:50%;border:2px solid rgba(255,255,255,.35);background:rgba(20,10,40,.45);color:#fff;font-family:var(--disp);display:flex;align-items:center;justify-content:center;font-size:14px;letter-spacing:.08em}
 .tb.on{background:rgba(255,46,151,.55);border-color:var(--pink)}
 .tb{pointer-events:none!important;user-select:none;-webkit-user-select:none}
-.tb[data-k=gas]{right:22px;bottom:26px;width:104px;height:104px;font-size:17px}
-.tb[data-k=drift]{right:136px;bottom:34px;width:88px;height:88px;font-size:15px}
-.tb[data-k=brake]{right:152px;bottom:134px;width:64px;height:64px;font-size:12px}
-.tb[data-k=item]{right:38px;bottom:142px;width:72px;height:72px;font-size:14px}
-body.autogas .tb[data-k=gas]{display:none}
-body.autogas .tb[data-k=drift]{right:22px;bottom:26px;width:108px;height:108px;font-size:17px}
-body.autogas .tb[data-k=brake]{right:144px;bottom:22px;width:70px;height:70px}
-body.autogas .tb[data-k=item]{right:40px;bottom:150px;width:78px;height:78px}
 #joy{position:absolute;width:132px;height:132px;margin:-66px 0 0 -66px;border-radius:50%;border:2px solid rgba(255,255,255,.3);background:rgba(20,10,40,.35);left:110px;top:calc(100% - 110px);opacity:.55;transition:opacity .15s}
 #joy.on{opacity:1}
 #joyK{position:absolute;left:50%;top:50%;width:60px;height:60px;margin:-30px 0 0 -30px;border-radius:50%;background:rgba(255,46,151,.6);border:2px solid #fff;box-shadow:0 0 12px rgba(255,46,151,.6)}
@@ -132,7 +125,7 @@ body.autogas .tb[data-k=item]{right:40px;bottom:150px;width:78px;height:78px}
 #loading .bar2{width:min(360px,70vw);height:6px;background:rgba(255,255,255,.1);margin-top:18px;overflow:hidden;border-radius:3px}
 #loading .bar2 i{display:block;height:100%;width:40%;background:linear-gradient(90deg,var(--pink),var(--cyan));animation:load 1s infinite linear}
 @keyframes load{0%{transform:translateX(-100%)}100%{transform:translateX(260%)}}
-body.touch #board{display:none}body.touch #miniBox{bottom:auto;top:96px}body.touch #mini{width:120px;height:120px}body.touch #spdBox{top:auto;right:50%;transform:translateX(50%);bottom:max(40px,env(safe-area-inset-bottom));text-align:center}body.touch #hSpd{font-size:40px}#rot{position:fixed;inset:0;background:#150a2e;z-index:50;display:none;align-items:center;justify-content:center;text-align:center;font-family:var(--disp);font-size:26px;padding:30px;color:#fff}@media (orientation:portrait){body.touch.racing #rot{display:flex}}body.touch #miniName{display:none}
+body.touch #board{display:none}body.touch #miniBox{bottom:auto;top:96px}body.touch #mini{width:120px;height:120px}body.touch #spdBox{top:auto;right:50%;transform:translateX(50%);bottom:max(40px,env(safe-area-inset-bottom));text-align:center}body.touch #hSpd{font-size:40px}#rot{position:fixed;inset:0;background:#150a2e;z-index:50;display:none;align-items:center;justify-content:center;text-align:center;font-family:var(--disp);font-size:26px;padding:30px;color:#fff}body.touch #miniName{display:none}
 @media (max-height:520px){.btn{padding:7px 18px;font-size:17px}.menu{gap:7px;margin-top:0}#menu .logo{margin-bottom:-8vh!important;transform:rotate(-4deg) scale(.5)!important}.tcard p,.tcard .pl{display:none}#tracks{grid-template-columns:repeat(5,minmax(0,1fr));margin-top:6px;gap:6px}.tcard{padding:6px}.tcard h3{font-size:14px}.title{font-size:26px}#carInfo{padding:10px}#carInfo .desc{display:none}.stat{margin:2px 0}}
 label.fl{display:block;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin:8px 0}
 label.fl input{display:block;width:100%;margin-top:6px;font-family:var(--body);font-size:18px;color:#fff;background:rgba(0,0,0,.4);border:2px solid rgba(255,255,255,.2);border-radius:4px;padding:10px 12px;outline:none;user-select:text;-webkit-user-select:text;letter-spacing:.02em;text-transform:none}
@@ -163,6 +156,110 @@ table.lb td.p{font-family:var(--disp);font-size:19px;color:var(--cyan);width:36p
 #tInfo .stats b{color:var(--gold);letter-spacing:.04em}
 .badge{display:inline-block;font-family:var(--body);font-style:normal;font-size:11px;letter-spacing:.14em;padding:2px 7px;border-radius:3px;margin-left:8px;vertical-align:middle;text-shadow:none}
 @media (max-width:820px),(max-height:520px){#tsWrap{grid-template-columns:minmax(200px,1fr) minmax(0,1.3fr);gap:10px;margin-top:6px}#tList{max-height:58vh}#tList .tcard{grid-template-columns:52px 1fr;padding:4px}#tList .tcard canvas{width:52px;height:40px}#tList .tcard h3{font-size:14px}#tList .tcard .rec{display:none}#tInfo p{display:none}#tInfo h2{font-size:20px;margin-top:6px}#tBig{height:26vh}#tsHint{display:none}}
+
+/* ===== touch controls (sized by --k, mirrored for right-thumb steering) ===== */
+body{--k:1}body.bs-s{--k:.82}body.bs-l{--k:1.2}
+.tb{font-size:calc(15px*var(--k))}
+.tb[data-k=gas]{right:calc(18px + env(safe-area-inset-right));bottom:calc(22px*var(--k));width:calc(104px*var(--k));height:calc(104px*var(--k))}
+.tb[data-k=drift]{right:calc(18px + 116px*var(--k) + env(safe-area-inset-right));bottom:calc(26px*var(--k));width:calc(90px*var(--k));height:calc(90px*var(--k))}
+.tb[data-k=brake]{right:calc(24px + 124px*var(--k) + env(safe-area-inset-right));bottom:calc(128px*var(--k));width:calc(66px*var(--k));height:calc(66px*var(--k));font-size:calc(12px*var(--k))}
+.tb[data-k=item]{right:calc(26px + env(safe-area-inset-right));bottom:calc(138px*var(--k));width:calc(76px*var(--k));height:calc(76px*var(--k))}
+body.autogas .tb[data-k=gas]{display:none}
+body.autogas .tb[data-k=drift]{right:calc(18px + env(safe-area-inset-right));bottom:calc(20px*var(--k));width:calc(112px*var(--k));height:calc(112px*var(--k));font-size:calc(18px*var(--k))}
+body.autogas .tb[data-k=brake]{right:calc(22px + 122px*var(--k) + env(safe-area-inset-right));bottom:calc(18px*var(--k));width:calc(76px*var(--k));height:calc(76px*var(--k))}
+body.autogas .tb[data-k=item]{right:calc(34px + env(safe-area-inset-right));bottom:calc(144px*var(--k));width:calc(82px*var(--k));height:calc(82px*var(--k))}
+.tb[data-k=left],.tb[data-k=right]{display:none;bottom:calc(22px*var(--k));width:calc(96px*var(--k));height:calc(96px*var(--k));font-size:calc(34px*var(--k));border-radius:24%}
+body.arrows .tb[data-k=left],body.arrows .tb[data-k=right]{display:flex}
+.tb[data-k=left]{left:calc(16px + env(safe-area-inset-left))}.tb[data-k=right]{left:calc(28px + 96px*var(--k) + env(safe-area-inset-left))}
+body.arrows #joy,body.arrows #joyHint{display:none}
+#joy:not(.on){left:calc(110px*var(--k));top:calc(100% - 110px*var(--k))}
+body.lefty #touch .tb:not([data-k=left]):not([data-k=right]){right:auto}
+body.lefty .tb[data-k=gas]{left:calc(18px + env(safe-area-inset-left))}
+body.lefty .tb[data-k=drift]{left:calc(18px + 116px*var(--k) + env(safe-area-inset-left))}
+body.lefty .tb[data-k=brake]{left:calc(24px + 124px*var(--k) + env(safe-area-inset-left))}
+body.lefty .tb[data-k=item]{left:calc(26px + env(safe-area-inset-left))}
+body.lefty.autogas .tb[data-k=drift]{left:calc(18px + env(safe-area-inset-left))}
+body.lefty.autogas .tb[data-k=brake]{left:calc(22px + 122px*var(--k) + env(safe-area-inset-left))}
+body.lefty.autogas .tb[data-k=item]{left:calc(34px + env(safe-area-inset-left))}
+body.lefty .tb[data-k=left]{left:auto;right:calc(28px + 96px*var(--k) + env(safe-area-inset-right))}
+body.lefty .tb[data-k=right]{left:auto;right:calc(16px + env(safe-area-inset-right))}
+body.lefty #joy:not(.on){left:auto;right:calc(44px*var(--k))}
+body.lefty #joyHint{left:auto;right:84px}
+#touch.preview{display:block;opacity:.75}#touch.preview #joy{opacity:.8}
+/* ===== device picker ===== */
+.devRow{display:flex;gap:18px;margin-top:18px;flex-wrap:wrap;justify-content:center}
+.devCard{width:min(300px,42vw);padding:22px 16px;border-radius:14px;border:3px solid rgba(255,255,255,.15);background:var(--panel);text-align:center;cursor:pointer;transition:all .12s}
+.devCard:hover,.devCard.focus{border-color:var(--pink);box-shadow:0 0 24px rgba(255,46,151,.5)}
+.devIco{font-size:54px}.devName{font-family:var(--disp);font-style:italic;font-size:26px;color:#fff;margin-top:6px}.devSub{font-size:13px;color:var(--dim);margin-top:6px}
+.mOnly{display:none!important}body.mobile .mOnly{display:flex!important}body.mobile .set.mOnly{display:grid!important}
+.ctlPanel{width:min(640px,96vw);margin-top:10px}.ctlTip{font-size:12px;color:var(--dim);margin-top:8px;line-height:1.4}
+/* ===== rotate helper ===== */
+#rot{flex-direction:column;gap:14px}
+#rot .rotPhone{width:54px;height:92px;border:4px solid #fff;border-radius:12px;animation:rotph 2.2s ease-in-out infinite;box-shadow:0 0 22px var(--pink)}
+@keyframes rotph{0%,25%{transform:rotate(0)}55%,85%{transform:rotate(-90deg)}100%{transform:rotate(0)}}
+#rot .rotT{font-size:30px}#rot .rotS{font-family:var(--body);font-size:14px;color:var(--dim);max-width:340px;line-height:1.5}
+@media (orientation:portrait){body.mobile.inmenu #rot,body.mobile.racing #rot{display:flex}}
+/* ===== gear button ===== */
+#mGear{position:fixed;right:max(12px,env(safe-area-inset-right));top:max(10px,env(safe-area-inset-top));z-index:30;width:48px;height:48px;border-radius:50%;background:rgba(18,8,38,.8);border:2px solid rgba(255,255,255,.3);color:#fff;font-size:26px;display:none;align-items:center;justify-content:center;cursor:pointer}
+/* ===== MOBILE LAYOUT (landscape phones) ===== */
+body.mobile .screen{justify-content:flex-start;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:max(8px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) 14px max(14px,env(safe-area-inset-left))}
+body.mobile #title,body.mobile #device,body.mobile #loading{justify-content:center}
+body.mobile .title{font-size:26px;margin-top:2px}
+body.mobile .hint{font-size:11px}
+body.mobile .btn{min-height:50px;display:flex;align-items:center;justify-content:center;font-size:18px;padding:8px 16px}
+body.mobile .btn.small{min-height:46px;font-size:15px}
+body.mobile #menu .logo{transform:rotate(-4deg) scale(.42)!important;margin:-7vh 0 -10vh!important}
+body.mobile #menu .menu{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:min(760px,94vw);min-width:0;margin-top:6px}
+body.mobile #menu .hint{display:none}
+body.mobile #joinBanner{margin-top:8px}
+body.mobile #garage{justify-content:space-between}
+body.mobile #garage .title{font-size:22px}
+body.mobile #carInfo{position:absolute;left:max(12px,env(safe-area-inset-left));top:54px;transform:none;width:min(290px,40vw);padding:10px;margin:0}
+body.mobile #carInfo .desc{display:none}body.mobile #carInfo h2{font-size:22px}body.mobile #carInfo .tag{font-size:18px;margin:2px 0 4px}
+body.mobile .stat{margin:2px 0;font-size:10px;grid-template-columns:64px 1fr}
+body.mobile .arrow{width:62px;height:62px;font-size:28px}
+body.mobile #garage .arrows{top:52%}
+body.mobile #garage .row .btn.gold{min-width:190px}
+body.mobile #tsWrap{display:block;width:min(860px,96vw);margin-top:6px}
+body.mobile #tList{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:8px;max-height:none;overflow:visible}
+body.mobile #tList .tcard{display:flex;flex-direction:column;align-items:stretch;padding:6px;gap:4px;border-width:3px}
+body.mobile #tList .tcard canvas{width:100%;height:auto;aspect-ratio:4/3}
+body.mobile #tList .tcard h3{font-size:14px;text-align:center}
+body.mobile #tList .tcard .pl,body.mobile #tList .tcard .rec{display:none}
+body.mobile #tList .tcard.sel{transform:scale(1.03)}
+body.mobile #tDetail{margin-top:8px;padding:8px 12px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px}
+body.mobile #tBig,body.mobile #tInfo p,body.mobile #tInfo .stats,body.mobile #tInfo .pl{display:none}
+body.mobile #tInfo h2{font-size:20px;margin:0}
+body.mobile #diffRow{margin-top:0!important}
+body.mobile .seg button{min-height:42px;padding:8px 16px;font-size:15px}
+body.mobile #lbHint{width:100%;margin-top:2px!important}
+body.mobile #tsHint{display:none}
+body.mobile #trackSel .row .btn.gold{min-width:210px}
+body.mobile .set{grid-template-columns:minmax(110px,34%) 1fr 40px;margin:12px 0}
+body.mobile #settings .panel,body.mobile .ctlPanel{padding:10px 14px}
+body.mobile input[type=range]{height:34px}
+body.mobile #pause .menu{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;width:min(560px,90vw)}
+body.mobile #results .panel{max-height:36vh}
+body.mobile #gpRounds .gpr canvas{display:none}
+body.mobile #pauseBtn{width:52px;height:52px;font-size:20px}
+body.mobile #introCard{bottom:14%}
+
+body.mobile #tList{grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:6px}
+body.mobile #tList .tcard{padding:4px}
+body.mobile #tList .tcard h3{font-size:12px;line-height:1.15}
+body.mobile #trackSel .row{position:sticky;bottom:0;padding:6px 0 2px;background:linear-gradient(0deg,rgba(8,2,20,.85),rgba(8,2,20,0));width:100%;justify-content:center}
+body.mobile #trackSel .title{font-size:22px}
+body.mobile #tDetail{margin-top:6px}
+body.mobile #garage .arrows{padding-left:calc(min(290px,40vw) + 20px)}
+body.mobile .stat{letter-spacing:.04em}
+body.mobile #carInfo .cls{font-size:10px;letter-spacing:.1em}
+#controls{z-index:6}#touch.preview{z-index:5;opacity:.45}
+body.mobile .ctlPanel{width:min(520px,66vw)}
+body.mobile.touch #mini{width:96px;height:96px}body.mobile.touch #miniBox{top:76px}
+body.mobile.touch #spdBox{bottom:max(46px,env(safe-area-inset-bottom))}
+body.mobile #boostWrap{width:min(220px,34vw)}
+@media (max-width:700px){body.mobile #tList{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
+body.mobile #boostLbl{display:none}
 #err{position:fixed;left:10px;bottom:10px;right:10px;color:#ff8080;font-size:12px;display:none;background:rgba(0,0,0,.8);padding:8px;z-index:99}
 </style></head>
 <body>
@@ -174,16 +271,27 @@ table.lb td.p{font-family:var(--disp);font-size:19px;color:var(--cyan);width:36p
   <div class="press" id="pressTxt">Press any key</div>
 </div>
 
+<div class="screen" id="device">
+  <div class="title">How are you playing?</div>
+  <div class="devRow">
+    <div class="devCard" id="devPc" data-act="devPc"><div class="devIco">💻</div><div class="devName">Computer</div><div class="devSub">Keyboard, mouse or gamepad</div></div>
+    <div class="devCard" id="devMob" data-act="devMob"><div class="devIco">📱</div><div class="devName">Phone / Tablet</div><div class="devSub">Touch controls · big buttons · plays sideways</div></div>
+  </div>
+  <div class="hint">You can change this any time in Settings</div>
+</div>
+
 <div class="screen" id="menu">
   <div class="logo" style="transform:rotate(-4deg) scale(.62);margin-bottom:-4vh"><span class="r">Ryden's</span><span class="x">RACERS</span></div>
   <div class="menu">
     <div class="btn" data-act="race"><span>Quick race</span></div>
     <div class="btn" data-act="gp"><span>Grand Prix</span></div>
+    <div class="btn" data-act="practice"><span>Practice</span></div>
     <div class="btn" data-act="boards"><span>Leaderboards</span></div>
     <div class="btn" data-act="records"><span>My records</span></div>
     <div class="btn" data-act="account" id="acctBtn"><span>Log in</span></div>
     <div class="btn" data-act="settings"><span>Settings</span></div>
     <div class="btn" data-act="howto"><span>How to play</span></div>
+    <div class="btn mOnly" data-act="fullscreen" id="fsBtn"><span>⛶ Full screen</span></div>
   </div>
   <div id="joinBanner" class="btn small" data-act="account" style="margin-top:12px;border-color:var(--gold);display:none"><span>🏆 Join the online leaderboard — pick a racer name</span></div>
   <div class="hint">Arrows / Enter · Mouse · Touch · Gamepad</div>
@@ -203,20 +311,22 @@ table.lb td.p{font-family:var(--disp);font-size:19px;color:var(--cyan);width:36p
     <div id="tDetail" class="panel">
       <canvas id="tBig" width="640" height="420"></canvas>
       <div id="tInfo"></div>
-      <div class="row" style="margin-top:10px;align-items:center;justify-content:flex-start">
+      <div class="row" id="diffRow" style="margin-top:10px;align-items:center;justify-content:flex-start">
         <span style="letter-spacing:.2em;font-size:12px;color:var(--dim)">DIFFICULTY</span>
         <div class="seg" id="diffSeg"><button data-d="easy">Easy</button><button data-d="normal">Normal</button><button data-d="hard">Hard</button></div>
       </div>
       <div id="lbHint" class="msg" style="margin-top:8px"></div>
     </div>
   </div>
-  <div class="row" style="margin-top:12px"><div class="btn small" data-act="back"><span>Back</span></div><div class="btn gold" data-act="go"><span>Start race</span></div></div>
+  <div class="row" style="margin-top:12px"><div class="btn small" data-act="back"><span>Back</span></div><div class="btn gold" data-act="go" id="goBtn"><span>Start race</span></div></div>
   <div class="hint" id="tsHint">↑↓ choose track · ←→ difficulty · Enter to race</div>
 </div>
 
 <div class="screen" id="settings">
   <div class="title">Settings</div>
   <div class="panel" style="width:min(560px,94vw);margin-top:14px">
+    <div class="set"><span>Playing on</span><div class="seg"><button class="on" data-act="pickDevice" id="devLabel">Change device</button></div><b></b></div>
+    <div class="set mOnly"><span>Touch controls</span><div class="seg"><button class="on" data-act="controls">Steering &amp; buttons ›</button></div><b></b></div>
     <div class="set"><span>Master</span><input type="range" min="0" max="1" step="0.05" data-s="master"><b></b></div>
     <div class="set"><span>Sound FX</span><input type="range" min="0" max="1" step="0.05" data-s="sfx"><b></b></div>
     <div class="set"><span>Music</span><input type="range" min="0" max="1" step="0.05" data-s="music"><b></b></div>
@@ -224,8 +334,6 @@ table.lb td.p{font-family:var(--disp);font-size:19px;color:var(--cyan);width:36p
     <div class="set"><span>Quality</span><div class="seg" data-t="quality"><button data-v="low">Low</button><button data-v="medium">Med</button><button data-v="high">High</button></div><b></b></div>
     <div class="set"><span>Camera shake</span><div class="seg" data-t="shake"><button data-v="1">On</button><button data-v="0">Off</button></div><b></b></div>
     <div class="set"><span>Speed units</span><div class="seg" data-t="units"><button data-v="mph">MPH</button><button data-v="kmh">KM/H</button></div><b></b></div>
-    <div class="set"><span>Auto gas (touch)</span><div class="seg" data-t="autogas"><button data-v="1">On</button><button data-v="0">Off</button></div><b></b></div>
-    <div class="set"><span>Touch buttons</span><div class="seg" data-t="touch"><button data-v="auto">Auto</button><button data-v="on">On</button><button data-v="off">Off</button></div><b></b></div>
   </div>
   <div class="row" style="margin-top:16px"><div class="btn small" data-act="back"><span>Done</span></div></div>
 </div>
@@ -241,7 +349,7 @@ table.lb td.p{font-family:var(--disp);font-size:19px;color:var(--cyan);width:36p
       <tr><td><kbd>Shift</kbd> / <kbd>E</kbd></td><td>Use item</td></tr>
       <tr><td><kbd>R</kbd></td><td>Reset car to the track</td></tr>
       <tr><td><kbd>Esc</kbd> / <kbd>P</kbd></td><td>Pause</td></tr>
-      <tr><td>Touch</td><td>Left thumb anywhere on the left side is a joystick: slide to steer, pull down to brake/reverse. Right side: DRIFT, ITEM, BRAKE. Gas is automatic unless you switch Auto gas off in Settings; then rest your thumb between GAS and DRIFT to press both. You can slide your thumb between buttons.</td></tr>
+      <tr><td>Phone</td><td>Steer with the joystick (put your thumb anywhere on the left and slide) or the ◀ ▶ arrow buttons — pick in Settings › Touch controls. Pull the joystick down to brake. Right side: DRIFT, ITEM, BRAKE. Gas is automatic unless you turn Auto gas off. Use <b>Practice</b> to tune steering sensitivity, assist and button size; pause any time with ❚❚.</td></tr>
       <tr><td>Gamepad</td><td>RT / A accelerate · LT / B brake · stick steer · RB / X drift · LB / Y item · Back reset · Start pause</td></tr>
     </table>
     <p><b style="color:var(--pink)">Prism crystals</b> give an item: <b style="color:var(--cyan)">⚡ Nitro Cell</b> (big boost), <b style="color:#7ff6ff">◈ Aegis Bubble</b> (shield — blocks one hazard and bumps rivals aside), <b style="color:var(--pink)">◍ Glaze Slick</b> (drop a sticky puddle behind you that spins out whoever hits it).</p>
@@ -286,20 +394,35 @@ table.lb td.p{font-family:var(--disp);font-size:19px;color:var(--cyan);width:36p
 
 <div class="screen" id="gpIntro" style="background:rgba(8,2,20,.62)">
   <div class="title">Grand Prix</div>
-  <div class="hint" style="margin-top:4px">4 races back to back · the slowest racers are knocked out after each race</div>
+  <div class="hint" style="margin-top:4px">4 random tracks back to back · the slowest racers are knocked out after each race</div>
   <div id="gpRounds" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;width:min(1100px,96vw);margin-top:16px"></div>
   <div class="row" style="margin-top:16px;align-items:center"><span style="letter-spacing:.2em;font-size:12px;color:var(--dim)">DIFFICULTY</span>
     <div class="seg" id="gpDiff"><button data-d="easy">Easy</button><button data-d="normal">Normal</button><button data-d="hard">Hard</button></div></div>
-  <div class="row" style="margin-top:14px"><div class="btn small" data-act="gpBack"><span>Back</span></div><div class="btn gold" data-act="gpStart"><span>Start Grand Prix</span></div></div>
+  <div class="row" style="margin-top:14px"><div class="btn small" data-act="gpBack"><span>Back</span></div><div class="btn small" data-act="gpShuffle"><span>🔀 Shuffle tracks</span></div><div class="btn gold" data-act="gpStart"><span>Start Grand Prix</span></div></div>
+</div>
+
+<div class="screen" id="controls" style="background:rgba(8,2,20,.55)">
+  <div class="title">Touch controls</div>
+  <div class="panel ctlPanel">
+    <div class="set"><span>Steering</span><div class="seg" data-t="steerMode"><button data-v="joy">🕹 Joystick</button><button data-v="arrows">◀ ▶ Arrows</button></div><b></b></div>
+    <div class="set"><span>Steering sensitivity</span><input type="range" min="0.5" max="1.5" step="0.05" data-s="steerSens"><b></b></div>
+    <div class="set"><span>Steering assist</span><div class="seg" data-t="assist"><button data-v="off">Off</button><button data-v="low">Low</button><button data-v="high">High</button></div><b></b></div>
+    <div class="set"><span>Button size</span><div class="seg" data-t="btnSize"><button data-v="s">S</button><button data-v="m">M</button><button data-v="l">L</button></div><b></b></div>
+    <div class="set"><span>Steer with</span><div class="seg" data-t="steerSide"><button data-v="left">Left thumb</button><button data-v="right">Right thumb</button></div><b></b></div>
+    <div class="set"><span>Auto gas</span><div class="seg" data-t="autogas"><button data-v="1">On</button><button data-v="0">Off</button></div><b></b></div>
+    <div class="ctlTip">Low sensitivity = smoother, gentler turns. Steering assist nudges you along the racing line. Changes apply instantly: try them in <b>Practice</b>.</div>
+  </div>
+  <div class="row" style="margin-top:10px"><div class="btn gold" data-act="ctlDone"><span>Done</span></div></div>
 </div>
 
 <div class="screen" id="loading"><div class="title" id="loadName">Loading</div><div class="hint" id="loadPlace"></div><div class="bar2"><i></i></div></div>
 
 <div class="screen" id="pause" style="background:rgba(8,2,20,.6)">
-  <div class="title">Paused</div>
+  <div class="title" id="pauseTitle">Paused</div>
   <div class="menu">
-    <div class="btn" data-act="resume"><span>Resume</span></div>
-    <div class="btn" data-act="restart"><span>Restart race</span></div>
+    <div class="btn gold" data-act="resume"><span>Resume</span></div>
+    <div class="btn" data-act="controls" id="pauseCtl"><span>Touch controls</span></div>
+    <div class="btn" data-act="restart" id="pauseRestart"><span>Restart race</span></div>
     <div class="btn" data-act="settings"><span>Settings</span></div>
     <div class="btn" data-act="quit"><span>Quit to menu</span></div>
   </div>
@@ -325,20 +448,23 @@ table.lb td.p{font-family:var(--disp);font-size:19px;color:var(--cyan);width:36p
   <div id="boostWrap"><div id="boostLbl">DRIFT</div><div id="boostBar"><i></i></div></div>
   <div id="spdBox"><div id="hSpd">0</div><div id="hUnit">MPH</div></div>
   <div id="count"></div><div id="flash"></div><div id="wrong">WRONG WAY</div>
-  <div id="introCard"><div class="p" id="icPlace"></div><div class="n" id="icName"></div><div class="s">3 LAPS · 8 RACERS · PRESS ANY KEY TO SKIP</div></div>
+  <div id="introCard"><div class="p" id="icPlace"></div><div class="n" id="icName"></div><div class="s" id="introSkip">PRESS ANY KEY TO SKIP</div></div>
   <button id="pauseBtn">❚❚</button>
 </div>
 <div id="touch">
   <div id="joy"><div id="joyK"></div></div>
   <div id="joyHint">STEER</div>
+  <div class="tb" data-k="left">◀</div>
+  <div class="tb" data-k="right">▶</div>
   <div class="tb" data-k="gas">GAS</div>
   <div class="tb" data-k="drift">DRIFT</div>
   <div class="tb" data-k="brake">BRAKE</div>
   <div class="tb" data-k="item">ITEM</div>
 </div>
-<div id="rot">Rotate your phone to landscape to race ⟳</div>
+<div id="rot"><div class="rotPhone"></div><div class="rotT">Turn your phone sideways</div><div class="rotS">Ryden's Racers plays in landscape.<br>Not rotating? Turn off <b>Rotation Lock</b> (iPhone: Control Center 🔒) or <b>Auto-rotate</b> (Android quick settings).</div></div>
+<div id="mGear" data-act="settings">⚙</div>
 <div id="acctTag"></div>
 <div id="err"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="js/game.js?v=1790398520"></script>
+<script src="js/game.js?v=1790402370"></script>
 </body></html>
