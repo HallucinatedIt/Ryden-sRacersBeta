@@ -3628,7 +3628,7 @@
 
 } )();
 
-const GLB_DATA={"env_sweet": "models/env/env_sweet.glb?v=1790439367", "grandstand": "models/props/grandstand.glb?v=1790402370", "rrsign": "models/props/rrsign.glb?v=1790402370", "dolly": "models/props/dolly.glb?v=1790402370", "knives": "models/props/knives.glb?v=1790402370", "trio": "models/props/trio.glb?v=1790402370", "gate": "models/props/gate.glb?v=1790402370", "solocup": "models/props/solocup.glb?v=1790402370", "church": "models/props/church.glb?v=1790402370", "donkeys": "models/props/donkeys.glb?v=1790402370", "hijoe": "models/props/hijoe.glb?v=1790402370", "palm": "models/props/palm.glb?v=1790402370", "mrblack": "models/props/mrblack.glb?v=1790402370", "ak": "models/props/ak.glb?v=1790402370", "hellcat": "models/cars/hellcat.glb?v=1790402370", "brcc": "models/cars/rotor.glb?v=1790402370", "fdc": "models/cars/rrpickup.glb?v=1790402370", "shoe_factory": "models/props/shoe_factory.glb?v=1790402370", "claw_can": "models/props/claw_can.glb?v=1790402370", "echelon_can": "models/props/echelon_can.glb?v=1790402370", "watch_shop": "models/props/watch_shop.glb?v=1790402370", "watch_sign": "models/props/watch_sign.glb?v=1790402370", "range_sign": "models/props/range_sign.glb?v=1790402370", "bpd": "models/cars/bpd_69.glb?v=1790402370", "concord": "models/cars/concordance.glb?v=1790402370", "donut": "models/cars/donut_patrol.glb?v=1790402370", "duck": "models/cars/duck_plasma.glb?v=1790402370", "gt44": "models/cars/gt40.glb?v=1790402370", "missile": "models/cars/missile_commander.glb?v=1790402370", "leopard": "models/cars/night_leopard.glb?v=1790402370", "trout": "models/cars/trout_protocol.glb?v=1790402370"};
+const GLB_DATA={"env_mesa": "models/env/env_mesa.glb?v=1790446322", "env_sweet": "models/env/env_sweet.glb?v=1790439367", "grandstand": "models/props/grandstand.glb?v=1790402370", "rrsign": "models/props/rrsign.glb?v=1790402370", "dolly": "models/props/dolly.glb?v=1790402370", "knives": "models/props/knives.glb?v=1790402370", "trio": "models/props/trio.glb?v=1790402370", "gate": "models/props/gate.glb?v=1790402370", "solocup": "models/props/solocup.glb?v=1790402370", "church": "models/props/church.glb?v=1790402370", "donkeys": "models/props/donkeys.glb?v=1790402370", "hijoe": "models/props/hijoe.glb?v=1790402370", "palm": "models/props/palm.glb?v=1790402370", "mrblack": "models/props/mrblack.glb?v=1790402370", "ak": "models/props/ak.glb?v=1790402370", "hellcat": "models/cars/hellcat.glb?v=1790402370", "brcc": "models/cars/rotor.glb?v=1790402370", "fdc": "models/cars/rrpickup.glb?v=1790402370", "shoe_factory": "models/props/shoe_factory.glb?v=1790402370", "claw_can": "models/props/claw_can.glb?v=1790402370", "echelon_can": "models/props/echelon_can.glb?v=1790402370", "watch_shop": "models/props/watch_shop.glb?v=1790402370", "watch_sign": "models/props/watch_sign.glb?v=1790402370", "range_sign": "models/props/range_sign.glb?v=1790402370", "bpd": "models/cars/bpd_69.glb?v=1790402370", "concord": "models/cars/concordance.glb?v=1790402370", "donut": "models/cars/donut_patrol.glb?v=1790402370", "duck": "models/cars/duck_plasma.glb?v=1790402370", "gt44": "models/cars/gt40.glb?v=1790402370", "missile": "models/cars/missile_commander.glb?v=1790402370", "leopard": "models/cars/night_leopard.glb?v=1790402370", "trout": "models/cars/trout_protocol.glb?v=1790402370"};
 const GLB_TEX={};
 "use strict";
 // ===== UTILITIES =====
@@ -4301,11 +4301,12 @@ const CAR_GLTF={}, GLB_PROC={};
 const GLB_ROT={brcc:Math.PI/2, fdc:Math.PI/2, hellcat:Math.PI/2};
 const GLB_LEN={hellcat:4.9,brcc:4.4,fdc:5.3,duck:3.9,gt44:4.4,donut:4.5,missile:5.8,bpd:4.8,concord:5.8,trout:5.0,leopard:4.5};
 const GLB_TEXTURES={}; let GLB_ERROR='';
-const PROP_IDS=new Set(['env_sweet','grandstand','rrsign','dolly','knives','trio','gate','solocup','church','donkeys','hijoe','palm','mrblack','ak','shoe_factory','claw_can','echelon_can','watch_shop','watch_sign','range_sign']);
+const PROP_IDS=new Set(['env_mesa','env_sweet','grandstand','rrsign','dolly','knives','trio','gate','solocup','church','donkeys','hijoe','palm','mrblack','ak','shoe_factory','claw_can','echelon_can','watch_shop','watch_sign','range_sign']);
 function propsForTrack(def){ const need=new Set(['grandstand','rrsign']);
   for(const id in PROP_INFO){ const i=PROP_INFO[id]; if((i.themes&&i.themes[def.id])||(i.median&&i.median[def.id])) need.add(id); }
   if(def.theme==='city') need.add('palm'); if(def.shooters){ need.add('mrblack'); need.add('ak'); } if(def.monument){ need.add('solocup'); need.add('dolly'); }
   if(typeof GLB_DATA!=='undefined'&&GLB_DATA['env_'+def.id]&&!(window.GAME&&GAME.q&&GAME.q.env===false)) need.add('env_'+def.id);
+  if(need.has('env_'+def.id)&&typeof ENV_CFG!=='undefined'&&ENV_CFG[def.id]){ const c=ENV_CFG[def.id]; (c.skipProps||[]).forEach(id=>need.delete(id)); if(c.skipStand) need.delete('grandstand'); }
   return [...need].filter(id=>typeof GLB_DATA!=='undefined'&&GLB_DATA[id]&&!CAR_GLTF[id]); }
 function loadCarGLBs(done,progress,only){
   const data=(typeof GLB_DATA!=='undefined')?GLB_DATA:{}; const ids=only?only.filter(id=>data[id]&&!CAR_GLTF[id]):Object.keys(data).filter(id=>!PROP_IDS.has(id));
@@ -4408,7 +4409,7 @@ function placeTrackProps(W,def,P,H){
     list.forEach(i=>{ if(P.median[i]<Math.max(T.w,T.d)/2) return; const o=makeProp(id); const ang=info.face>0?Math.atan2(-P.tx[i],-P.tz[i]):Math.atan2(P.tx[i],P.tz[i]);
       o.position.set(P.x[i],P.y[i]+0.12,P.z[i]); o.rotation.y=ang; W.group.add(o); (W.props=W.props||[]).push({id,x:P.x[i],z:P.z[i],y:P.y[i],ang,i,median:true}); blockers.push({x:P.x[i],z:P.z[i],r:Math.max(T.w,T.d)/2+0.2}); }); }
   for(const id in PROP_INFO){
-    const want=(PROP_INFO[id].themes||{})[def.id]; if(!want || !CAR_GLTF[id] || PROP_INFO[id].kind==='manual') continue; const T=propTemplate(id); if(!T) continue;
+    const want=(PROP_INFO[id].themes||{})[def.id]; if(!want || !CAR_GLTF[id] || PROP_INFO[id].kind==='manual') continue; if(W.env&&W.env.skipProps&&W.env.skipProps.includes(id)) continue; const T=propTemplate(id); if(!T) continue;
     const cand=[]; const K=12;
     for(let i=40;i<P.N-40;i+=6){ let c=0,tun=false; for(let k=-K;k<=K;k++) c=Math.max(c,Math.abs(P.curv[(i+k)%P.N])); for(let k=-45;k<=45;k+=3) if(P.tunnel[(i+k+P.N)%P.N]) tun=true; if(c<0.006&&!tun) cand.push(i); }
     PROP_DBG.cand=cand.length;
@@ -4524,19 +4525,30 @@ function naturalHeightFn(def,P){
   else f=(x,z)=>{ return chan(x,z,0.0); };
   f.cx=cx; f.cz=cz; f.R0=R0; f.channels=channels; return f;
 }
+const ENV_CFG={ mesa:{skipProps:['knives','rrsign'],skipStand:true,skipScenery:true,respectSides:true,lowHide:/^mz_(scrub|rocks)/} };
 function envFree(E,x,z,r){ const f=E.foot; for(let k=0;k<f.length;k++){ const b=f[k]; const dx=b[0]-x, dz=b[1]-z; if(dx*dx+dz*dz<(b[2]+r)*(b[2]+r)) return false; } return true; }
 function addEnv(W,def,scene,Q){
-  const root=scene.clone(true); const foot=[]; const aniso=(window.GAME&&GAME.renderer)?Math.min(Q.shadows?8:4,GAME.renderer.capabilities.getMaxAnisotropy()):4;
-  root.traverse(o=>{ if(o.userData&&o.userData.foot){ try{ foot.push(...JSON.parse(o.userData.foot)); }catch(e){} }
+  const cfg=ENV_CFG[def.id]||{};
+  const root=scene.clone(true); const foot=[]; let lamps=null, hasTerrain=false; const aniso=(window.GAME&&GAME.renderer)?Math.min(Q.shadows?8:4,GAME.renderer.capabilities.getMaxAnisotropy()):4;
+  const hide=[];
+  root.traverse(o=>{ const ud=o.userData||{};
+    if(ud.foot){ try{ foot.push(...JSON.parse(ud.foot)); }catch(e){} }
+    if(ud.lamps){ try{ lamps={pos:JSON.parse(ud.lamps),dir:JSON.parse(ud.lampDir)}; }catch(e){} }
     if(!o.isMesh) return; const m=o.material; const n=(m.name||'');
+    if(/^terrain/.test(o.name)) hasTerrain=true;
+    if(cfg.lowHide && Q.density<0.6 && cfg.lowHide.test(o.name)) hide.push(o);
     if(m.map){ m.map.anisotropy=aniso; m.map.needsUpdate=true; }
     if(/fence/.test(n)){ m.transparent=false; m.alphaTest=0.45; m.side=THREE.DoubleSide; m.depthWrite=true; o.castShadow=false; }
-    else { m.side=/billboard|bb_|donut|spr|lamp/.test(n)?THREE.DoubleSide:THREE.FrontSide; }
+    else if(!cfg.respectSides){ m.side=/billboard|bb_|donut|spr|lamp/.test(n)?THREE.DoubleSide:THREE.FrontSide; }
     if(/line|checker/.test(n)){ m.polygonOffset=true; m.polygonOffsetFactor=-2; m.polygonOffsetUnits=-2; }
-    o.receiveShadow=true; o.castShadow=/city|barrier|billboard|lamp|donut/.test(o.name)&&Q.shadows;
+    if(cfg.respectSides && /m_rock|m_scrub|m_strata/.test(n)){ m.flatShading=/m_rock|m_scrub/.test(n); m.needsUpdate=true; }
+    if(/maximus|gantry_sign/.test(n) && m.emissiveMap){ m.emissiveIntensity=/maximus/.test(n)?0.55:0.3; m.toneMapped=true; }
+    o.receiveShadow=true;
+    o.castShadow=Q.shadows && (cfg.respectSides ? /gantry|maximus|grandstand|festival|gasdiner|mine|arch|joshua|support|mesa_|trackside|guardrail/.test(o.name) : /city|barrier|billboard|lamp|donut/.test(o.name));
     o.matrixAutoUpdate=false; o.updateMatrix(); });
+  hide.forEach(o=>{ o.visible=false; });
   root.updateMatrixWorld(true); W.group.add(root);
-  return {root,foot};
+  return Object.assign({root,foot,lamps,hasTerrain},cfg);
 }
 function buildWorld(def,P,Q){
   seed(def.id.length*1337+7);
@@ -4573,9 +4585,10 @@ function buildWorld(def,P,Q){
     const k=0.9+0.2*n2; cols[v*3]=c[0]*k; cols[v*3+1]=c[1]*k; cols[v*3+2]=c[2]*k; }
   tg.setAttribute('color',new THREE.BufferAttribute(cols,3));
   const detail=canvasTex(256,256,(g,w,h)=>{noiseFill(g,w,h,'#bfbfbf',70);},{repeat:true}); detail.repeat.set(tw/12,td/12);
-  const terrain=new THREE.Mesh(tg,new THREE.MeshStandardMaterial({vertexColors:true,map:detail,roughness:0.97})); terrain.receiveShadow=true; G.add(terrain);
+  const terrain=new THREE.Mesh(tg,new THREE.MeshStandardMaterial({vertexColors:true,map:detail,roughness:0.97})); terrain.receiveShadow=true; G.add(terrain); W.terrainMesh=terrain;
   // ---------- hand-built environment (Blender) ----------
   const ENV=CAR_GLTF['env_'+def.id]?addEnv(W,def,CAR_GLTF['env_'+def.id],Q):null; W.env=ENV;
+  if(ENV&&ENV.hasTerrain){ W.terrainMesh.visible=false; }
   // ---------- road surfaces ----------
   const ptAt=(i,lat,dy)=>[P.x[i]+P.rx[i]*lat,P.y[i]+dy,P.z[i]+P.rz[i]*lat];
   function ribbon(include,latA,latB,dyA,dyB,uA,uB,vs,normalUp=true){
@@ -4638,7 +4651,7 @@ function buildWorld(def,P,Q){
   // grid slots
   W.grid=[]; for(let k=0;k<8;k++){ const row=Math.floor(k/2), col=k%2; const dist=10+row*8.5+(col?4:0); const i=(P.N-Math.round(dist/P.spacing))%P.N; const lat=(col?1:-1)*P.w[i]*0.22; W.grid.push({i,lat}); 
     const p=ptAt(i,lat,0.035); const m=new THREE.Mesh(new THREE.PlaneGeometry(2.6,0.25),new THREE.MeshBasicMaterial({color:0xf0f0f0})); m.position.set(p[0],p[1],p[2]+0); m.rotation.set(-Math.PI/2,0,Math.atan2(P.tx[i],P.tz[i])); m.position.x+=P.tx[i]*2.6; m.position.z+=P.tz[i]*2.6; if(!ENV) G.add(m); }
-  buildGantry(W,P,0); upgradeGantry(W,P,0);
+  buildGantry(W,P,0); if(ENV&&ENV.lamps) envLamps(W,ENV); else upgradeGantry(W,P,0);
   // ---------- boost pads ----------
   const padTex=canvasTex(128,256,(g,w,h)=>{ g.fillStyle='rgba(10,20,40,0.6)'; g.fillRect(0,0,w,h); g.lineWidth=16; g.lineJoin='miter';
     for(let k=0;k<3;k++){ const y=h-40-k*80; g.strokeStyle=k%2?'#ff2e97':'#22e4ff'; g.beginPath(); g.moveTo(14,y+34); g.lineTo(w/2,y); g.lineTo(w-14,y+34); g.stroke(); } },{repeat:true});
@@ -4699,6 +4712,11 @@ function textPanelTex(lines,opts={}){
   const w=opts.w||512,h=opts.h||256;
   return canvasTex(w,h,(g)=>{ g.fillStyle=opts.bg||'#111'; g.fillRect(0,0,w,h); if(opts.border){ g.strokeStyle=opts.border; g.lineWidth=12; g.strokeRect(8,8,w-16,h-16); }
     lines.forEach(L=>{ g.font=L.font; g.fillStyle=L.color; g.textAlign='center'; g.textBaseline='middle'; if(L.glow){ g.shadowColor=L.glow; g.shadowBlur=20; } g.fillText(L.text,w/2,L.y*h); g.shadowBlur=0; }); });
+}
+function envLamps(W,E){
+  const grp=W.group.children.find(o=>o.isGroup&&o.userData.gantry); if(grp) grp.visible=false;
+  const d=new THREE.Vector3(...E.lamps.dir).normalize(); W.lamps=[];
+  E.lamps.pos.forEach(p=>{ const m=new THREE.Mesh(new THREE.CircleGeometry(0.4,20),new THREE.MeshBasicMaterial({color:0x220808})); m.position.set(p[0],p[1],p[2]).addScaledVector(d,0.02); m.lookAt(m.position.clone().add(d)); W.group.add(m); W.lamps.push(m.material); });
 }
 function upgradeGantry(W,P,i){
   if(typeof propTemplate!=='function') return; const T=propTemplate('rrsign'); if(!T) return;
@@ -4779,7 +4797,8 @@ function buildScenery(W,def,P,Q,H){
     const m=new THREE.Mesh(new THREE.BoxGeometry(2.4,1.2,0.12),chevMat); m.position.set(p[0],p[1]+1.9,p[2]); m.rotation.y=Math.atan2(-P.rx[i]*side,-P.rz[i]*side); m.scale.x=side>0?-1:1; G.add(m); }
   // grandstand at start (all tracks)
   const GST=(typeof propTemplate==='function')?propTemplate('grandstand'):null;
-  if(GST){ const i=Math.round(26/P.spacing); const sc=55/GST.w; const e=P.wr[i]+4+GST.d*sc/2; const x=P.x[i]+P.rx[i]*e, z=P.z[i]+P.rz[i]*e; const o=makeProp('grandstand'); o.scale.setScalar(sc); o.position.set(x,heightAt(x,z)-0.1,z); o.rotation.y=Math.atan2(-P.rx[i],-P.rz[i]); G.add(o); }
+  if(W.env&&W.env.skipStand){ }
+  else if(GST){ const i=Math.round(26/P.spacing); const sc=55/GST.w; const e=P.wr[i]+4+GST.d*sc/2; const x=P.x[i]+P.rx[i]*e, z=P.z[i]+P.rz[i]*e; const o=makeProp('grandstand'); o.scale.setScalar(sc); o.position.set(x,heightAt(x,z)-0.1,z); o.rotation.y=Math.atan2(-P.rx[i],-P.rz[i]); G.add(o); }
   else { const i=Math.round(22/P.spacing); const side=1; const e=P.wr[i]+4; const x=P.x[i]+P.rx[i]*e, z=P.z[i]+P.rz[i]*e, y=heightAt(x,z); const grp=new THREE.Group(); grp.position.set(x,y,z); grp.rotation.y=Math.atan2(P.tx[i],P.tz[i]); G.add(grp);
     const crowd=[]; for(let r=0;r<6;r++){ const st=new THREE.Mesh(new THREE.BoxGeometry(6+r*0,1,40),stdMat(th.night?0x2a2a38:0xb0aca4)); st.position.set(-(r*1.6+2),r*1.0+0.5,0); st.scale.x=0.3; st.receiveShadow=true; grp.add(st);
       for(let c=0;c<26;c++) if(rnd()<0.8) crowd.push({x:-(r*1.6+2),y:r*1.0+1.4,z:-19+c*1.5+rr(-0.3,0.3),s:[0.5,0.8+rnd()*0.3,0.5],c:pick([0xff2e97,0x22e4ff,0xffd23f,0xffffff,0x2b2b2b,0xe74c3c,0x3498db,0x8e44ad])}); }
@@ -4828,7 +4847,7 @@ function buildScenery(W,def,P,Q,H){
     const tw=facadeTex('tower'); const towers=[]; for(let k=0;k<26;k++){ const a=-0.6+k*0.05+rr(-0.02,0.02); const r=rr(820,980); towers.push({x:W.nat.cx+Math.sin(a)*r,y:0,z:W.nat.cz+Math.cos(a)*r,ry:rnd(),s:[rr(25,45),rr(60,190),rr(25,45)]}); }
     const tg=new THREE.BoxGeometry(1,1,1); tg.translate(0,0.5,0); G.add(instanced(tg,new THREE.MeshStandardMaterial({color:0x8ea3b8,roughness:0.6,metalness:0.3}),towers,false));
   }
-  if(def.theme==='desert'){
+  if(def.theme==='desert' && !(W.env&&W.env.skipScenery)){
     const sag=saguaroGeo(); G.add(instanced(sag,vcMat,scatter(170,3,140,2,(x,y,z)=>({x,y:y-0.2,z,ry:rnd()*TAU,s:rr(0.8,1.5)}))));
     const rocks=[0,1,2].map(k=>rockGeo(k*10)); const rockMat=new THREE.MeshStandardMaterial({color:0xa65a34,roughness:0.95,flatShading:true});
     rocks.forEach(g=>G.add(instanced(g,rockMat,scatter(70,2,160,2,(x,y,z)=>{const s=rr(0.8,5);return {x,y:y+s*0.1,z,ry:rnd()*TAU,s:[s*rr(1,1.8),s,s*rr(1,1.6)],c:pick([0xffffff,0xd8b8a0,0xc09070])};}),true,true)));
