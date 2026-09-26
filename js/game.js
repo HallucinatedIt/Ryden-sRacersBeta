@@ -3628,7 +3628,7 @@
 
 } )();
 
-const GLB_DATA={"env_mesa": "models/env/env_mesa.glb?v=1790446322", "env_sweet": "models/env/env_sweet.glb?v=1790439367", "grandstand": "models/props/grandstand.glb?v=1790402370", "rrsign": "models/props/rrsign.glb?v=1790402370", "dolly": "models/props/dolly.glb?v=1790402370", "knives": "models/props/knives.glb?v=1790402370", "trio": "models/props/trio.glb?v=1790402370", "gate": "models/props/gate.glb?v=1790402370", "solocup": "models/props/solocup.glb?v=1790402370", "church": "models/props/church.glb?v=1790402370", "donkeys": "models/props/donkeys.glb?v=1790402370", "hijoe": "models/props/hijoe.glb?v=1790402370", "palm": "models/props/palm.glb?v=1790402370", "mrblack": "models/props/mrblack.glb?v=1790402370", "ak": "models/props/ak.glb?v=1790402370", "hellcat": "models/cars/hellcat.glb?v=1790402370", "brcc": "models/cars/rotor.glb?v=1790402370", "fdc": "models/cars/rrpickup.glb?v=1790402370", "shoe_factory": "models/props/shoe_factory.glb?v=1790402370", "claw_can": "models/props/claw_can.glb?v=1790402370", "echelon_can": "models/props/echelon_can.glb?v=1790402370", "watch_shop": "models/props/watch_shop.glb?v=1790402370", "watch_sign": "models/props/watch_sign.glb?v=1790402370", "range_sign": "models/props/range_sign.glb?v=1790402370", "bpd": "models/cars/bpd_69.glb?v=1790402370", "concord": "models/cars/concordance.glb?v=1790402370", "donut": "models/cars/donut_patrol.glb?v=1790402370", "duck": "models/cars/duck_plasma.glb?v=1790402370", "gt44": "models/cars/gt40.glb?v=1790402370", "missile": "models/cars/missile_commander.glb?v=1790402370", "leopard": "models/cars/night_leopard.glb?v=1790402370", "trout": "models/cars/trout_protocol.glb?v=1790402370"};
+const GLB_DATA={"env_coast": "models/env/env_coast.glb?v=1790457650", "env_mesa": "models/env/env_mesa.glb?v=1790446322", "env_sweet": "models/env/env_sweet.glb?v=1790439367", "grandstand": "models/props/grandstand.glb?v=1790402370", "rrsign": "models/props/rrsign.glb?v=1790402370", "dolly": "models/props/dolly.glb?v=1790402370", "knives": "models/props/knives.glb?v=1790402370", "trio": "models/props/trio.glb?v=1790402370", "gate": "models/props/gate.glb?v=1790402370", "solocup": "models/props/solocup.glb?v=1790402370", "church": "models/props/church.glb?v=1790402370", "donkeys": "models/props/donkeys.glb?v=1790402370", "hijoe": "models/props/hijoe.glb?v=1790402370", "palm": "models/props/palm.glb?v=1790402370", "mrblack": "models/props/mrblack.glb?v=1790402370", "ak": "models/props/ak.glb?v=1790402370", "hellcat": "models/cars/hellcat.glb?v=1790402370", "brcc": "models/cars/rotor.glb?v=1790402370", "fdc": "models/cars/rrpickup.glb?v=1790402370", "shoe_factory": "models/props/shoe_factory.glb?v=1790402370", "claw_can": "models/props/claw_can.glb?v=1790402370", "echelon_can": "models/props/echelon_can.glb?v=1790402370", "watch_shop": "models/props/watch_shop.glb?v=1790402370", "watch_sign": "models/props/watch_sign.glb?v=1790402370", "range_sign": "models/props/range_sign.glb?v=1790402370", "bpd": "models/cars/bpd_69.glb?v=1790402370", "concord": "models/cars/concordance.glb?v=1790402370", "donut": "models/cars/donut_patrol.glb?v=1790402370", "duck": "models/cars/duck_plasma.glb?v=1790402370", "gt44": "models/cars/gt40.glb?v=1790402370", "missile": "models/cars/missile_commander.glb?v=1790402370", "leopard": "models/cars/night_leopard.glb?v=1790402370", "trout": "models/cars/trout_protocol.glb?v=1790402370"};
 const GLB_TEX={};
 "use strict";
 // ===== UTILITIES =====
@@ -4301,7 +4301,7 @@ const CAR_GLTF={}, GLB_PROC={};
 const GLB_ROT={brcc:Math.PI/2, fdc:Math.PI/2, hellcat:Math.PI/2};
 const GLB_LEN={hellcat:4.9,brcc:4.4,fdc:5.3,duck:3.9,gt44:4.4,donut:4.5,missile:5.8,bpd:4.8,concord:5.8,trout:5.0,leopard:4.5};
 const GLB_TEXTURES={}; let GLB_ERROR='';
-const PROP_IDS=new Set(['env_mesa','env_sweet','grandstand','rrsign','dolly','knives','trio','gate','solocup','church','donkeys','hijoe','palm','mrblack','ak','shoe_factory','claw_can','echelon_can','watch_shop','watch_sign','range_sign']);
+const PROP_IDS=new Set(['env_coast','env_mesa','env_sweet','grandstand','rrsign','dolly','knives','trio','gate','solocup','church','donkeys','hijoe','palm','mrblack','ak','shoe_factory','claw_can','echelon_can','watch_shop','watch_sign','range_sign']);
 function propsForTrack(def){ const need=new Set(['grandstand','rrsign']);
   for(const id in PROP_INFO){ const i=PROP_INFO[id]; if((i.themes&&i.themes[def.id])||(i.median&&i.median[def.id])) need.add(id); }
   if(def.theme==='city') need.add('palm'); if(def.shooters){ need.add('mrblack'); need.add('ak'); } if(def.monument){ need.add('solocup'); need.add('dolly'); }
@@ -4525,7 +4525,9 @@ function naturalHeightFn(def,P){
   else f=(x,z)=>{ return chan(x,z,0.0); };
   f.cx=cx; f.cz=cz; f.R0=R0; f.channels=channels; return f;
 }
-const ENV_CFG={ mesa:{skipProps:['knives','rrsign'],skipStand:true,skipScenery:true,respectSides:true,lowHide:/^mz_(scrub|rocks)/} };
+const ENV_CFG={ mesa:{skipProps:['knives','rrsign'],skipStand:true,skipScenery:true,respectSides:true,lowHide:/^mz_(scrub|rocks)/},
+  coast:{skipProps:['knives','hijoe','rrsign'],skipStand:true,skipScenery:true,respectSides:true,lowHide:/^pc_(scrub|grass|rocks|shore_rocks)/,seaY:-9,fogNear:220,fogFar:2300,
+    shadowRe:/gantry|maximus|grandstand|festival|lighthouse|support|cypress|palms|trackside|guardrail|roadside|overlook|tunnel/} };
 function envFree(E,x,z,r){ const f=E.foot; for(let k=0;k<f.length;k++){ const b=f[k]; const dx=b[0]-x, dz=b[1]-z; if(dx*dx+dz*dz<(b[2]+r)*(b[2]+r)) return false; } return true; }
 function addEnv(W,def,scene,Q){
   const cfg=ENV_CFG[def.id]||{};
@@ -4542,9 +4544,10 @@ function addEnv(W,def,scene,Q){
     else if(!cfg.respectSides){ m.side=/billboard|bb_|donut|spr|lamp/.test(n)?THREE.DoubleSide:THREE.FrontSide; }
     if(/line|checker/.test(n)){ m.polygonOffset=true; m.polygonOffsetFactor=-2; m.polygonOffsetUnits=-2; }
     if(cfg.respectSides && /m_rock|m_scrub|m_strata/.test(n)){ m.flatShading=/m_rock|m_scrub/.test(n); m.needsUpdate=true; }
+    if(/foam/.test(n)){ m.transparent=true; m.alphaTest=0; m.depthWrite=false; m.side=THREE.DoubleSide; o.renderOrder=1; o.castShadow=false; }
     if(/maximus|gantry_sign/.test(n) && m.emissiveMap){ m.emissiveIntensity=/maximus/.test(n)?0.55:0.3; m.toneMapped=true; }
     o.receiveShadow=true;
-    o.castShadow=Q.shadows && (cfg.respectSides ? /gantry|maximus|grandstand|festival|gasdiner|mine|arch|joshua|support|mesa_|trackside|guardrail/.test(o.name) : /city|barrier|billboard|lamp|donut/.test(o.name));
+    o.castShadow=Q.shadows && !/foam/.test(n) && (cfg.shadowRe ? cfg.shadowRe.test(o.name) : cfg.respectSides ? /gantry|maximus|grandstand|festival|gasdiner|mine|arch|joshua|support|mesa_|trackside|guardrail/.test(o.name) : /city|barrier|billboard|lamp|donut/.test(o.name));
     o.matrixAutoUpdate=false; o.updateMatrix(); });
   hide.forEach(o=>{ o.visible=false; });
   root.updateMatrixWorld(true); W.group.add(root);
@@ -4589,6 +4592,7 @@ function buildWorld(def,P,Q){
   // ---------- hand-built environment (Blender) ----------
   const ENV=CAR_GLTF['env_'+def.id]?addEnv(W,def,CAR_GLTF['env_'+def.id],Q):null; W.env=ENV;
   if(ENV&&ENV.hasTerrain){ W.terrainMesh.visible=false; }
+  if(ENV&&ENV.fogFar){ W.fog.near=ENV.fogNear*Q.fogMul; W.fog.far=ENV.fogFar*Q.fogMul; }
   // ---------- road surfaces ----------
   const ptAt=(i,lat,dy)=>[P.x[i]+P.rx[i]*lat,P.y[i]+dy,P.z[i]+P.rz[i]*lat];
   function ribbon(include,latA,latB,dyA,dyB,uA,uB,vs,normalUp=true){
@@ -4885,7 +4889,8 @@ function buildScenery(W,def,P,Q,H){
           vec3 c=mix(deep,shallow,0.35+0.2*w); c=mix(c,vec3(0.95,0.75,0.6),fr*0.6);
           vec3 r=reflect(-v,n); float sp=pow(max(dot(r,normalize(sun)),0.),120.); c+=sunc*sp*3.;
           gl_FragColor=vec4(c,1.);\n#include <fog_fragment>\n}`}));
-    ocean.rotation.x=-Math.PI/2; ocean.position.y=-3; G.add(ocean); W.updaters.push((dt,t)=>ocean.material.uniforms.t.value=t);
+    ocean.rotation.x=-Math.PI/2; ocean.position.y=(W.env&&W.env.seaY!=null)?W.env.seaY:-3; G.add(ocean); W.updaters.push((dt,t)=>ocean.material.uniforms.t.value=t);
+    if(!(W.env&&W.env.skipScenery)){
     const land=(x,z,y)=>y>0.5;
     const cyp=cypressGeo(); G.add(instanced(cyp,vcMat,scatter(150,4,140,3,(x,y,z)=>land(x,z,y)?{x,y:y-0.2,z,ry:rnd()*TAU,s:rr(1.2,2.2)}:null)));
     const pine=coneTreeGeo(0x2d5a32); G.add(instanced(pine,vcMat,areaScatter(260,10,(x,y,z)=>y>4?{x,y:y-0.3,z,ry:rnd()*TAU,s:rr(1.5,3)}:null)));
@@ -4917,10 +4922,11 @@ function buildScenery(W,def,P,Q,H){
     const vl=scatter(28,10,60,5,(x,y,z,i,sd)=>{ if(y<1) return null; const ang=Math.atan2(P.tx[i],P.tz[i]); const w=rr(9,14),d=rr(8,11),h=rr(5,8); if(!footprintClear(x,z,ang,w,d,4)) return null; return {x,y:y-0.3,z,ry:ang,s:[w,h,d],c:pick([0xffffff,0xf7e7cf,0xf2d6c0])}; });
     const bg=new THREE.BoxGeometry(1,1,1); bg.translate(0,0.5,0); G.add(instanced(bg,[vf,vf,rfm,rfm,vf,vf],vl,true,true));
     const rg2=new THREE.ConeGeometry(0.75,0.35,4); rg2.rotateY(Math.PI/4); rg2.translate(0,0.17,0); G.add(instanced(rg2,rfm,vl.map(v=>({x:v.x,y:v.y+v.s[1],z:v.z,ry:v.ry,s:[v.s[0]*0.95*1.41,v.s[1]*0.9,v.s[2]*0.95*1.41]})),true));
+    }
     // sailboats
-    for(let k=0;k<5;k++){ const b=new THREE.Group(); const x=W.nat.cx-rr(350,900), z=W.nat.cz+rr(-600,600); b.position.set(x,-3,z); const hull=new THREE.Mesh(new THREE.BoxGeometry(2,1,7),stdMat(0xffffff)); b.add(hull);
+    for(let k=0;k<5;k++){ const b=new THREE.Group(); const x=W.nat.cx-rr(350,900), z=W.nat.cz+rr(-600,600); b.position.set(x,(W.env&&W.env.seaY!=null)?W.env.seaY:-3,z); const hull=new THREE.Mesh(new THREE.BoxGeometry(2,1,7),stdMat(0xffffff)); b.add(hull);
       const sg=new THREE.BufferGeometry(); sg.setAttribute('position',new THREE.Float32BufferAttribute([0,1,-2,0,11,0,0,1,2.8],3)); sg.computeVertexNormals(); const sail=new THREE.Mesh(sg,new THREE.MeshStandardMaterial({color:0xf8f4ec,side:THREE.DoubleSide})); b.add(sail); b.rotation.y=rnd()*TAU; G.add(b); }
-    billboard(P.cpIdx[13],1,8,[{text:'PACIFICA',font:'italic 150px Yellowtail',color:'#ff7a1f',y:0.42},{text:'COAST HIGHWAY',font:'bold 80px "Chakra Petch"',color:'#fff',y:0.76}],'#10304f');
+    if(!W.env) billboard(P.cpIdx[13],1,8,[{text:'PACIFICA',font:'italic 150px Yellowtail',color:'#ff7a1f',y:0.42},{text:'COAST HIGHWAY',font:'bold 80px "Chakra Petch"',color:'#fff',y:0.76}],'#10304f');
   }
   if(def.theme==='night'){
     W.rain=true;
