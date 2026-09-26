@@ -3628,7 +3628,7 @@
 
 } )();
 
-const GLB_DATA={"grandstand": "models/props/grandstand.glb?v=1790402370", "rrsign": "models/props/rrsign.glb?v=1790402370", "dolly": "models/props/dolly.glb?v=1790402370", "knives": "models/props/knives.glb?v=1790402370", "trio": "models/props/trio.glb?v=1790402370", "gate": "models/props/gate.glb?v=1790402370", "solocup": "models/props/solocup.glb?v=1790402370", "church": "models/props/church.glb?v=1790402370", "donkeys": "models/props/donkeys.glb?v=1790402370", "hijoe": "models/props/hijoe.glb?v=1790402370", "palm": "models/props/palm.glb?v=1790402370", "mrblack": "models/props/mrblack.glb?v=1790402370", "ak": "models/props/ak.glb?v=1790402370", "hellcat": "models/cars/hellcat.glb?v=1790402370", "brcc": "models/cars/rotor.glb?v=1790402370", "fdc": "models/cars/rrpickup.glb?v=1790402370", "shoe_factory": "models/props/shoe_factory.glb?v=1790402370", "claw_can": "models/props/claw_can.glb?v=1790402370", "echelon_can": "models/props/echelon_can.glb?v=1790402370", "watch_shop": "models/props/watch_shop.glb?v=1790402370", "watch_sign": "models/props/watch_sign.glb?v=1790402370", "range_sign": "models/props/range_sign.glb?v=1790402370", "bpd": "models/cars/bpd_69.glb?v=1790402370", "concord": "models/cars/concordance.glb?v=1790402370", "donut": "models/cars/donut_patrol.glb?v=1790402370", "duck": "models/cars/duck_plasma.glb?v=1790402370", "gt44": "models/cars/gt40.glb?v=1790402370", "missile": "models/cars/missile_commander.glb?v=1790402370", "leopard": "models/cars/night_leopard.glb?v=1790402370", "trout": "models/cars/trout_protocol.glb?v=1790402370"};
+const GLB_DATA={"env_sweet": "models/env/env_sweet.glb?v=1790439367", "grandstand": "models/props/grandstand.glb?v=1790402370", "rrsign": "models/props/rrsign.glb?v=1790402370", "dolly": "models/props/dolly.glb?v=1790402370", "knives": "models/props/knives.glb?v=1790402370", "trio": "models/props/trio.glb?v=1790402370", "gate": "models/props/gate.glb?v=1790402370", "solocup": "models/props/solocup.glb?v=1790402370", "church": "models/props/church.glb?v=1790402370", "donkeys": "models/props/donkeys.glb?v=1790402370", "hijoe": "models/props/hijoe.glb?v=1790402370", "palm": "models/props/palm.glb?v=1790402370", "mrblack": "models/props/mrblack.glb?v=1790402370", "ak": "models/props/ak.glb?v=1790402370", "hellcat": "models/cars/hellcat.glb?v=1790402370", "brcc": "models/cars/rotor.glb?v=1790402370", "fdc": "models/cars/rrpickup.glb?v=1790402370", "shoe_factory": "models/props/shoe_factory.glb?v=1790402370", "claw_can": "models/props/claw_can.glb?v=1790402370", "echelon_can": "models/props/echelon_can.glb?v=1790402370", "watch_shop": "models/props/watch_shop.glb?v=1790402370", "watch_sign": "models/props/watch_sign.glb?v=1790402370", "range_sign": "models/props/range_sign.glb?v=1790402370", "bpd": "models/cars/bpd_69.glb?v=1790402370", "concord": "models/cars/concordance.glb?v=1790402370", "donut": "models/cars/donut_patrol.glb?v=1790402370", "duck": "models/cars/duck_plasma.glb?v=1790402370", "gt44": "models/cars/gt40.glb?v=1790402370", "missile": "models/cars/missile_commander.glb?v=1790402370", "leopard": "models/cars/night_leopard.glb?v=1790402370", "trout": "models/cars/trout_protocol.glb?v=1790402370"};
 const GLB_TEX={};
 "use strict";
 // ===== UTILITIES =====
@@ -4301,10 +4301,11 @@ const CAR_GLTF={}, GLB_PROC={};
 const GLB_ROT={brcc:Math.PI/2, fdc:Math.PI/2, hellcat:Math.PI/2};
 const GLB_LEN={hellcat:4.9,brcc:4.4,fdc:5.3,duck:3.9,gt44:4.4,donut:4.5,missile:5.8,bpd:4.8,concord:5.8,trout:5.0,leopard:4.5};
 const GLB_TEXTURES={}; let GLB_ERROR='';
-const PROP_IDS=new Set(['grandstand','rrsign','dolly','knives','trio','gate','solocup','church','donkeys','hijoe','palm','mrblack','ak','shoe_factory','claw_can','echelon_can','watch_shop','watch_sign','range_sign']);
+const PROP_IDS=new Set(['env_sweet','grandstand','rrsign','dolly','knives','trio','gate','solocup','church','donkeys','hijoe','palm','mrblack','ak','shoe_factory','claw_can','echelon_can','watch_shop','watch_sign','range_sign']);
 function propsForTrack(def){ const need=new Set(['grandstand','rrsign']);
   for(const id in PROP_INFO){ const i=PROP_INFO[id]; if((i.themes&&i.themes[def.id])||(i.median&&i.median[def.id])) need.add(id); }
   if(def.theme==='city') need.add('palm'); if(def.shooters){ need.add('mrblack'); need.add('ak'); } if(def.monument){ need.add('solocup'); need.add('dolly'); }
+  if(typeof GLB_DATA!=='undefined'&&GLB_DATA['env_'+def.id]&&!(window.GAME&&GAME.q&&GAME.q.env===false)) need.add('env_'+def.id);
   return [...need].filter(id=>typeof GLB_DATA!=='undefined'&&GLB_DATA[id]&&!CAR_GLTF[id]); }
 function loadCarGLBs(done,progress,only){
   const data=(typeof GLB_DATA!=='undefined')?GLB_DATA:{}; const ids=only?only.filter(id=>data[id]&&!CAR_GLTF[id]):Object.keys(data).filter(id=>!PROP_IDS.has(id));
@@ -4523,6 +4524,20 @@ function naturalHeightFn(def,P){
   else f=(x,z)=>{ return chan(x,z,0.0); };
   f.cx=cx; f.cz=cz; f.R0=R0; f.channels=channels; return f;
 }
+function envFree(E,x,z,r){ const f=E.foot; for(let k=0;k<f.length;k++){ const b=f[k]; const dx=b[0]-x, dz=b[1]-z; if(dx*dx+dz*dz<(b[2]+r)*(b[2]+r)) return false; } return true; }
+function addEnv(W,def,scene,Q){
+  const root=scene.clone(true); const foot=[]; const aniso=(window.GAME&&GAME.renderer)?Math.min(Q.shadows?8:4,GAME.renderer.capabilities.getMaxAnisotropy()):4;
+  root.traverse(o=>{ if(o.userData&&o.userData.foot){ try{ foot.push(...JSON.parse(o.userData.foot)); }catch(e){} }
+    if(!o.isMesh) return; const m=o.material; const n=(m.name||'');
+    if(m.map){ m.map.anisotropy=aniso; m.map.needsUpdate=true; }
+    if(/fence/.test(n)){ m.transparent=false; m.alphaTest=0.45; m.side=THREE.DoubleSide; m.depthWrite=true; o.castShadow=false; }
+    else { m.side=/billboard|bb_|donut|spr|lamp/.test(n)?THREE.DoubleSide:THREE.FrontSide; }
+    if(/line|checker/.test(n)){ m.polygonOffset=true; m.polygonOffsetFactor=-2; m.polygonOffsetUnits=-2; }
+    o.receiveShadow=true; o.castShadow=/city|barrier|billboard|lamp|donut/.test(o.name)&&Q.shadows;
+    o.matrixAutoUpdate=false; o.updateMatrix(); });
+  root.updateMatrixWorld(true); W.group.add(root);
+  return {root,foot};
+}
 function buildWorld(def,P,Q){
   seed(def.id.length*1337+7);
   const th=THEMES[def.sky||def.theme]; const W={group:new THREE.Group(),updaters:[],obstacles:[],items:[],pads:[],slicks:[],th,def,P};
@@ -4559,6 +4574,8 @@ function buildWorld(def,P,Q){
   tg.setAttribute('color',new THREE.BufferAttribute(cols,3));
   const detail=canvasTex(256,256,(g,w,h)=>{noiseFill(g,w,h,'#bfbfbf',70);},{repeat:true}); detail.repeat.set(tw/12,td/12);
   const terrain=new THREE.Mesh(tg,new THREE.MeshStandardMaterial({vertexColors:true,map:detail,roughness:0.97})); terrain.receiveShadow=true; G.add(terrain);
+  // ---------- hand-built environment (Blender) ----------
+  const ENV=CAR_GLTF['env_'+def.id]?addEnv(W,def,CAR_GLTF['env_'+def.id],Q):null; W.env=ENV;
   // ---------- road surfaces ----------
   const ptAt=(i,lat,dy)=>[P.x[i]+P.rx[i]*lat,P.y[i]+dy,P.z[i]+P.rz[i]*lat];
   function ribbon(include,latA,latB,dyA,dyB,uA,uB,vs,normalUp=true){
@@ -4572,13 +4589,13 @@ function buildWorld(def,P,Q){
   }
   const notGap=(i,j)=>!P.gap[i]&&!P.gap[j];
   const roadMat=new THREE.MeshStandardMaterial({map:roadTexture(th),roughness:th.night?0.28:0.85,metalness:th.night?0.35:0.0});
-  const road=new THREE.Mesh(ribbon(notGap,i=>-P.w[i]/2,i=>P.w[i]/2,0,0,0,1,26),roadMat); road.receiveShadow=true; G.add(road); W.roadMat=roadMat;
+  const road=new THREE.Mesh(ribbon(notGap,i=>-P.w[i]/2,i=>P.w[i]/2,0,0,0,1,26),roadMat); road.receiveShadow=true; if(!ENV) G.add(road); W.roadMat=roadMat;
   // curbs: corner curbs vs edge strip
   const isCorner=i=>Math.abs(P.curv[i])>1/110;
   const curbMat=new THREE.MeshStandardMaterial({map:stripTex(th.curbA,th.curbB),roughness:0.6,emissive:th.night?0xff2e97:0,emissiveIntensity:th.night?0.25:0});
   const edgeMat=new THREE.MeshStandardMaterial({color:th.edge,roughness:0.8});
   const shMat=new THREE.MeshStandardMaterial({map:shoulderTexture(th.shoulder),roughness:th.night?0.4:0.95,metalness:th.night?0.2:0});
-  [[-1],[1]].forEach(([sd])=>{
+  if(!ENV) [[-1],[1]].forEach(([sd])=>{
     const la=sd<0?(i=>-P.w[i]/2-0.9):(i=>P.w[i]/2), lb=sd<0?(i=>-P.w[i]/2):(i=>P.w[i]/2+0.9);
     const c1=new THREE.Mesh(ribbon((i,j)=>notGap(i,j)&&isCorner(i),la,lb,0.04,0.04,0,1,2),curbMat); c1.receiveShadow=true; G.add(c1);
     const c2=new THREE.Mesh(ribbon((i,j)=>notGap(i,j)&&!isCorner(i),la,lb,0.02,0.02,0,1,2),edgeMat); c2.receiveShadow=true; G.add(c2);
@@ -4586,7 +4603,7 @@ function buildWorld(def,P,Q){
     const sh=new THREE.Mesh(ribbon(notGap,sa,sb,0.01,0.01,0,1,4),shMat); sh.receiveShadow=true; sh.material.map.repeat.set(3,1); G.add(sh);
   });
   // medians
-  (def.medians||[]).forEach(m=>{
+  (ENV?[]:(def.medians||[])).forEach(m=>{
     const mg=ribbon((i,j)=>P.median[i]>0.3&&P.median[j]>0.3,i=>-P.median[i],i=>P.median[i],0.35,0.35,0,1,4);
     const mm=new THREE.Mesh(mg,new THREE.MeshStandardMaterial({color:def.theme==='night'?0x222a2a:0x6f8f3a,roughness:0.9})); G.add(mm);
     const side=ribbon((i,j)=>P.median[i]>0.3&&P.median[j]>0.3,i=>-P.median[i],i=>-P.median[i],-0.2,0.38,0,1,2);
@@ -4598,7 +4615,7 @@ function buildWorld(def,P,Q){
   const wallMat=new THREE.MeshStandardMaterial({map:wallTexture(th.wall),roughness:th.wall==='guardrail'?0.35:0.8,metalness:th.wall==='guardrail'?0.6:0.05,side:THREE.DoubleSide});
   const railLike=th.wall==='guardrail'||th.wall==='wood'; const H=th.wallH, T=railLike?0.12:0.45;
   const wallInc=(i,j)=>notGap(i,j);
-  [-1,1].forEach(sd=>{
+  if(!ENV) [-1,1].forEach(sd=>{
     const L=i=>sd<0?-P.wl[i]:P.wr[i], L2=i=>sd<0?-P.wl[i]-T:P.wr[i]+T;
     const bottom=railLike?0.3:-0.5;
     const gIn=ribbon(wallInc,L,L,bottom,H,0,1,4); const gTop=ribbon(wallInc,sd<0?L2:L,sd<0?L:L2,H,H,0,0.1,4); const gOut=ribbon(wallInc,L2,L2,H,-0.6,0,1,4);
@@ -4617,10 +4634,10 @@ function buildWorld(def,P,Q){
   // ---------- start/finish ----------
   const s0=0;
   const chk=canvasTex(256,64,(g)=>{for(let x=0;x<16;x++)for(let y=0;y<4;y++){g.fillStyle=(x+y)%2?'#111':'#f4f4f4';g.fillRect(x*16,y*16,16,16);}});
-  const fl=new THREE.Mesh(ribbon((i,j)=>i===0,i=>-P.w[i]/2,i=>P.w[i]/2,0.03,0.03,0,1,P.spacing),new THREE.MeshStandardMaterial({map:chk,roughness:0.6})); G.add(fl);
+  const fl=new THREE.Mesh(ribbon((i,j)=>i===0,i=>-P.w[i]/2,i=>P.w[i]/2,0.03,0.03,0,1,P.spacing),new THREE.MeshStandardMaterial({map:chk,roughness:0.6})); if(!ENV) G.add(fl);
   // grid slots
   W.grid=[]; for(let k=0;k<8;k++){ const row=Math.floor(k/2), col=k%2; const dist=10+row*8.5+(col?4:0); const i=(P.N-Math.round(dist/P.spacing))%P.N; const lat=(col?1:-1)*P.w[i]*0.22; W.grid.push({i,lat}); 
-    const p=ptAt(i,lat,0.035); const m=new THREE.Mesh(new THREE.PlaneGeometry(2.6,0.25),new THREE.MeshBasicMaterial({color:0xf0f0f0})); m.position.set(p[0],p[1],p[2]+0); m.rotation.set(-Math.PI/2,0,Math.atan2(P.tx[i],P.tz[i])); m.position.x+=P.tx[i]*2.6; m.position.z+=P.tz[i]*2.6; G.add(m); }
+    const p=ptAt(i,lat,0.035); const m=new THREE.Mesh(new THREE.PlaneGeometry(2.6,0.25),new THREE.MeshBasicMaterial({color:0xf0f0f0})); m.position.set(p[0],p[1],p[2]+0); m.rotation.set(-Math.PI/2,0,Math.atan2(P.tx[i],P.tz[i])); m.position.x+=P.tx[i]*2.6; m.position.z+=P.tz[i]*2.6; if(!ENV) G.add(m); }
   buildGantry(W,P,0); upgradeGantry(W,P,0);
   // ---------- boost pads ----------
   const padTex=canvasTex(128,256,(g,w,h)=>{ g.fillStyle='rgba(10,20,40,0.6)'; g.fillRect(0,0,w,h); g.lineWidth=16; g.lineJoin='miter';
@@ -4775,11 +4792,12 @@ function buildScenery(W,def,P,Q,H){
     const palms=scatter(110,3,60,3,(x,y,z)=>({x,y,z,ry:rnd()*TAU,h:rr(10,17)}));
     for(let i=0;i<P.N;i+=8){ if(i>P.cpIdx[3]&&i<P.cpIdx[21]) continue; [-1,1].forEach(sd=>{ const e=(sd<0?P.wl[i]:P.wr[i])+2.5; const x=P.x[i]+P.rx[i]*e*sd, z=P.z[i]+P.rz[i]*e*sd; palms.push({x,y:heightAt(x,z),z,ry:rnd()*TAU,h:rr(13,17)}); }); }
     for(let i=0;i<P.N;i+=9){ if(P.median[i]>1.2){ palms.push({x:P.x[i],y:P.y[i]+0.3,z:P.z[i],ry:rnd()*TAU,h:rr(8,11)}); } }
-    for(let q=palms.length-1;q>=0;q--) if(!freeOfProps(palms[q].x,palms[q].z,1.5)) palms.splice(q,1);
+    for(let q=palms.length-1;q>=0;q--) if(!freeOfProps(palms[q].x,palms[q].z,1.5)||(W.env&&!envFree(W.env,palms[q].x,palms[q].z,2))) palms.splice(q,1);
     const PT=(typeof propTemplate==='function')?propTemplate('palm'):null;
     if(PT){ PT.parts.forEach(pp=>G.add(instanced(pp.g,pp.mt,palms.map(p=>({x:p.x,y:p.y,z:p.z,ry:p.ry,s:p.h/PT.h*0.85})),true))); }
     else { G.add(instanced(trunk,vcMat,palms.map(p=>({x:p.x,y:p.y,z:p.z,ry:p.ry,s:[1+p.h*0.03,p.h,1+p.h*0.03]}))));
     G.add(instanced(crown,vcMat,palms.map(p=>({x:p.x,y:p.y+p.h-0.2,z:p.z,ry:p.ry,s:1.15})))); }
+    if(!W.env){ // procedural city (replaced by the Blender environment when present)
     // buildings
     const facades=[facadeTex('shop'),facadeTex('shop'),facadeTex('shop')]; const roofM=stdMat(0x8a8580);
     const blds=[[],[],[]];
@@ -4791,6 +4809,7 @@ function buildScenery(W,def,P,Q,H){
     // street lamps
     const lamps=[]; for(let i=0;i<P.N;i+=18){ const sd=(i/18)%2?1:-1; const e=(sd<0?P.wl[i]:P.wr[i])+1.2; const x=P.x[i]+P.rx[i]*e*sd, z=P.z[i]+P.rz[i]*e*sd; lamps.push({x,y:heightAt(x,z),z,ry:Math.atan2(P.rx[i]*-sd,P.rz[i]*-sd)}); }
     const lp=new THREE.CylinderGeometry(0.1,0.14,7,6); lp.translate(0,3.5,0); const la=new THREE.BoxGeometry(0.2,0.2,2); la.translate(0,7,1); G.add(instanced(mergeGeos([lp,la]),stdMat(0x3a3a3a,{metalness:0.6}),lamps));
+    }
     // landmark: retro Ryden's sign
     { const i=P.cpIdx[3]; const e=P.wl[i]+9; const x=P.x[i]-P.rx[i]*e, z=P.z[i]-P.rz[i]*e, y=heightAt(x,z); const grp=new THREE.Group(); grp.position.set(x,y,z); grp.rotation.y=Math.atan2(P.tx[i],P.tz[i])+2.2; G.add(grp);
       const tex=canvasTex(1024,512,(g,w,h)=>{ g.fillStyle='#f6f0e2'; g.beginPath(); g.moveTo(40,120); g.lineTo(w-60,40); g.lineTo(w-20,h-120); g.lineTo(60,h-40); g.fill(); g.strokeStyle='#27c6d9'; g.lineWidth=18; g.stroke();
@@ -4798,13 +4817,13 @@ function buildScenery(W,def,P,Q,H){
       const sgn=new THREE.Mesh(new THREE.PlaneGeometry(14,7),new THREE.MeshStandardMaterial({map:tex,transparent:true,side:THREE.DoubleSide,roughness:0.5,emissive:0xffffff,emissiveMap:tex,emissiveIntensity:0.25})); sgn.position.y=15; grp.add(sgn);
       const pl=new THREE.Mesh(new THREE.CylinderGeometry(0.35,0.45,15,8),stdMat(0x6b6f75,{metalness:0.6})); pl.position.y=7.5; pl.castShadow=true; grp.add(pl); }
     // landmark: donut shop with giant donut
-    { const i=P.cpIdx[15]; const sd=1; const e=P.wr[i]+18; const x=P.x[i]+P.rx[i]*e, z=P.z[i]+P.rz[i]*e, y=heightAt(x,z); const grp=new THREE.Group(); grp.position.set(x,y,z); grp.rotation.y=Math.atan2(P.tx[i],P.tz[i]); G.add(grp);
+    if(!W.env){ const i=P.cpIdx[15]; const sd=1; const e=P.wr[i]+18; const x=P.x[i]+P.rx[i]*e, z=P.z[i]+P.rz[i]*e, y=heightAt(x,z); const grp=new THREE.Group(); grp.position.set(x,y,z); grp.rotation.y=Math.atan2(P.tx[i],P.tz[i]); G.add(grp);
       const b=new THREE.Mesh(new THREE.BoxGeometry(14,5,12),stdMat(0xfff3e6)); b.position.y=2.5; b.castShadow=true; grp.add(b);
       const dough=new THREE.Mesh(new THREE.TorusGeometry(4,1.9,16,40),stdMat(0xd9a15a)); dough.position.set(0,11,0); dough.rotation.y=Math.PI/2; dough.castShadow=true; grp.add(dough);
       const ic=new THREE.Mesh(new THREE.TorusGeometry(4,1.95,16,40,Math.PI*2),new THREE.MeshStandardMaterial({map:liveryTexture('sprinkles'),roughness:0.5})); ic.scale.set(1,1,0.7); ic.position.set(0.35,11,0); ic.rotation.y=Math.PI/2; grp.add(ic);
       const sg=new THREE.Mesh(new THREE.PlaneGeometry(10,1.6),new THREE.MeshBasicMaterial({map:textPanelTex([{text:'GLAZE EM DONUTS',font:'bold 90px "Racing Sans One",Impact',color:'#ff2e97',y:0.55}],{w:1024,h:160,bg:'#fff'})})); sg.position.set(-7.05,4,0); sg.rotation.y=-Math.PI/2; grp.add(sg); }
-    billboard(P.cpIdx[8],1,10,[{text:'RIMFIRE GAMES',font:'bold 130px "Racing Sans One",Impact',color:'#ffd23f',y:0.4},{text:'presents',font:'italic 70px Yellowtail',color:'#fff',y:0.72}],'#1a0f33');
-    billboard(P.cpIdx[19],-1,8,[{text:'MISSILE',font:'bold 150px "Racing Sans One",Impact',color:'#d4a33a',y:0.35},{text:'COMMANDER TRUCKS',font:'bold 80px "Chakra Petch"',color:'#fff',y:0.72}],'#111');
+    if(!W.env) billboard(P.cpIdx[8],1,10,[{text:'RIMFIRE GAMES',font:'bold 130px "Racing Sans One",Impact',color:'#ffd23f',y:0.4},{text:'presents',font:'italic 70px Yellowtail',color:'#fff',y:0.72}],'#1a0f33');
+    if(!W.env) billboard(P.cpIdx[19],-1,8,[{text:'MISSILE',font:'bold 150px "Racing Sans One",Impact',color:'#d4a33a',y:0.35},{text:'COMMANDER TRUCKS',font:'bold 80px "Chakra Petch"',color:'#fff',y:0.72}],'#111');
     // distant skyline (downtown)
     const tw=facadeTex('tower'); const towers=[]; for(let k=0;k<26;k++){ const a=-0.6+k*0.05+rr(-0.02,0.02); const r=rr(820,980); towers.push({x:W.nat.cx+Math.sin(a)*r,y:0,z:W.nat.cz+Math.cos(a)*r,ry:rnd(),s:[rr(25,45),rr(60,190),rr(25,45)]}); }
     const tg=new THREE.BoxGeometry(1,1,1); tg.translate(0,0.5,0); G.add(instanced(tg,new THREE.MeshStandardMaterial({color:0x8ea3b8,roughness:0.6,metalness:0.3}),towers,false));
