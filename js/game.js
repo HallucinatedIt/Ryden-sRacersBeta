@@ -3628,8 +3628,8 @@
 
 } )();
 
-const GLB_DATA={"solocup": "models/props/solocup.glb?v=1790383946", "church": "models/props/church.glb?v=1790383946", "donkeys": "models/props/donkeys.glb?v=1790383946", "hijoe": "models/props/hijoe.glb?v=1790383946", "palm": "models/props/palm.glb?v=1790383946", "mrblack": "models/props/mrblack.glb?v=1790383946", "ak": "models/props/ak.glb?v=1790383946", "hellcat": "models/cars/hellcat.glb?v=1790383946", "brcc": "models/cars/rotor.glb?v=1790383946", "fdc": "models/cars/rrpickup.glb?v=1790383946", "shoe_factory": "models/props/shoe_factory.glb?v=1790383946", "claw_can": "models/props/claw_can.glb?v=1790383946", "echelon_can": "models/props/echelon_can.glb?v=1790383946", "watch_shop": "models/props/watch_shop.glb?v=1790383946", "watch_sign": "models/props/watch_sign.glb?v=1790383946", "range_sign": "models/props/range_sign.glb?v=1790383946", "bpd": "models/cars/bpd_69.glb?v=1790383946", "concord": "models/cars/concordance.glb?v=1790383946", "donut": "models/cars/donut_patrol.glb?v=1790383946", "duck": "models/cars/duck_plasma.glb?v=1790383946", "gt44": "models/cars/gt40.glb?v=1790383946", "missile": "models/cars/missile_commander.glb?v=1790383946", "leopard": "models/cars/night_leopard.glb?v=1790383946", "trout": "models/cars/trout_protocol.glb?v=1790383946"};
-const GLB_TEX={"solocup": {"base": "models/props/solocup_base.jpg?v=1790383946", "mr": "models/props/solocup_mr.jpg?v=1790383946"}, "church": {"base": "models/props/church_base.jpg?v=1790383946", "normal": "models/props/church_normal.jpg?v=1790383946", "mr": "models/props/church_mr.jpg?v=1790383946"}, "donkeys": {"base": "models/props/donkeys_base.jpg?v=1790383946", "mr": "models/props/donkeys_mr.jpg?v=1790383946"}, "hijoe": {"base": "models/props/hijoe_base.jpg?v=1790383946", "mr": "models/props/hijoe_mr.jpg?v=1790383946"}, "palm": {"base": "models/props/palm_base.jpg?v=1790383946", "normal": "models/props/palm_normal.jpg?v=1790383946", "mr": "models/props/palm_mr.jpg?v=1790383946"}, "mrblack": {"base": "models/props/mrblack_base.jpg?v=1790383946", "normal": "models/props/mrblack_normal.jpg?v=1790383946", "mr": "models/props/mrblack_mr.jpg?v=1790383946"}, "ak": {"base": "models/props/ak_base.jpg?v=1790383946", "normal": "models/props/ak_normal.jpg?v=1790383946", "mr": "models/props/ak_mr.jpg?v=1790383946"}, "hellcat": {"base": "models/cars/hellcat_base.jpg?v=1790383946", "normal": "models/cars/hellcat_normal.jpg?v=1790383946", "mr": "models/cars/hellcat_mr.jpg?v=1790383946"}, "brcc": {"base": "models/cars/rotor_base.jpg?v=1790383946", "normal": "models/cars/rotor_normal.jpg?v=1790383946", "mr": "models/cars/rotor_mr.jpg?v=1790383946"}, "fdc": {"base": "models/cars/rrpickup_base.jpg?v=1790383946", "normal": "models/cars/rrpickup_normal.jpg?v=1790383946", "mr": "models/cars/rrpickup_mr.jpg?v=1790383946"}, "shoe_factory": {"base": "models/props/shoe_factory_base.jpg?v=1790383946", "normal": "models/props/shoe_factory_normal.jpg?v=1790383946", "mr": "models/props/shoe_factory_mr.jpg?v=1790383946"}, "claw_can": {"base": "models/props/claw_can_base.jpg?v=1790383946", "normal": "models/props/claw_can_normal.jpg?v=1790383946", "mr": "models/props/claw_can_mr.jpg?v=1790383946"}, "echelon_can": {"base": "models/props/echelon_can_base.jpg?v=1790383946", "normal": "models/props/echelon_can_normal.jpg?v=1790383946", "mr": "models/props/echelon_can_mr.jpg?v=1790383946"}, "watch_shop": {"base": "models/props/watch_shop_base.jpg?v=1790383946", "normal": "models/props/watch_shop_normal.jpg?v=1790383946", "mr": "models/props/watch_shop_mr.jpg?v=1790383946"}, "watch_sign": {"base": "models/props/watch_sign_base.jpg?v=1790383946", "normal": "models/props/watch_sign_normal.jpg?v=1790383946", "mr": "models/props/watch_sign_mr.jpg?v=1790383946"}, "range_sign": {"base": "models/props/range_sign_base.jpg?v=1790383946", "normal": "models/props/range_sign_normal.jpg?v=1790383946", "mr": "models/props/range_sign_mr.jpg?v=1790383946"}, "bpd": {"base": "models/cars/bpd_69_base.jpg?v=1790383946", "normal": "models/cars/bpd_69_normal.jpg?v=1790383946", "mr": "models/cars/bpd_69_mr.jpg?v=1790383946"}, "concord": {"base": "models/cars/concordance_base.jpg?v=1790383946", "normal": "models/cars/concordance_normal.jpg?v=1790383946", "mr": "models/cars/concordance_mr.jpg?v=1790383946"}, "donut": {"base": "models/cars/donut_patrol_base.jpg?v=1790383946", "normal": "models/cars/donut_patrol_normal.jpg?v=1790383946", "mr": "models/cars/donut_patrol_mr.jpg?v=1790383946"}, "duck": {"base": "models/cars/duck_plasma_base.jpg?v=1790383946", "normal": "models/cars/duck_plasma_normal.jpg?v=1790383946", "mr": "models/cars/duck_plasma_mr.jpg?v=1790383946"}, "gt44": {"base": "models/cars/gt40_base.jpg?v=1790383946", "normal": "models/cars/gt40_normal.jpg?v=1790383946", "mr": "models/cars/gt40_mr.jpg?v=1790383946"}, "missile": {"base": "models/cars/missile_commander_base.jpg?v=1790383946", "normal": "models/cars/missile_commander_normal.jpg?v=1790383946", "mr": "models/cars/missile_commander_mr.jpg?v=1790383946"}, "leopard": {"base": "models/cars/night_leopard_base.jpg?v=1790383946", "normal": "models/cars/night_leopard_normal.jpg?v=1790383946", "mr": "models/cars/night_leopard_mr.jpg?v=1790383946"}, "trout": {"base": "models/cars/trout_protocol_base.jpg?v=1790383946", "normal": "models/cars/trout_protocol_normal.jpg?v=1790383946", "mr": "models/cars/trout_protocol_mr.jpg?v=1790383946"}};
+const GLB_DATA={"solocup": "models/props/solocup.glb?v=1790385898", "church": "models/props/church.glb?v=1790385898", "donkeys": "models/props/donkeys.glb?v=1790385898", "hijoe": "models/props/hijoe.glb?v=1790385898", "palm": "models/props/palm.glb?v=1790385898", "mrblack": "models/props/mrblack.glb?v=1790385898", "ak": "models/props/ak.glb?v=1790385898", "hellcat": "models/cars/hellcat.glb?v=1790385898", "brcc": "models/cars/rotor.glb?v=1790385898", "fdc": "models/cars/rrpickup.glb?v=1790385898", "shoe_factory": "models/props/shoe_factory.glb?v=1790385898", "claw_can": "models/props/claw_can.glb?v=1790385898", "echelon_can": "models/props/echelon_can.glb?v=1790385898", "watch_shop": "models/props/watch_shop.glb?v=1790385898", "watch_sign": "models/props/watch_sign.glb?v=1790385898", "range_sign": "models/props/range_sign.glb?v=1790385898", "bpd": "models/cars/bpd_69.glb?v=1790385898", "concord": "models/cars/concordance.glb?v=1790385898", "donut": "models/cars/donut_patrol.glb?v=1790385898", "duck": "models/cars/duck_plasma.glb?v=1790385898", "gt44": "models/cars/gt40.glb?v=1790385898", "missile": "models/cars/missile_commander.glb?v=1790385898", "leopard": "models/cars/night_leopard.glb?v=1790385898", "trout": "models/cars/trout_protocol.glb?v=1790385898"};
+const GLB_TEX={"solocup": {"base": "models/props/solocup_base.jpg?v=1790385898", "mr": "models/props/solocup_mr.jpg?v=1790385898"}, "church": {"base": "models/props/church_base.jpg?v=1790385898", "normal": "models/props/church_normal.jpg?v=1790385898", "mr": "models/props/church_mr.jpg?v=1790385898"}, "donkeys": {"base": "models/props/donkeys_base.jpg?v=1790385898", "mr": "models/props/donkeys_mr.jpg?v=1790385898"}, "hijoe": {"base": "models/props/hijoe_base.jpg?v=1790385898", "mr": "models/props/hijoe_mr.jpg?v=1790385898"}, "palm": {"base": "models/props/palm_base.jpg?v=1790385898", "normal": "models/props/palm_normal.jpg?v=1790385898", "mr": "models/props/palm_mr.jpg?v=1790385898"}, "mrblack": {"base": "models/props/mrblack_base.jpg?v=1790385898", "normal": "models/props/mrblack_normal.jpg?v=1790385898", "mr": "models/props/mrblack_mr.jpg?v=1790385898"}, "ak": {"base": "models/props/ak_base.jpg?v=1790385898", "normal": "models/props/ak_normal.jpg?v=1790385898", "mr": "models/props/ak_mr.jpg?v=1790385898"}, "hellcat": {"base": "models/cars/hellcat_base.jpg?v=1790385898", "normal": "models/cars/hellcat_normal.jpg?v=1790385898", "mr": "models/cars/hellcat_mr.jpg?v=1790385898"}, "brcc": {"base": "models/cars/rotor_base.jpg?v=1790385898", "normal": "models/cars/rotor_normal.jpg?v=1790385898", "mr": "models/cars/rotor_mr.jpg?v=1790385898"}, "fdc": {"base": "models/cars/rrpickup_base.jpg?v=1790385898", "normal": "models/cars/rrpickup_normal.jpg?v=1790385898", "mr": "models/cars/rrpickup_mr.jpg?v=1790385898"}, "shoe_factory": {"base": "models/props/shoe_factory_base.jpg?v=1790385898", "normal": "models/props/shoe_factory_normal.jpg?v=1790385898", "mr": "models/props/shoe_factory_mr.jpg?v=1790385898"}, "claw_can": {"base": "models/props/claw_can_base.jpg?v=1790385898", "normal": "models/props/claw_can_normal.jpg?v=1790385898", "mr": "models/props/claw_can_mr.jpg?v=1790385898"}, "echelon_can": {"base": "models/props/echelon_can_base.jpg?v=1790385898", "normal": "models/props/echelon_can_normal.jpg?v=1790385898", "mr": "models/props/echelon_can_mr.jpg?v=1790385898"}, "watch_shop": {"base": "models/props/watch_shop_base.jpg?v=1790385898", "normal": "models/props/watch_shop_normal.jpg?v=1790385898", "mr": "models/props/watch_shop_mr.jpg?v=1790385898"}, "watch_sign": {"base": "models/props/watch_sign_base.jpg?v=1790385898", "normal": "models/props/watch_sign_normal.jpg?v=1790385898", "mr": "models/props/watch_sign_mr.jpg?v=1790385898"}, "range_sign": {"base": "models/props/range_sign_base.jpg?v=1790385898", "normal": "models/props/range_sign_normal.jpg?v=1790385898", "mr": "models/props/range_sign_mr.jpg?v=1790385898"}, "bpd": {"base": "models/cars/bpd_69_base.jpg?v=1790385898", "normal": "models/cars/bpd_69_normal.jpg?v=1790385898", "mr": "models/cars/bpd_69_mr.jpg?v=1790385898"}, "concord": {"base": "models/cars/concordance_base.jpg?v=1790385898", "normal": "models/cars/concordance_normal.jpg?v=1790385898", "mr": "models/cars/concordance_mr.jpg?v=1790385898"}, "donut": {"base": "models/cars/donut_patrol_base.jpg?v=1790385898", "normal": "models/cars/donut_patrol_normal.jpg?v=1790385898", "mr": "models/cars/donut_patrol_mr.jpg?v=1790385898"}, "duck": {"base": "models/cars/duck_plasma_base.jpg?v=1790385898", "normal": "models/cars/duck_plasma_normal.jpg?v=1790385898", "mr": "models/cars/duck_plasma_mr.jpg?v=1790385898"}, "gt44": {"base": "models/cars/gt40_base.jpg?v=1790385898", "normal": "models/cars/gt40_normal.jpg?v=1790385898", "mr": "models/cars/gt40_mr.jpg?v=1790385898"}, "missile": {"base": "models/cars/missile_commander_base.jpg?v=1790385898", "normal": "models/cars/missile_commander_normal.jpg?v=1790385898", "mr": "models/cars/missile_commander_mr.jpg?v=1790385898"}, "leopard": {"base": "models/cars/night_leopard_base.jpg?v=1790385898", "normal": "models/cars/night_leopard_normal.jpg?v=1790385898", "mr": "models/cars/night_leopard_mr.jpg?v=1790385898"}, "trout": {"base": "models/cars/trout_protocol_base.jpg?v=1790385898", "normal": "models/cars/trout_protocol_normal.jpg?v=1790385898", "mr": "models/cars/trout_protocol_mr.jpg?v=1790385898"}};
 "use strict";
 // ===== UTILITIES =====
 const TAU=Math.PI*2;
@@ -3760,22 +3760,24 @@ const TRACK_DATA = [
 },
 {
   id:'country', name:'Honky Tonk Highway', place:'Red Dirt Country, OK',
-  blurb:'Red dirt, rolling hills and a covered bridge, all circling the Red Solo Cup monument. A creek jump, a church on the hill and one very honest donkey sign.',
+  blurb:'Red dirt, rolling hills and a covered bridge. Dive down the divided boulevard, loop the Red Solo Cup roundabout and head straight back out. A creek jump, a church on the hill and one very honest donkey sign.',
   theme:'country', laps:3,
   points:[
-    [0,-60,0,17],[0,60,1,17],[2,165,3,16],[-18,235,5,15],[-80,265,6,14],[-150,255,5,14],
+    [0,-60,0,17],[0,60,1,17],[2,165,3,16],[-12,228,5,15],[-45,252,6,14],[-78,234,5,14],
+    [-82,196,4,14],[-68,160,3,14],[-58,122,2,14],[-72,86,2,14],[-95,76,2,14],[-118,86,2,14],
+    [-132,122,2,14],[-122,160,3,14],[-108,196,4,14],[-112,234,5,14],[-148,257,5,14],
     [-205,212,4,14],[-222,148,3,13],[-232,70,1,13],[-248,-10,0,13],[-236,-100,0,13],[-196,-165,1,13],
     [-128,-196,3,13],[-62,-178,6,14],[-8,-205,4,14],[55,-240,2,13],[118,-232,0,13],[170,-182,0,13],
     [214,-108,2,13],[236,-28,4,14],[214,48,6,14],[156,84,6,13],[104,58,4,13],[82,4,2,13],
     [70,-58,1,14],[52,-118,0,15],[16,-138,0,16],[-6,-108,0,17]
   ],
-  jumps:[{cp:13,f:0.2,len:14,h:2.8,gap:0},{cp:16,f:0.15,len:12,h:3.2,gap:15}],
-  boosts:[{cp:1,f:0.45,lat:0},{cp:8,f:0.5,lat:-3},{cp:15,f:0.55,lat:0},{cp:19,f:0.4,lat:3}],
-  items:[{cp:2,f:0.3},{cp:9,f:0.6},{cp:14,f:0.5},{cp:20,f:0.5},{cp:25,f:0.3}],
+  jumps:[{cp:24,f:0.2,len:14,h:2.8,gap:0},{cp:27,f:0.15,len:12,h:3.2,gap:15}],
+  boosts:[{cp:1,f:0.45,lat:0},{cp:13,f:0.5,lat:0},{cp:19,f:0.5,lat:-3},{cp:26,f:0.55,lat:0},{cp:30,f:0.4,lat:3}],
+  items:[{cp:2,f:0.3},{cp:10,f:0.2},{cp:20,f:0.6},{cp:25,f:0.5},{cp:31,f:0.5},{cp:36,f:0.3}],
   medians:[],
-  tunnels:[{cp:9,f:0.75,len:44}],
+  tunnels:[{cp:20,f:0.75,len:44}],
   creek:[[-420,-60],[-236,-78],[-120,-120],[40,-190],[148,-210],[320,-250],[520,-300]],
-  monument:{x:-95,z:120},
+  monument:{x:-95,z:124},
 },
 ];
 if (typeof module!=='undefined') module.exports = {TRACK_DATA};
@@ -4922,34 +4924,34 @@ function buildCountryScenery(W,def,P,Q,H,K){
 
   // ---------- THE RED SOLO CUP MONUMENT (the centrepiece) ----------
   if(def.monument && typeof CAR_GLTF!=='undefined' && CAR_GLTF.solocup){
-    const {x,z}=def.monument; const R=22; const base=Math.max(nat(x,z),0); const gy=base+3.2;
-    const mound=new THREE.Mesh(new THREE.CylinderGeometry(R+3,R+16,3.4,48),new THREE.MeshStandardMaterial({color:0x5f7f34,roughness:1})); mound.position.set(x,base+1.4,z); mound.receiveShadow=true; G.add(mound);
-    blocked.push({x,z,r:R+10});
+    const {x,z}=def.monument; const R=17; const base=Math.max(nat(x,z),0); const gy=base+3.2;
+    const mound=new THREE.Mesh(new THREE.CylinderGeometry(R+2,R+7,3.4,48),new THREE.MeshStandardMaterial({color:0x5f7f34,roughness:1})); mound.position.set(x,base+1.4,z); mound.receiveShadow=true; G.add(mound);
+    blocked.push({x,z,r:R+8});
     const stone=new THREE.MeshStandardMaterial({map:canvasTex(256,256,(c,w,h)=>{ noiseFill(c,w,h,'#b9ad98',20); c.strokeStyle='rgba(60,50,40,0.35)'; c.lineWidth=2; for(let y=0;y<h;y+=32){ c.beginPath(); c.moveTo(0,y); c.lineTo(w,y); c.stroke(); for(let xx=(y/32%2)*32;xx<w;xx+=64){ c.beginPath(); c.moveTo(xx,y); c.lineTo(xx,y+32); c.stroke(); } } },{repeat:true}),roughness:0.9});
     stone.map.repeat.set(6,1);
     const plaza=new THREE.Mesh(new THREE.CylinderGeometry(R,R+2,1.6,48),stone); plaza.position.set(x,gy+0.2,z); plaza.receiveShadow=true; plaza.castShadow=true; G.add(plaza);
     const ring=new THREE.Mesh(new THREE.CylinderGeometry(R*0.55,R*0.6,1.4,40),stone); ring.position.set(x,gy+1.6,z); ring.castShadow=true; G.add(ring);
     const red=new THREE.MeshStandardMaterial({color:0xc8201e,roughness:0.6}); const band=new THREE.Mesh(new THREE.TorusGeometry(R*0.57,0.18,8,64),red); band.rotation.x=Math.PI/2; band.position.set(x,gy+2.3,z); G.add(band);
     // the cup itself, towering over the infield
-    const cup=makeProp('solocup'); cup.position.set(x,gy+2.3,z); const toStart=Math.atan2(0-x,20-z); cup.rotation.y=toStart; G.add(cup);
+    const cup=makeProp('solocup'); cup.position.set(x,gy+2.3,z); const toStart=0; cup.rotation.y=toStart; G.add(cup);
     // bronze plaque facing the start straight
     const pl=new THREE.Mesh(new THREE.BoxGeometry(6.4,1.8,0.3),new THREE.MeshStandardMaterial({map:textPanelTex([{text:'RED SOLO CUP',font:'bold 88px "Racing Sans One", Impact',color:'#ffe2a0',y:0.36},{text:'IN LOVING MEMORY OF TOBY',font:'bold 46px "Chakra Petch", sans-serif',color:'#f5d99a',y:0.74}],{w:1024,h:290,bg:'#5a3a14'}),metalness:0.5,roughness:0.45}));
     const ang=toStart; pl.position.set(x+Math.sin(ang)*(R*0.6+0.2),gy+1.7,z+Math.cos(ang)*(R*0.6+0.2)); pl.rotation.y=ang; G.add(pl);
     // floodlight towers + light beams + flags + string lights
     const poleM=stdMat(0x2a2a2e,{metalness:0.6,roughness:0.4}); const beamM=new THREE.MeshBasicMaterial({color:0xfff0c8,transparent:true,opacity:0.05,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide});
     const beams=[]; const tops=[];
-    for(let k=0;k<6;k++){ const a=k/6*TAU+0.3, px=x+Math.cos(a)*(R-1.5), pz=z+Math.sin(a)*(R-1.5);
+    for(let k=0;k<6;k++){ const a=k/6*TAU+0.3, px=x+Math.cos(a)*(R-2.5), pz=z+Math.sin(a)*(R-2.5);
       const pole=new THREE.Mesh(new THREE.CylinderGeometry(0.18,0.26,11,8),poleM); pole.position.set(px,gy+6.5,pz); pole.castShadow=true; G.add(pole); tops.push([px,gy+12,pz]);
       const lamp=glowSprite(0xfff2c0,3.2,0.9); lamp.position.set(px,gy+12.1,pz); G.add(lamp);
-      const bg=new THREE.ConeGeometry(4.5,15,20,1,true); bg.translate(0,-7.5,0); const b=new THREE.Mesh(bg,beamM); b.position.set(px,gy+12,pz); b.lookAt(x,gy+10,z); b.rotateX(Math.PI/2); G.add(b); beams.push(b); }
-    for(let k=0;k<4;k++){ const a=k/4*TAU+1.0, px=x+Math.cos(a)*(R+3), pz=z+Math.sin(a)*(R+3); const fp=new THREE.Mesh(new THREE.CylinderGeometry(0.08,0.1,12,6),stdMat(0xdddddd,{metalness:0.7})); fp.position.set(px,gy+6,pz); G.add(fp);
+      const bg=new THREE.ConeGeometry(4.5,15,20,1,true); bg.translate(0,-7.5,0); const b=new THREE.Mesh(bg,beamM); b.position.set(px,gy+12,pz); b.lookAt(x,gy+10,z); b.rotateX(Math.PI/2); beams.push(b); }
+    for(let k=0;k<4;k++){ const a=k/4*TAU+1.0, px=x+Math.cos(a)*(R-0.8), pz=z+Math.sin(a)*(R-0.8); const fp=new THREE.Mesh(new THREE.CylinderGeometry(0.08,0.1,12,6),stdMat(0xdddddd,{metalness:0.7})); fp.position.set(px,gy+6,pz); G.add(fp);
       const fg=new THREE.PlaneGeometry(3.4,2,10,1); fg.translate(1.7,0,0); const fl=new THREE.Mesh(fg,new THREE.MeshStandardMaterial({map:canvasTex(128,76,(c,w,h)=>{ for(let s=0;s<7;s++){ c.fillStyle=s%2?'#f5f0e6':'#c8201e'; c.fillRect(0,s*h/7,w,h/7+1);} c.fillStyle='#233a78'; c.fillRect(0,0,w*0.42,h*0.54); c.fillStyle='#fff'; for(let i=0;i<5;i++) for(let j=0;j<4;j++) c.fillRect(5+i*10,4+j*10,3,3); }),side:THREE.DoubleSide,roughness:0.8}));
       fl.position.set(px,gy+11,pz); G.add(fl); W.updaters.push((dt,t)=>{ const p=fg.attributes.position; for(let i=0;i<p.count;i++){ const X=p.getX(i); p.setZ(i,Math.sin(X*2.2-t*5+k)*0.18*(X/3.4)); } p.needsUpdate=true; }); }
     // string lights between the floodlight poles
     const bulbs=[]; for(let k=0;k<tops.length;k++){ const a=tops[k], b=tops[(k+1)%tops.length]; for(let q=1;q<14;q++){ const t=q/14; bulbs.push({x:lerp(a[0],b[0],t),y:lerp(a[1],b[1],t)-2.2*Math.sin(t*Math.PI)-0.4,z:lerp(a[2],b[2],t),s:0.16,c:[0xffd27a,0xff6a4a,0x8affc8,0xffffff][q%4]}); } }
     G.add(instanced(new THREE.SphereGeometry(1,6,4),new THREE.MeshBasicMaterial({color:0xffffff}),bulbs,false));
     // hay-bale seating ring and a few pickup-bed style crowd blocks
-    const hay=[]; for(let k=0;k<22;k++){ const a=k/22*TAU; hay.push({x:x+Math.cos(a)*(R+6.5),y:heightAt(x+Math.cos(a)*(R+6.5),z+Math.sin(a)*(R+6.5))+0.6,z:z+Math.sin(a)*(R+6.5),rz:Math.PI/2,ry:a,s:[0.75,1.4,0.75],c:0xd8b35a}); }
+    const hay=[]; for(let k=0;k<18;k++){ const a=k/18*TAU+0.17; hay.push({x:x+Math.cos(a)*(R-4.5),y:gy+1.6,z:z+Math.sin(a)*(R-4.5),rz:Math.PI/2,ry:a,s:[0.75,1.4,0.75],c:0xd8b35a}); }
     G.add(instanced(new THREE.CylinderGeometry(1,1,1,14),stdMat(0xffffff,{roughness:1}),hay,true,true));
     W.updaters.push((dt,t)=>{ beams.forEach((b,k)=>{ b.material.opacity=0.04+0.02*Math.sin(t*1.3+k); }); });
     W.monument={x,y:gy,z};
@@ -6161,7 +6163,10 @@ class UI{
       if(scr==='title'||scr==='loading') continue;
       if(scr==='garage'&&(e==='ArrowLeft'||e==='KeyA')){ this.act('prevCar'); continue; }
       if(scr==='garage'&&(e==='ArrowRight'||e==='KeyD')){ this.act('nextCar'); continue; }
-      if(scr==='trackSel'&&(e==='ArrowUp'||e==='ArrowDown')&&g.focus<TRACK_DATA.length){ const d=['easy','normal','hard']; let k=d.indexOf(g.sel.diff)+(e==='ArrowUp'?1:-1); g.sel.diff=d[clamp(k,0,2)]; this.diffUI(); g.audio.play('blip'); continue; }
+      if(scr==='trackSel'&&(e==='ArrowUp'||e==='ArrowDown'||e==='KeyW'||e==='KeyS')){ this.selectTrack(g.sel.track+((e==='ArrowUp'||e==='KeyW')?-1:1)); continue; }
+      if(scr==='trackSel'&&(e==='ArrowLeft'||e==='ArrowRight'||e==='KeyA'||e==='KeyD')){ const d=['easy','normal','hard']; let k=d.indexOf(g.sel.diff)+((e==='ArrowRight'||e==='KeyD')?1:-1); g.sel.diff=d[clamp(k,0,2)]; this.diffUI(); g.audio.play('blip'); continue; }
+      if(scr==='trackSel'&&(e==='Enter'||e==='Space'||e==='NumpadEnter')){ this.act('go'); continue; }
+      if(false){ const d=['easy','normal','hard']; let k=d.indexOf(g.sel.diff)+(e==='ArrowUp'?1:-1); g.sel.diff=d[clamp(k,0,2)]; this.diffUI(); g.audio.play('blip'); continue; }
       if(scr==='settings'&&(e==='ArrowLeft'||e==='ArrowRight')) continue;
       if(['ArrowDown','ArrowRight','KeyS','KeyD','Tab'].includes(e)){ g.focus=(g.focus+1)%it.length; g.audio.play('blip'); }
       else if(['ArrowUp','ArrowLeft','KeyW','KeyA'].includes(e)){ g.focus=(g.focus-1+it.length)%it.length; g.audio.play('blip'); }
@@ -6239,16 +6244,20 @@ class UI{
     [...$('carDots').children].forEach((d,k)=>d.classList.toggle('on',k===this.g.sel.vehicle));
   }
   buildTracks(){
-    const el=$('tracks'); el.innerHTML='';
+    const el=$('tList'); el.innerHTML='';
     TRACK_DATA.forEach((t,i)=>{ const b=Store.get('best_'+t.id,{});
       const d=document.createElement('div'); d.className='tcard'; d.dataset.i=i;
-      d.innerHTML=`<canvas width="300" height="240"></canvas><div class="pl">${t.place}</div><h3>${t.name}${t.hard?' <span style="color:#ff3b3b;font-size:12px;letter-spacing:.1em">HARDEST</span>':''}</h3><p>${t.blurb}</p><div class="rec">BEST RACE ${fmtTime(b.race)}<br>BEST LAP ${fmtTime(b.lap)}</div>`;
-      d.addEventListener('click',()=>{ this.g.sel.track=i; this.g.focus=i; this.g.audio.play('blip'); this.refocus(); this.markTrack(); });
-      d.addEventListener('dblclick',()=>{ this.g.sel.track=i; this.act('go'); });
+      d.innerHTML=`<canvas width="144" height="108"></canvas><div><h3>${t.name}</h3><div class="pl">${t.place}</div><div class="rec">RACE ${fmtTime(b.race)} · LAP ${fmtTime(b.lap)}</div></div>`;
+      d.addEventListener('click',()=>{ if(this.g.sel.track===i && this.lastTap && performance.now()-this.lastTap<450){ this.act('go'); return; } this.lastTap=performance.now(); this.selectTrack(i); });
       el.appendChild(d); drawTrackThumb(d.querySelector('canvas'),t); });
     this.markTrack();
   }
-  markTrack(){ document.querySelectorAll('.tcard').forEach((c,k)=>c.style.outline=k===this.g.sel.track?'3px solid var(--gold)':'none'); }
+  selectTrack(i){ const g=this.g; g.sel.track=clamp(i,0,TRACK_DATA.length-1); g.focus=g.sel.track; g.audio.play('blip'); this.markTrack(); this.refocus(); const c=$('tList').children[g.sel.track]; if(c&&c.scrollIntoView) c.scrollIntoView({block:'nearest'}); }
+  markTrack(){ const g=this.g, t=TRACK_DATA[g.sel.track]; document.querySelectorAll('#tList .tcard').forEach((c,k)=>c.classList.toggle('sel',k===g.sel.track));
+    const cv=$('tBig'); if(cv.clientWidth){ cv.width=Math.round(cv.clientWidth*Math.min(2,devicePixelRatio||1)); cv.height=Math.round(cv.clientHeight*Math.min(2,devicePixelRatio||1)); } drawTrackThumb(cv,t); const b=Store.get('best_'+t.id,{}); const P=t._len||(t._len=Math.round(buildTrackPath(t).L));
+    const feats=[]; if((t.jumps||[]).length) feats.push((t.jumps||[]).length+' jump'+((t.jumps||[]).length>1?'s':'')); if((t.tunnels||[]).length) feats.push(t.id==='country'?'covered bridge':'tunnel'); if(t.shooters) feats.push('hot blocks'); if(t.monument) feats.push('Red Solo Cup roundabout');
+    const badge=t.hard?'<span class="badge" style="background:#ff3b3b;color:#fff">HARDEST</span>':t.id==='country'?'<span class="badge" style="background:var(--gold);color:#1a1000">NEW</span>':'';
+    $('tInfo').innerHTML=`<h2>${t.name}${badge}</h2><div class="pl">${t.place}</div><p>${t.blurb}</p><div class="stats"><span>Length <b>${(P/1000).toFixed(2)} km</b></span><span>Laps <b>${t.laps}</b></span>${feats.length?`<span>${feats.join(' · ')}</span>`:''}</div><div class="stats" style="margin-top:6px"><span>Best race <b>${fmtTime(b.race)}</b></span><span>Best lap <b>${fmtTime(b.lap)}</b></span></div>`; }
   records(){
     $('recList').innerHTML=TRACK_DATA.map(t=>{ const b=Store.get('best_'+t.id,{}); return `<div style="display:flex;justify-content:space-between;gap:10px;padding:10px 4px;border-bottom:1px solid rgba(255,255,255,.08)"><div><div style="font-family:var(--disp);font-size:20px;font-style:italic">${t.name}</div><div class="hint" style="margin:0;text-align:left">${t.place}</div></div><div style="text-align:right;font-size:13px;letter-spacing:.06em"><div>RACE <b style="color:var(--gold)">${fmtTime(b.race)}</b> <span style="color:var(--dim)">${b.raceCar||''}</span></div><div>LAP <b style="color:var(--cyan)">${fmtTime(b.lap)}</b> <span style="color:var(--dim)">${b.lapCar||''}</span></div></div></div>`; }).join('');
   }
