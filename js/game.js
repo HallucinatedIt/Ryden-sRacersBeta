@@ -3763,8 +3763,8 @@ const TRACK_DATA = [
   shooters:[{cp:4,f:0.3,perches:[[0,-1,5.0,3.7,-25,26],[18,1,4.6,0.25,-26,26]]},{cp:13,f:0.1,perches:[[0,-1,4.6,0.25,-26,26],[18,1,5.0,3.7,-26,26]]},{cp:22,f:0.2,perches:[[0,-1,5.0,3.7,-26,1],[18,1,4.6,0.25,-26,26]]}],
 },
 {
-  id:'country', name:'Honky Tonk Highway', place:'Red Dirt Country, OK',
-  blurb:'Red dirt, rolling hills and a covered bridge. Dive down the divided boulevard, loop the Red Solo Cup roundabout and head straight back out. A creek jump, a church on the hill and one very honest donkey sign.',
+  id:'country', name:'Honky Tonk Highway', place:'Red Dirt Country, OK', rev:2,
+  blurb:'An ode to the legends of country music: red dirt, rolling hills and a covered bridge. Loop the Red Solo Cup roundabout, then hit the Yee-Haw Creek Jump and fly the creek good-ol\'-boy style. A church on the hill and one very honest donkey sign.',
   theme:'country', laps:3,
   points:[
     [0,-60,0,17],[0,60,1,17],[2,165,3,16],[-12,228,5,15],[-45,252,6,14],[-78,234,5,14],
@@ -3775,7 +3775,7 @@ const TRACK_DATA = [
     [214,-108,2,13],[236,-28,4,14],[214,48,6,14],[156,84,6,13],[104,58,4,13],[82,4,2,13],
     [70,-58,1,14],[52,-118,0,15],[16,-138,0,16],[-6,-108,0,17]
   ],
-  jumps:[{cp:24,f:0.2,len:14,h:2.8,gap:0},{cp:27,f:0.15,len:12,h:3.2,gap:15}],
+  jumps:[{cp:24,f:0.2,len:14,h:2.8,gap:0},{cp:27,f:0.15,len:16,h:4.4,gap:20,dukes:true}],
   boosts:[{cp:1,f:0.45,lat:0},{cp:13,f:0.5,lat:0},{cp:19,f:0.5,lat:-3},{cp:26,f:0.55,lat:0},{cp:30,f:0.4,lat:3}],
   items:[{cp:2,f:0.3},{cp:10,f:0.2},{cp:20,f:0.6},{cp:25,f:0.5},{cp:31,f:0.5},{cp:36,f:0.3}],
   medians:[],
@@ -4317,7 +4317,7 @@ const GLB_TEXTURES={}; let GLB_ERROR='';
 const PROP_IDS=new Set(['env_alondra','env_neon','env_coast','env_mesa','env_sweet','grandstand','rrsign','dolly','knives','trio','gate','solocup','church','donkeys','hijoe','palm','mrblack','ak','shoe_factory','claw_can','echelon_can','watch_shop','watch_sign','range_sign']);
 function propsForTrack(def){ const need=new Set(['grandstand','rrsign']);
   for(const id in PROP_INFO){ const i=PROP_INFO[id]; if((i.themes&&i.themes[def.id])||(i.median&&i.median[def.id])) need.add(id); }
-  if(def.theme==='city') need.add('palm'); if(def.shooters){ need.add('mrblack'); need.add('ak'); } if(def.monument){ need.add('solocup'); need.add('dolly'); }
+  if(def.theme==='city') need.add('palm'); if(def.shooters){ need.add('mrblack'); need.add('ak'); } if(def.monument){ need.add('solocup'); need.add('dolly'); } if((def.jumps||[]).some(j=>j.dukes)&&GLB_DATA.genlee) need.add('genlee');
   if(typeof GLB_DATA!=='undefined'&&GLB_DATA['env_'+def.id]&&!(window.GAME&&GAME.q&&GAME.q.env===false)) need.add('env_'+def.id);
   if(need.has('env_'+def.id)&&typeof ENV_CFG!=='undefined'&&ENV_CFG[def.id]){ const c=ENV_CFG[def.id]; (c.skipProps||[]).forEach(id=>need.delete(id)); if(c.skipStand) need.delete('grandstand'); }
   return [...need].filter(id=>typeof GLB_DATA!=='undefined'&&GLB_DATA[id]&&!CAR_GLTF[id]); }
@@ -5123,6 +5123,61 @@ function buildScenery(W,def,P,Q,H){
   }
 }
 
+// ===== HONKY TONK HIGHWAY: Yee-Haw Creek Jump =====
+function buildDukesJump(W,def,P,j,heightAt,stdMat){
+  const G=new THREE.Group(); W.group.add(G); const N=P.N; const gl=Math.round(j.gap/P.spacing);
+  const plank=canvasTex(128,256,(c,w,h)=>{ noiseFill(c,w,h,'#9b7448',22); c.fillStyle='rgba(50,28,12,0.75)'; for(let y=0;y<h;y+=21) c.fillRect(0,y,w,2); c.fillStyle='rgba(30,16,6,0.6)'; for(let y=0;y<h;y+=21){ c.fillRect(8,y+8,3,3); c.fillRect(w-12,y+8,3,3); } },{repeat:true});
+  const woodM=new THREE.MeshStandardMaterial({map:plank,roughness:0.85,side:THREE.DoubleSide,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2});
+  const beamM=stdMat(0x6b4a2c), steelM=new THREE.MeshStandardMaterial({color:0x8a8f96,metalness:0.6,roughness:0.4});
+  const i0=j.i0, top=j.top;
+  // plank deck over the ramp + side skirts down to the ground
+  const ribbon=(ia,ib,la,lb,ya,yb,mat)=>{ const pos=[],uv=[]; for(let i=ia;i<ib;i++){ const a=i%N,b=(i+1)%N; const q=(ii,lat,dy)=>[P.x[ii]+P.rx[ii]*lat(ii),dy(ii),P.z[ii]+P.rz[ii]*lat(ii)];
+      const A=q(a,la,ya),B=q(a,lb,yb),C=q(b,lb,yb),D=q(b,la,ya); const v0=(i-ia)*P.spacing/3, v1=(i+1-ia)*P.spacing/3; pos.push(...A,...B,...C,...A,...C,...D); uv.push(0,v0,1,v0,1,v1,0,v0,1,v1,0,v1); }
+    const g=new THREE.BufferGeometry(); g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3)); g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2)); g.computeVertexNormals(); const m=new THREE.Mesh(g,mat); m.receiveShadow=true; m.castShadow=true; G.add(m); return m; };
+  ribbon(i0-2,top+1,i=>-P.w[i]/2-0.6,i=>P.w[i]/2+0.6,i=>P.y[i]+0.03,i=>P.y[i]+0.03,woodM);
+  [-1,1].forEach(sd=>{ const e=i=>sd*(P.w[i]/2+0.6); ribbon(i0,top+1,e,e,i=>P.y[i]+0.25,i=>Math.min(P.y[i]-0.3,heightAt(P.x[i]+P.rx[i]*e(i),P.z[i]+P.rz[i]*e(i))-0.4),woodM);
+    // guard rail timbers along the ramp edges
+    for(let i=i0;i<=top;i+=2){ const x=P.x[i]+P.rx[i]*sd*(P.w[i]/2+0.5), z=P.z[i]+P.rz[i]*sd*(P.w[i]/2+0.5); const post=new THREE.Mesh(new THREE.BoxGeometry(0.25,1.1,0.25),beamM); post.position.set(x,P.y[i]+0.55,z); G.add(post); } });
+  // trestle under the lip: timber bents with cross bracing, sitting in the creek bank
+  for(let k=0;k<4;k++){ const i=(top-k*2+N)%N; const gy=Math.min(P.y[i]-0.2,heightAt(P.x[i],P.z[i]))-1.5, hh=P.y[i]-gy;
+    [-0.42,-0.14,0.14,0.42].forEach(f=>{ const lat=f*P.w[i]; const c=new THREE.Mesh(new THREE.BoxGeometry(0.45,hh,0.45),beamM); c.position.set(P.x[i]+P.rx[i]*lat,gy+hh/2,P.z[i]+P.rz[i]*lat); c.castShadow=true; G.add(c); });
+    const x=new THREE.Mesh(new THREE.BoxGeometry(P.w[i]*0.9,0.3,0.3),beamM); x.position.set(P.x[i],gy+hh*0.55,P.z[i]); x.rotation.y=Math.atan2(P.rx[i],P.rz[i])-Math.PI/2; G.add(x); }
+  // lip flags (orange + checkered) and landing flags on the far bank
+  const flagTex=canvasTex(64,48,(c,w,h)=>{ for(let x=0;x<8;x++)for(let y=0;y<6;y++){ c.fillStyle=(x+y)%2?'#111':'#f4f4f4'; c.fillRect(x*8,y*8,8,8); } });
+  const flag=(i,sd,lat,orange)=>{ const x=P.x[i]+P.rx[i]*sd*lat, z=P.z[i]+P.rz[i]*sd*lat, y=Math.max(P.y[i],heightAt(x,z)); const pole=new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.05,4.2,5),steelM); pole.position.set(x,y+2.1,z); G.add(pole);
+    const f=new THREE.Mesh(new THREE.PlaneGeometry(1.6,1.1),orange?stdMat(0xff7a1a,{side:THREE.DoubleSide}):new THREE.MeshStandardMaterial({map:flagTex,side:THREE.DoubleSide})); f.position.set(x+P.tx[i]*0.85,y+3.6,z+P.tz[i]*0.85); f.rotation.y=Math.atan2(P.rx[i],P.rz[i]); G.add(f); };
+  [-1,1].forEach(sd=>{ flag(top,sd,P.w[top]/2+1.4,false); flag((top-6+N)%N,sd,P.w[top]/2+1.6,true); flag((top+gl+2)%N,sd,P.w[(top+gl+2)%N]/2+1.6,true); flag((top+gl+6)%N,sd,P.w[(top+gl+6)%N]/2+1.6,false); });
+  // hay bales: round bales along the approach, a stacked wall at the landing
+  const hayTex=canvasTex(128,64,(c,w,h)=>{ noiseFill(c,w,h,'#d8b35a',30); c.strokeStyle='rgba(120,90,30,0.5)'; for(let y=4;y<h;y+=6){ c.beginPath(); c.moveTo(0,y); c.lineTo(w,y+Math.random()*3); c.stroke(); } },{repeat:true});
+  const hayM=new THREE.MeshStandardMaterial({map:hayTex,roughness:1}); const round=new THREE.CylinderGeometry(0.85,0.85,1.3,12); round.rotateZ(Math.PI/2); const sq=new THREE.BoxGeometry(1.2,0.6,0.6);
+  const bales=[];
+  [-1,1].forEach(sd=>{ for(let k=-26;k<-4;k+=3){ const i=(i0+k+N)%N; const e=(sd<0?P.wl[i]:P.wr[i])+1.4; const x=P.x[i]+P.rx[i]*e*sd, z=P.z[i]+P.rz[i]*e*sd; const b=new THREE.Mesh(round,hayM); b.position.set(x,heightAt(x,z)+0.8,z); b.rotation.y=Math.atan2(P.tx[i],P.tz[i]); b.castShadow=true; G.add(b); }
+    for(let k=gl+3;k<gl+14;k+=2){ const i=(top+k)%N; const e=(sd<0?P.wl[i]:P.wr[i])+1.3; for(let r=0;r<3;r++){ const x=P.x[i]+P.rx[i]*e*sd, z=P.z[i]+P.rz[i]*e*sd; const b=new THREE.Mesh(sq,hayM); b.position.set(x,heightAt(x,z)+0.3+r*0.6,z); b.rotation.y=Math.atan2(P.tx[i],P.tz[i])+Math.PI/2+(r%2)*0.1; b.castShadow=true; G.add(b); } } });
+  // hand-painted plank sign on the approach (left side), facing oncoming cars
+  { const i=(i0-22+N)%N, sd=-1, e=P.wl[i]+4.5; const x=P.x[i]+P.rx[i]*e*sd, z=P.z[i]+P.rz[i]*e*sd, y=heightAt(x,z);
+    const tex=canvasTex(1024,512,(c,w,h)=>{ noiseFill(c,w,h,'#a7784a',26); c.fillStyle='rgba(60,32,14,0.6)'; for(let yy=0;yy<h;yy+=64) c.fillRect(0,yy,w,4);
+      c.textAlign='center'; c.fillStyle='#fff7e0'; c.strokeStyle='#5a2a10'; c.lineWidth=14; c.font='bold 150px "Racing Sans One",Impact'; c.strokeText('YEE-HAW!',w/2,190); c.fillText('YEE-HAW!',w/2,190);
+      c.fillStyle='#ff7a1a'; c.font='bold 92px Impact'; c.strokeText('CREEK JUMP AHEAD',w/2,330); c.fillText('CREEK JUMP AHEAD',w/2,330);
+      c.fillStyle='#fff7e0'; c.font='bold 56px Impact'; c.fillText('FLOOR IT  →  FLY THE CREEK',w/2,440); });
+    const grp=new THREE.Group(); grp.position.set(x,y,z); grp.rotation.y=Math.atan2(-P.tx[i],-P.tz[i]); G.add(grp);
+    const face=new THREE.Mesh(new THREE.PlaneGeometry(8,4),new THREE.MeshStandardMaterial({map:tex,roughness:0.9})); face.position.y=4.2; grp.add(face);
+    const back=new THREE.Mesh(new THREE.BoxGeometry(8.2,4.2,0.15),beamM); back.position.set(0,4.2,-0.1); grp.add(back);
+    [-3,3].forEach(px=>{ const p=new THREE.Mesh(new THREE.BoxGeometry(0.3,6.4,0.3),beamM); p.position.set(px,3.0,-0.25); p.castShadow=true; grp.add(p); }); }
+  // the General Lee, frozen mid-jump on a steel pole beside the creek (decoration only; the car stays drivable in the garage)
+  if(typeof CAR_GLTF!=='undefined'&&CAR_GLTF.genlee){ const PG=processGLB('genlee'); const m=(top+Math.round(gl*0.55))%N; const sd=1; const e=P.wr[m]+6.5;
+    const x=P.x[m]+P.rx[m]*e*sd, z=P.z[m]+P.rz[m]*e*sd, gy=heightAt(x,z), carY=P.y[top]+4.2;
+    const car=new THREE.Group(); car.position.set(x,carY,z); car.rotation.order='YXZ'; car.rotation.set(-0.2,Math.atan2(P.tx[m],P.tz[m]),0.05);
+    const mats=new Map(); const mf=mt=>{ if(!mats.has(mt)){ const c=mt.clone(); if(W.env&&W.env.envMap) c.envMap=W.env.envMap; mats.set(mt,c); } return mats.get(mt); };
+    PG.body.forEach(b=>{ const o=new THREE.Mesh(b.geo,mf(b.mat)); o.castShadow=true; car.add(o); });
+    PG.wheels.forEach(w=>{ const o=new THREE.Mesh(w.geo,mf(w.mat)); o.position.copy(w.c); o.castShadow=true; car.add(o); });
+    car.position.y-=PG.H*0.35; G.add(car);
+    const top_=carY-0.2, h=top_-gy+0.6; const pole=new THREE.Mesh(new THREE.CylinderGeometry(0.22,0.3,h,10),steelM); pole.position.set(x,gy-0.6+h/2,z); pole.castShadow=true; G.add(pole);
+    const base=new THREE.Mesh(new THREE.CylinderGeometry(1.4,1.7,0.8,12),stdMat(0x9a948a)); base.position.set(x,gy+0.1,z); G.add(base);
+    const plaque=canvasTex(512,128,(c,w,h)=>{ c.fillStyle='#2b1a0e'; c.fillRect(0,0,w,h); c.strokeStyle='#e0b050'; c.lineWidth=8; c.strokeRect(6,6,w-12,h-12); c.fillStyle='#f4d58a'; c.textAlign='center'; c.font='bold 54px Impact'; c.fillText('GOOD OL’ CREEK JUMP',w/2,82); });
+    const pl=new THREE.Mesh(new THREE.PlaneGeometry(3.2,0.8),new THREE.MeshStandardMaterial({map:plaque,roughness:0.6})); pl.position.set(x-P.rx[m]*1.75,gy+0.5,z-P.rz[m]*1.75); pl.rotation.y=Math.atan2(-P.rx[m],-P.rz[m]); G.add(pl);
+    W.dukesCar=car; }
+}
+
 // ===== HONKY TONK HIGHWAY: country scenery =====
 function buildCountryScenery(W,def,P,Q,H,K){
   const G=W.group, {heightAt,clearOfRoad}=H, {scatter,areaScatter,footprintClear,stdMat,vcMat,freeOfProps}=K, D=Q.density;
@@ -5142,6 +5197,10 @@ function buildCountryScenery(W,def,P,Q,H,K){
     const rocks=[]; pts.forEach((p,k)=>{ if(k%2) return; for(const sd of [-1,1]){ const x=p[0]+rr(-3,3)+sd*rr(8,12), z=p[1]+rr(-3,3); if(!clearOfRoad(x,z,3)) continue; rocks.push({x,y:heightAt(x,z)-0.3,z,ry:rnd()*TAU,s:[rr(0.8,2),rr(0.5,1.2),rr(0.8,2)],c:0x8a8278}); } });
     G.add(instanced(new THREE.DodecahedronGeometry(1,0),stdMat(0xffffff),rocks,true,true));
   }
+
+  // ---------- Yee-Haw Creek Jump: timber stunt ramp, hay bales, flags, hand-painted sign, and the General Lee flying the creek on a pole ----------
+  (def.jumps||[]).forEach(j=>{ if(!j.dukes) return; buildDukesJump(W,def,P,j,heightAt,stdMat); j.gl=Math.round(j.gap/P.spacing);
+    for(let k=-6;k<j.gl+8;k++){ const i=(j.top+k+P.N)%P.N; blocked.push({x:P.x[i],z:P.z[i],r:P.w[i]/2+16}); } });
 
   // ---------- covered bridge over the creek (tunnel section) ----------
   (def.tunnels||[]).forEach(()=>{ const inc=(i,j)=>P.tunnel[i]&&P.tunnel[j];
