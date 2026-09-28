@@ -1,0 +1,1627 @@
+{
+ "version": 1,
+ "note": "Graphics V2 asset inventory. status: in_game | inbox (not yet exported for the game). Categories: playable_vehicle, decorative_vehicle, building, vegetation, infrastructure, hero_prop, filler_prop, track_specific, environment.",
+ "tracks": [
+  "sweet",
+  "mesa",
+  "coast",
+  "neon",
+  "alondra",
+  "country",
+  "revolution"
+ ],
+ "assets": [
+  {
+   "id": "hellcat",
+   "status": "in_game",
+   "file": "models/cars/hellcat.glb",
+   "category": "playable_vehicle",
+   "tracks": [],
+   "note": "Colonial Hellcat (CordIsLoud)",
+   "tris": 30086,
+   "prims": 1,
+   "materials": 1,
+   "textures": [
+    "512x512:jpeg",
+    "1024x1024:jpeg",
+    "256x256:jpeg"
+   ],
+   "textureMB": 0.29,
+   "fileMB": 1.65,
+   "size": [
+    4.9,
+    1.5,
+    2.1
+   ]
+  },
+  {
+   "id": "brcc",
+   "status": "in_game",
+   "file": "models/cars/rotor.glb",
+   "category": "playable_vehicle",
+   "tracks": [],
+   "note": "BRCC (JT)",
+   "tris": 29874,
+   "prims": 1,
+   "materials": 1,
+   "textures": [
+    "512x512:jpeg",
+    "1024x1024:jpeg",
+    "256x256:jpeg"
+   ],
+   "textureMB": 0.37,
+   "fileMB": 1.6,
+   "size": [
+    15.3,
+    5.4,
+    6.9
+   ]
+  },
+  {
+   "id": "fdc",
+   "status": "in_game",
+   "file": "models/cars/rrpickup.glb",
+   "category": "playable_vehicle",
+   "tracks": [],
+   "note": "FDC pickup",
+   "tris": 29147,
+   "prims": 1,
+   "materials": 1,
+   "textures": [
+    "512x512:jpeg",
+    "1024x1024:jpeg",
+    "256x256:jpeg"
+   ],
+   "textureMB": 0.39,
+   "fileMB": 2.12,
+   "size": [
+    10.9,
+    5.4,
+    3.6
+   ]
+  },
+  {
+   "id": "bpd",
+   "status": "in_game",
+   "file": "models/cars/bpd_69.glb",
+   "category": "playable_vehicle",
+   "tracks": [],
+   "note": "BPD 69 (Rich)",
+   "tris": 29888,
+   "prims": 5,
+   "materials": 1,
+   "textures": [
+    "1024x1024:jpeg",
+    "512x512:jpeg",
+    "256x256:jpeg"
+   ],
+   "textureMB": 0.32,
+   "fileMB": 1.39,
+   "size": [
+    2.5,
+    1.7,
+    5.5
+   ]
+  },
+  {
+   "id": "concord",
+   "status": "in_game",
+   "file": "models/cars/concordance.glb",
+   "category": "playable_vehicle",
+   "tracks": [],
+   "note": "Concordance",
+   "tris": 29531,
+   "prims": 5,
+   "materials": 1,
+   "textures": [
+    "1024x1024:jpeg",
+    "512x512:jpeg",
+    "256x256:jpeg"
+   ],
+   "textureMB": 0.34,
+   "fileMB": 1.36,
+   "size": [
+    2.1,
+    1.5,
+    5.1
+   ]
+  },
+  {
+   "id": "donut",
+   "status": "in_game",
+   "file": "models/cars/donut_patrol.glb",
+   "category": "playable_vehicle",
+   "tracks": [],
+   "note": "Donut Patrol",
+   "tris": 30152,
+   "prims": 5,
+   "materials": 1,
+   "textures": [
+    "1024x1024:jpeg",
+    "512x512:jpeg",
+    "256x256:jpeg"
+   ],
+   "textureMB": 0.51,
+   "fileMB": 1.57,
+   "size": [
+    2,
+    1.5,
+    4.9
+   ]
+  },
+  {
+   "id": "duck",
+   "status": "in_game",
+   "file": "models/cars/duck_plasma.glb",
+   "category": "playable_vehicle",
+   "tracks": [],
+   "note": "Duck Plasma (Nic)",
+   "tris": 30353,
+   "prims": 5,
+   "materials": 1,
+   "textures": [
+    "1024x1024:jpeg",
+    "512x512:jpeg",
+    "256x256:jpeg"
+   ],
+   "textureMB": 0.37,
+   "fileMB": 1.32,
+   "size": [
+    2.2,
+    1.9,
+    3.9
+   ]
+  },
+  {
+   "id": "gt44",
+   "status": "in_game",
+   "file": "models/cars/gt40.glb",
+   "category": "playable_vehicle",
+   "tracks": [],
+   "note": "GT40 (menu showcase + graphics benchmark car)",
+   "tris": 29634,
+   "prims": 5,
+   "materials": 1,
+   "textures": [
+    "1024x1024:jpeg",
+    "512x512:jpeg",
+    "256x256:jpeg"
+   ],
+   "textureMB": 0.31,
+   "fileMB": 1.18,
+   "size": [
+    2,
+    1,
+    4.3
+   ]
+  },
+  {
+   "id": "missile",
+   "status": "in_game",
+   "file": "models/cars/missile_commander.glb",
+   "category": "playable_vehicle",
+   "tracks": [],
+   "note": "Missile Commander",
+   "tris": 28630,
+   "prims": 5,
+   "materials": 1,
+   "textures": [
+    "1024x1024:jpeg",
+    "512x512:jpeg",
+    "256x256:jpeg"
+   ],
+   "textureMB": 0.32,
+   "fileMB": 1.55,
+   "size": [
+    3.3,
+    3.6,
+    7
+   ]
+  },
+  {
+   "id": "leopard",
+   "status": "in_game",
+   "file": "models/cars/night_leopard.glb",
+   "category": "playable_vehicle",
+   "tracks": [],
+   "note": "Black Lightning (Pix)",
+   "tris": 29809,
+   "prims": 5,
+   "materials": 1,
+   "textures": [
+    "1024x1024:jpeg",
+    "512x512:jpeg",
+    "256x256:jpeg"
+   ],
+   "textureMB": 0.3,
+   "fileMB": 1.33,
+   "size": [
+    2,
+    1.2,
+    4.4
+   ]
+  },
+  {
+   "id": "trout",
+   "status": "in_game",
+   "file": "models/cars/trout_protocol.glb",
+   "category": "playable_vehicle",
+   "tracks": [],
+   "note": "Trout Protocol",
+   "tris": 30037,
+   "prims": 5,
+   "materials": 1,
+   "textures": [
+    "1024x1024:jpeg",
+    "512x512:jpeg",
+    "256x256:jpeg"
+   ],
+   "textureMB": 0.4,
+   "fileMB": 1.24,
+   "size": [
+    1.7,
+    1.6,
+    5.7
+   ]
+  },
+  {
+   "id": "lightning",
+   "status": "in_game",
+   "file": "models/cars/white_lightning.glb",
+   "category": "playable_vehicle",
+   "tracks": [],
+   "note": "White Lightning GT3 (Tackett) - 2048 textures, heaviest car",
+   "tris": 40000,
+   "prims": 5,
+   "materials": 1,
+   "textures": [
+    "2048x2048:jpeg",
+    "64x64:jpeg",
+    "256x256:jpeg"
+   ],
+   "textureMB": 1.08,
+   "fileMB": 3.04,
+   "size": [
+    2,
+    1.3,
+    4.7
+   ]
+  },
+  {
+   "id": "genlee",
+   "status": "in_game",
+   "file": "models/cars/general_lee.glb",
+   "category": "playable_vehicle",
+   "tracks": [
+    "country"
+   ],
+   "note": "General Lee (Nolan); also the Dukes-jump hero on Honky Tonk Highway",
+   "tris": 23999,
+   "prims": 5,
+   "materials": 1,
+   "textures": [
+    "1024x1024:jpeg",
+    "512x512:jpeg",
+    "256x256:jpeg"
+   ],
+   "textureMB": 0.39,
+   "fileMB": 1.47,
+   "size": [
+    2,
+    1.4,
+    5.1
+   ]
+  },
+  {
+   "id": "env_sweet",
+   "status": "in_game",
+   "file": "models/env/env_sweet.glb",
+   "category": "environment",
+   "tracks": [
+    "sweet"
+   ],
+   "note": "Sweet Justice Circuit environment",
+   "tris": 76342,
+   "prims": 38,
+   "materials": 27,
+   "textures": [
+    "1024x1024:jpeg",
+    "512x512:jpeg",
+    "2048x2048:jpeg",
+    "4096x4096:jpeg",
+    "512x64:jpeg",
+    "1024x128:jpeg"
+   ],
+   "textureMB": 5.02,
+   "fileMB": 8.06,
+   "size": [
+    503.3,
+    39.5,
+    578.2
+   ]
+  },
+  {
+   "id": "env_mesa",
+   "status": "in_game",
+   "file": "models/env/env_mesa.glb",
+   "category": "environment",
+   "tracks": [
+    "mesa"
+   ],
+   "note": "Mojave Mesa Run environment",
+   "tris": 302451,
+   "prims": 122,
+   "materials": 41,
+   "textures": [
+    "512x64:jpeg",
+    "512x512:jpeg",
+    "2048x2048:jpeg",
+    "512x1024:jpeg",
+    "1024x1024:jpeg",
+    "1024x512:jpeg"
+   ],
+   "textureMB": 2.56,
+   "fileMB": 14.18,
+   "size": [
+    3976.8,
+    509.8,
+    3976.8
+   ]
+  },
+  {
+   "id": "env_coast",
+   "status": "in_game",
+   "file": "models/env/env_coast.glb",
+   "category": "environment",
+   "tracks": [
+    "coast"
+   ],
+   "note": "Pacifica Cliffs environment (graphics benchmark)",
+   "tris": 267664,
+   "prims": 110,
+   "materials": 44,
+   "textures": [
+    "1024x1024:jpeg",
+    "512x64:jpeg",
+    "2048x2048:jpeg",
+    "512x1024:jpeg",
+    "512x64:png",
+    "1024x512:jpeg"
+   ],
+   "textureMB": 2.51,
+   "fileMB": 11.83,
+   "size": [
+    2810.5,
+    558,
+    4567
+   ]
+  },
+  {
+   "id": "env_neon",
+   "status": "in_game",
+   "file": "models/env/env_neon.glb",
+   "category": "environment",
+   "tracks": [
+    "neon"
+   ],
+   "note": "Neon Foundry Nights environment (runtime LED/wet-road shaders)",
+   "tris": 107256,
+   "prims": 105,
+   "materials": 43,
+   "textures": [
+    "512x512:jpeg",
+    "256x64:jpeg",
+    "2048x2048:jpeg",
+    "2048x1024:jpeg",
+    "600x600:jpeg",
+    "2048x512:jpeg"
+   ],
+   "textureMB": 2.4,
+   "fileMB": 8.73,
+   "size": [
+    3566,
+    239.8,
+    2942.4
+   ]
+  },
+  {
+   "id": "env_alondra",
+   "status": "in_game",
+   "file": "models/env/env_alondra.glb",
+   "category": "environment",
+   "tracks": [
+    "alondra"
+   ],
+   "note": "Alondra Boulevard environment",
+   "tris": 368986,
+   "prims": 292,
+   "materials": 30,
+   "textures": [
+    "2048x2048:jpeg",
+    "512x512:jpeg",
+    "1024x1024:png",
+    "256x256:png",
+    "1024x1024:jpeg",
+    "256x256:jpeg"
+   ],
+   "textureMB": 5.36,
+   "fileMB": 16.21,
+   "size": [
+    6400,
+    181.1,
+    6400
+   ]
+  },
+  {
+   "id": "env_revolution",
+   "status": "in_game",
+   "file": "models/env/env_revolution.glb",
+   "category": "environment",
+   "tracks": [
+    "revolution"
+   ],
+   "note": "Revolution environment + runtime layout JSON",
+   "tris": 587329,
+   "prims": 395,
+   "materials": 23,
+   "textures": [
+    "1024x1024:jpeg",
+    "256x512:jpeg",
+    "512x512:jpeg",
+    "256x256:jpeg",
+    "2048x2048:jpeg",
+    "2048x1024:jpeg"
+   ],
+   "textureMB": 4.13,
+   "fileMB": 24,
+   "size": [
+    2903.4,
+    78.7,
+    3297.4
+   ]
+  },
+  {
+   "id": "showroom",
+   "status": "in_game",
+   "file": "models/env/showroom.glb",
+   "category": "environment",
+   "tracks": [
+    "menu"
+   ],
+   "note": "Neon showroom (menu / garage)",
+   "tris": 1632,
+   "prims": 10,
+   "materials": 10,
+   "textures": [],
+   "textureMB": 0,
+   "fileMB": 0.11,
+   "size": [
+    60,
+    8.6,
+    26
+   ]
+  },
+  {
+   "id": "grandstand",
+   "status": "in_game",
+   "file": "models/props/grandstand.glb",
+   "category": "infrastructure",
+   "tracks": [
+    "sweet",
+    "country"
+   ],
+   "note": "Grandstand (99k tris - LOD candidate)",
+   "tris": 99468,
+   "prims": 1,
+   "materials": 1,
+   "textures": [
+    "1024x1024:jpeg",
+    "2048x2048:jpeg",
+    "512x512:jpeg"
+   ],
+   "textureMB": 0.73,
+   "fileMB": 4.86,
+   "size": [
+    65.7,
+    11,
+    20.4
+   ]
+  },
+  {
+   "id": "rrsign",
+   "status": "in_game",
+   "file": "models/props/rrsign.glb",
+   "category": "hero_prop",
+   "tracks": [
+    "sweet",
+    "country"
+   ],
+   "note": "Ryden's Racers sign - 133k tris + 4096 texture: biggest prop cost, needs LOD/texture cap",
+   "tris": 133315,
+   "prims": 1,
+   "materials": 1,
+   "textures": [
+    "1024x1024:jpeg",
+    "4096x4096:jpeg",
+    "512x512:jpeg"
+   ],
+   "textureMB": 4.54,
+   "fileMB": 11.22,
+   "size": [
+    17.6,
+    9,
+    5.3
+   ]
+  },
+  {
+   "id": "knives",
+   "status": "in_game",
+   "file": "models/props/knives.glb",
+   "category": "hero_prop",
+   "tracks": [
+    "sweet",
+    "mesa",
+    "coast",
+    "neon",
+    "alondra",
+    "revolution"
+   ],
+   "note": "Maximus Knives billboard (house easter egg)",
+   "tris": 28080,
+   "prims": 1,
+   "materials": 1,
+   "textures": [
+    "1024x1024:jpeg",
+    "2048x2048:jpeg",
+    "512x512:jpeg"
+   ],
+   "textureMB": 2.07,
+   "fileMB": 3.94,
+   "size": [
+    18.9,
+    8,
+    2.3
+   ]
+  },
+  {
+   "id": "hijoe",
+   "status": "in_game",
+   "file": "models/props/hijoe.glb",
+   "category": "hero_prop",
+   "tracks": [
+    "sweet",
+    "mesa",
+    "coast",
+    "neon",
+    "alondra",
+    "country",
+    "revolution"
+   ],
+   "note": "Hi Joe billboard (house easter egg)",
+   "tris": 9473,
+   "prims": 1,
+   "materials": 1,
+   "textures": [
+    "2048x2048:jpeg",
+    "512x512:jpeg"
+   ],
+   "textureMB": 1.07,
+   "fileMB": 1.54,
+   "size": [
+    24.3,
+    15,
+    3.5
+   ]
+  },
+  {
+   "id": "trio",
+   "status": "in_game",
+   "file": "models/props/trio.glb",
+   "category": "hero_prop",
+   "tracks": [
+    "country",
+    "revolution"
+   ],
+   "note": "The trio billboard (easter egg)",
+   "tris": 10249,
+   "prims": 1,
+   "materials": 1,
+   "textures": [
+    "1024x1024:jpeg",
+    "2048x2048:jpeg",
+    "512x512:jpeg"
+   ],
+   "textureMB": 1.7,
+   "fileMB": 2.33,
+   "size": [
+    1.8,
+    1.8,
+    0.8
+   ]
+  },
+  {
+   "id": "donkeys",
+   "status": "in_game",
+   "file": "models/props/donkeys.glb",
+   "category": "hero_prop",
+   "tracks": [
+    "country",
+    "revolution"
+   ],
+   "note": "Donkeys sign (easter egg)",
+   "tris": 11438,
+   "prims": 1,
+   "materials": 1,
+   "textures": [
+    "2048x2048:jpeg",
+    "512x512:jpeg"
+   ],
+   "textureMB": 1.42,
+   "fileMB": 1.85,
+   "size": [
+    20.2,
+    15,
+    1.4
+   ]
+  },
+  {
+   "id": "solocup",
+   "status": "in_game",
+   "file": "models/props/solocup.glb",
+   "category": "hero_prop",
+   "tracks": [
+    "country"
+   ],
+   "note": "Red Solo Cup monument",
+   "tris": 10068,
+   "prims": 1,
+   "materials": 1,
+   "textures": [
+    "2048x2048:jpeg",
+    "512x512:jpeg"
+   ],
+   "textureMB": 0.99,
+   "fileMB": 1.39,
+   "size": [
+    5.2,
+    10,
+    6.2
+   ]
+  },
+  {
+   "id": "dolly",
+   "status": "in_game",
+   "file": "models/props/dolly.glb",
+   "category": "hero_prop",
+   "tracks": [
+    "country"
+   ],
+   "note": "Dolly statue",
+   "tris": 10424,
+   "prims": 1,
+   "materials": 1,
+   "textures": [
+    "1024x1024:jpeg",
+    "2048x2048:jpeg",
+    "512x512:jpeg"
+   ],
+   "textureMB": 1.39,
+   "fileMB": 1.89,
+   "size": [
+    1,
+    1.5,
+    0.7
+   ]
+  },
+  {
+   "id": "mrblack",
+   "status": "in_game",
+   "file": "models/props/mrblack.glb",
+   "category": "hero_prop",
+   "tracks": [
+    "alondra"
+   ],
+   "note": "Mr Black (shooter hazard)",
+   "tris": 31425,
+   "prims": 1,
+   "materials": 1,
+   "textures": [
+    "512x512:jpeg",
+    "1024x1024:jpeg",
+    "256x256:jpeg"
+   ],
+   "textureMB": 0.37,
+   "fileMB": 1.4,
+   "size": [
+    0.8,
+    1.8,
+    0.4
+   ]
+  },
+  {
+   "id": "ak",
+   "status": "in_game",
+   "file": "models/props/ak.glb",
+   "category": "hero_prop",
+   "tracks": [
+    "alondra"
+   ],
+   "note": "Shooter rifle",
+   "tris": 10046,
+   "prims": 1,
+   "materials": 1,
+   "textures": [
+    "512x512:jpeg",
+    "1024x1024:jpeg",
+    "256x256:jpeg"
+   ],
+   "textureMB": 0.43,
+   "fileMB": 0.95,
+   "size": [
+    0.9,
+    0.3,
+    0.1
+   ]
+  },
+  {
+   "id": "church",
+   "status": "in_game",
+   "file": "models/props/church.glb",
+   "category": "building",
+   "tracks": [
+    "country"
+   ],
+   "note": "Country church",
+   "tris": 30366,
+   "prims": 1,
+   "materials": 1,
+   "textures": [
+    "2048x2048:jpeg",
+    "1024x1024:jpeg",
+    "512x512:jpeg"
+   ],
+   "textureMB": 1.85,
+   "fileMB": 3.55,
+   "size": [
+    17.1,
+    25,
+    23.8
+   ]
+  },
+  {
+   "id": "gate",
+   "status": "in_game",
+   "file": "models/props/gate.glb",
+   "category": "infrastructure",
+   "tracks": [
+    "country"
+   ],
+   "note": "Ranch gate",
+   "tris": 2578,
+   "prims": 1,
+   "materials": 1,
+   "textures": [
+    "512x512:jpeg",
+    "1024x1024:jpeg",
+    "256x256:jpeg"
+   ],
+   "textureMB": 0.31,
+   "fileMB": 0.49,
+   "size": [
+    11.9,
+    4,
+    0.4
+   ]
+  },
+  {
+   "id": "watch_shop",
+   "status": "in_game",
+   "file": "models/props/watch_shop.glb",
+   "category": "building",
+   "tracks": [
+    "sweet",
+    "alondra"
+   ],
+   "note": "Watch shop",
+   "tris": 25566,
+   "prims": 1,
+   "materials": 1,
+   "textures": [
+    "1024x1024:jpeg",
+    "2048x2048:jpeg",
+    "512x512:jpeg"
+   ],
+   "textureMB": 1.63,
+   "fileMB": 2.92,
+   "size": [
+    9.4,
+    7,
+    13.4
+   ]
+  },
+  {
+   "id": "shoe_factory",
+   "status": "in_game",
+   "file": "models/props/shoe_factory.glb",
+   "category": "building",
+   "tracks": [
+    "sweet",
+    "alondra",
+    "neon"
+   ],
+   "note": "Shoe factory",
+   "tris": 26658,
+   "prims": 1,
+   "materials": 1,
+   "textures": [
+    "1024x1024:jpeg",
+    "2048x2048:jpeg",
+    "512x512:jpeg"
+   ],
+   "textureMB": 1.86,
+   "fileMB": 3.15,
+   "size": [
+    27.9,
+    16,
+    14
+   ]
+  },
+  {
+   "id": "watch_sign",
+   "status": "in_game",
+   "file": "models/props/watch_sign.glb",
+   "category": "hero_prop",
+   "tracks": [
+    "sweet",
+    "alondra"
+   ],
+   "note": "Watch billboard",
+   "tris": 2025,
+   "prims": 1,
+   "materials": 1,
+   "textures": [
+    "1024x1024:jpeg",
+    "2048x2048:jpeg",
+    "512x512:jpeg"
+   ],
+   "textureMB": 1.57,
+   "fileMB": 1.72,
+   "size": [
+    22.5,
+    12,
+    3.9
+   ]
+  },
+  {
+   "id": "range_sign",
+   "status": "in_game",
+   "file": "models/props/range_sign.glb",
+   "category": "hero_prop",
+   "tracks": [
+    "mesa",
+    "alondra"
+   ],
+   "note": "Range billboard",
+   "tris": 31804,
+   "prims": 1,
+   "materials": 1,
+   "textures": [
+    "1024x1024:jpeg",
+    "2048x2048:jpeg",
+    "512x512:jpeg"
+   ],
+   "textureMB": 1.55,
+   "fileMB": 2.76,
+   "size": [
+    16.8,
+    8,
+    2.1
+   ]
+  },
+  {
+   "id": "claw_can",
+   "status": "in_game",
+   "file": "models/props/claw_can.glb",
+   "category": "hero_prop",
+   "tracks": [
+    "sweet",
+    "alondra"
+   ],
+   "note": "Giant can (median prop)",
+   "tris": 3100,
+   "prims": 1,
+   "materials": 1,
+   "textures": [
+    "512x512:jpeg",
+    "2048x2048:jpeg",
+    "256x256:jpeg"
+   ],
+   "textureMB": 0.85,
+   "fileMB": 0.99,
+   "size": [
+    2.7,
+    7,
+    2.7
+   ]
+  },
+  {
+   "id": "echelon_can",
+   "status": "in_game",
+   "file": "models/props/echelon_can.glb",
+   "category": "hero_prop",
+   "tracks": [
+    "sweet",
+    "alondra"
+   ],
+   "note": "Giant can (median prop)",
+   "tris": 2984,
+   "prims": 1,
+   "materials": 1,
+   "textures": [
+    "512x512:jpeg",
+    "2048x2048:jpeg",
+    "256x256:jpeg"
+   ],
+   "textureMB": 0.81,
+   "fileMB": 0.94,
+   "size": [
+    2.8,
+    7,
+    2.8
+   ]
+  },
+  {
+   "id": "palm",
+   "status": "in_game",
+   "file": "models/props/palm.glb",
+   "category": "vegetation",
+   "tracks": [
+    "sweet"
+   ],
+   "note": "Palm tree (3k tris) - mx_palm_tree is a higher-quality candidate",
+   "tris": 3130,
+   "prims": 1,
+   "materials": 1,
+   "textures": [
+    "1024x1024:jpeg",
+    "512x512:jpeg",
+    "256x256:jpeg"
+   ],
+   "textureMB": 0.53,
+   "fileMB": 0.7,
+   "size": [
+    7.8,
+    12,
+    7.9
+   ]
+  },
+  {
+   "id": "rv_troops",
+   "status": "in_game",
+   "file": "models/props/rv_troops.glb",
+   "category": "track_specific",
+   "tracks": [
+    "revolution"
+   ],
+   "note": "Revolution troops, 3 LODs each",
+   "tris": 59441,
+   "prims": 15,
+   "materials": 15,
+   "textures": [
+    "1024x1024:jpeg",
+    "512x512:jpeg",
+    "256x256:jpeg"
+   ],
+   "textureMB": 1.93,
+   "fileMB": 3.81,
+   "size": [
+    1.1,
+    1.8,
+    0.8
+   ]
+  },
+  {
+   "id": "rv_props",
+   "status": "in_game",
+   "file": "models/props/rv_props.glb",
+   "category": "track_specific",
+   "tracks": [
+    "revolution"
+   ],
+   "note": "Revolution props: wagon, inn, galleon, cannon",
+   "tris": 59885,
+   "prims": 4,
+   "materials": 4,
+   "textures": [
+    "1024x1024:jpeg",
+    "512x512:jpeg"
+   ],
+   "textureMB": 1.23,
+   "fileMB": 5.33,
+   "size": [
+    58,
+    45.3,
+    21.5
+   ]
+  },
+  {
+   "id": "rv_heroes",
+   "status": "in_game",
+   "file": "models/props/rv_heroes.glb",
+   "category": "track_specific",
+   "tracks": [
+    "revolution"
+   ],
+   "note": "Francis Marion + Washington crossing",
+   "tris": 93998,
+   "prims": 2,
+   "materials": 2,
+   "textures": [
+    "1024x1024:jpeg",
+    "2048x2048:jpeg"
+   ],
+   "textureMB": 0.9,
+   "fileMB": 5.05,
+   "size": [
+    5.9,
+    3.9,
+    11.5
+   ]
+  },
+  {
+   "id": "mx_palm_tree",
+   "status": "inbox",
+   "blend": "RydensRacers-Blender/meshy_inbox/meshy_inbox.blend#Meshy_Inbox/mx_palm_tree",
+   "category": "vegetation",
+   "role": "filler",
+   "tracks": [
+    "coast",
+    "sweet",
+    "alondra"
+   ],
+   "note": "Tall fan palm. Better silhouette than the 3k-tri palm prop; needs a card/foliage-aware reduction, not a plain decimate.",
+   "tris": 2290928,
+   "textures": "2048",
+   "heightM": 9.0,
+   "targetTris": 12000,
+   "thumb": "docs/graphics-v2/img/meshy/mx_palm_tree.jpg"
+  },
+  {
+   "id": "mx_birch_tree",
+   "status": "inbox",
+   "blend": "RydensRacers-Blender/meshy_inbox/meshy_inbox.blend#Meshy_Inbox/mx_birch_tree",
+   "category": "vegetation",
+   "role": "filler",
+   "tracks": [
+    "country",
+    "revolution"
+   ],
+   "note": "Birch/aspen. Saratoga autumn woods, Honky Tonk creek.",
+   "tris": 2509704,
+   "textures": "2048 x3",
+   "heightM": 11.0,
+   "targetTris": 12000,
+   "thumb": "docs/graphics-v2/img/meshy/mx_birch_tree.jpg"
+  },
+  {
+   "id": "mx_fir_tree",
+   "status": "inbox",
+   "blend": "RydensRacers-Blender/meshy_inbox/meshy_inbox.blend#Meshy_Inbox/mx_fir_tree",
+   "category": "vegetation",
+   "role": "filler",
+   "tracks": [
+    "revolution",
+    "country",
+    "coast"
+   ],
+   "note": "Fir. Trenton/Delaware winter, Pacifica headland.",
+   "tris": 2788067,
+   "textures": "2048 x3",
+   "heightM": 12.0,
+   "targetTris": 12000,
+   "thumb": "docs/graphics-v2/img/meshy/mx_fir_tree.jpg"
+  },
+  {
+   "id": "mx_dark_pine",
+   "status": "inbox",
+   "blend": "RydensRacers-Blender/meshy_inbox/meshy_inbox.blend#Meshy_Inbox/mx_dark_pine",
+   "category": "vegetation",
+   "role": "filler",
+   "tracks": [
+    "revolution",
+    "mesa"
+   ],
+   "note": "Sparse dark pine (needle geometry). Heavy 4096 textures - cap to 1024.",
+   "tris": 1959040,
+   "textures": "4096/2048",
+   "heightM": 12.0,
+   "targetTris": 10000,
+   "thumb": "docs/graphics-v2/img/meshy/mx_dark_pine.jpg"
+  },
+  {
+   "id": "mx_fruit_tree",
+   "status": "inbox",
+   "blend": "RydensRacers-Blender/meshy_inbox/meshy_inbox.blend#Meshy_Inbox/mx_fruit_tree",
+   "category": "vegetation",
+   "role": "hero",
+   "tracks": [
+    "sweet",
+    "alondra",
+    "coast"
+   ],
+   "note": "Umbrella tree with hanging red fruit. 8.2M tris - heaviest asset; bake to a low-poly + cards.",
+   "tris": 8243129,
+   "textures": "2048",
+   "heightM": 6.0,
+   "targetTris": 15000,
+   "thumb": "docs/graphics-v2/img/meshy/mx_fruit_tree.jpg"
+  },
+  {
+   "id": "mx_banana_plant",
+   "status": "inbox",
+   "blend": "RydensRacers-Blender/meshy_inbox/meshy_inbox.blend#Meshy_Inbox/mx_banana_plant",
+   "category": "vegetation",
+   "role": "filler",
+   "tracks": [
+    "sweet",
+    "alondra",
+    "coast"
+   ],
+   "note": "Already game-ready (21k). Yards, shop fronts, coastal gardens.",
+   "tris": 21462,
+   "textures": "2048 x3",
+   "heightM": 2.2,
+   "targetTris": 8000,
+   "thumb": "docs/graphics-v2/img/meshy/mx_banana_plant.jpg"
+  },
+  {
+   "id": "mx_fern",
+   "status": "inbox",
+   "blend": "RydensRacers-Blender/meshy_inbox/meshy_inbox.blend#Meshy_Inbox/mx_fern",
+   "category": "vegetation",
+   "role": "filler",
+   "tracks": [
+    "revolution",
+    "coast",
+    "country"
+   ],
+   "note": "Understory: swamp causeway, cliff gardens.",
+   "tris": 1318231,
+   "textures": "2048 x3",
+   "heightM": 1.0,
+   "targetTris": 2500,
+   "thumb": "docs/graphics-v2/img/meshy/mx_fern.jpg"
+  },
+  {
+   "id": "mx_heather",
+   "status": "inbox",
+   "blend": "RydensRacers-Blender/meshy_inbox/meshy_inbox.blend#Meshy_Inbox/mx_heather",
+   "category": "vegetation",
+   "role": "filler",
+   "tracks": [
+    "coast",
+    "revolution"
+   ],
+   "note": "Coastal heather tufts along the Pacifica cliff road.",
+   "tris": 1563224,
+   "textures": "2048 x3",
+   "heightM": 0.8,
+   "targetTris": 2000,
+   "thumb": "docs/graphics-v2/img/meshy/mx_heather.jpg"
+  },
+  {
+   "id": "mx_red_hot_poker_shrub",
+   "status": "inbox",
+   "blend": "RydensRacers-Blender/meshy_inbox/meshy_inbox.blend#Meshy_Inbox/mx_red_hot_poker_shrub",
+   "category": "vegetation",
+   "role": "filler",
+   "tracks": [
+    "coast",
+    "sweet"
+   ],
+   "note": "Flowering shrub (kniphofia) - coastal/Californian gardens.",
+   "tris": 5202045,
+   "textures": "2048 x3",
+   "heightM": 1.3,
+   "targetTris": 3000,
+   "thumb": "docs/graphics-v2/img/meshy/mx_red_hot_poker_shrub.jpg"
+  },
+  {
+   "id": "mx_red_lily",
+   "status": "inbox",
+   "blend": "RydensRacers-Blender/meshy_inbox/meshy_inbox.blend#Meshy_Inbox/mx_red_lily",
+   "category": "vegetation",
+   "role": "filler",
+   "tracks": [
+    "sweet",
+    "alondra"
+   ],
+   "note": "Flower accent for planters and front yards.",
+   "tris": 849592,
+   "textures": "2048 x3",
+   "heightM": 0.6,
+   "targetTris": 1500,
+   "thumb": "docs/graphics-v2/img/meshy/mx_red_lily.jpg"
+  },
+  {
+   "id": "mx_fly_agaric",
+   "status": "inbox",
+   "blend": "RydensRacers-Blender/meshy_inbox/meshy_inbox.blend#Meshy_Inbox/mx_fly_agaric",
+   "category": "vegetation",
+   "role": "filler",
+   "tracks": [
+    "revolution",
+    "country"
+   ],
+   "note": "Toadstool cluster. Saratoga woods floor / swamp easter egg.",
+   "tris": 3245387,
+   "textures": "2048 x3",
+   "heightM": 0.5,
+   "targetTris": 2000,
+   "thumb": "docs/graphics-v2/img/meshy/mx_fly_agaric.jpg"
+  },
+  {
+   "id": "mx_mossy_log",
+   "status": "inbox",
+   "blend": "RydensRacers-Blender/meshy_inbox/meshy_inbox.blend#Meshy_Inbox/mx_mossy_log",
+   "category": "vegetation",
+   "role": "filler",
+   "tracks": [
+    "revolution",
+    "country"
+   ],
+   "note": "Fallen mossy log: swamp causeway, creek banks.",
+   "tris": 3358591,
+   "textures": "2048 x3",
+   "heightM": 0.8,
+   "targetTris": 3000,
+   "thumb": "docs/graphics-v2/img/meshy/mx_mossy_log.jpg"
+  },
+  {
+   "id": "mx_charred_stump",
+   "status": "inbox",
+   "blend": "RydensRacers-Blender/meshy_inbox/meshy_inbox.blend#Meshy_Inbox/mx_charred_stump",
+   "category": "vegetation",
+   "role": "hero",
+   "tracks": [
+    "revolution",
+    "mesa"
+   ],
+   "note": "Burnt stump with glowing embers (Bunker Hill / Charlestown burning). Game-ready tris; cap textures.",
+   "tris": 9769,
+   "textures": "4096/2048 + emissive embers",
+   "heightM": 1.2,
+   "targetTris": 9769,
+   "thumb": "docs/graphics-v2/img/meshy/mx_charred_stump.jpg"
+  },
+  {
+   "id": "mx_ibex",
+   "status": "inbox",
+   "blend": "RydensRacers-Blender/meshy_inbox/meshy_inbox.blend#Meshy_Inbox/mx_ibex",
+   "category": "hero_prop",
+   "role": "hero",
+   "tracks": [
+    "mesa"
+   ],
+   "note": "Mountain goat/ibex - perch it on a Mojave Mesa rock outcrop (bighorn stand-in).",
+   "tris": 509143,
+   "textures": "2048 x3",
+   "heightM": 1.4,
+   "targetTris": 8000,
+   "thumb": "docs/graphics-v2/img/meshy/mx_ibex.jpg"
+  },
+  {
+   "id": "mx_brick_colonial_house",
+   "status": "inbox",
+   "blend": "RydensRacers-Blender/meshy_inbox/meshy_inbox.blend#Meshy_Inbox/mx_brick_colonial_house",
+   "category": "building",
+   "role": "hero",
+   "tracks": [
+    "revolution"
+   ],
+   "note": "Georgian brick house with chimneys - big upgrade over the procedural houses in Yorktown/Trenton.",
+   "tris": 760204,
+   "textures": "2048 x3",
+   "heightM": 9.5,
+   "targetTris": 15000,
+   "thumb": "docs/graphics-v2/img/meshy/mx_brick_colonial_house.jpg"
+  },
+  {
+   "id": "mx_adobe_pueblo",
+   "status": "inbox",
+   "blend": "RydensRacers-Blender/meshy_inbox/meshy_inbox.blend#Meshy_Inbox/mx_adobe_pueblo",
+   "category": "building",
+   "role": "hero",
+   "tracks": [
+    "mesa"
+   ],
+   "note": "Adobe pueblo block - Route 99 desert settlement / trading post.",
+   "tris": 1581785,
+   "textures": "2048 x3",
+   "heightM": 6.0,
+   "targetTris": 12000,
+   "thumb": "docs/graphics-v2/img/meshy/mx_adobe_pueblo.jpg"
+  },
+  {
+   "id": "mx_butcher_stall",
+   "status": "inbox",
+   "blend": "RydensRacers-Blender/meshy_inbox/meshy_inbox.blend#Meshy_Inbox/mx_butcher_stall",
+   "category": "hero_prop",
+   "role": "filler",
+   "tracks": [
+    "revolution"
+   ],
+   "note": "Colonial market stall - Lexington green / Yorktown market.",
+   "tris": 797096,
+   "textures": "4096",
+   "heightM": 2.6,
+   "targetTris": 8000,
+   "thumb": "docs/graphics-v2/img/meshy/mx_butcher_stall.jpg"
+  },
+  {
+   "id": "mx_timber_gate",
+   "status": "inbox",
+   "blend": "RydensRacers-Blender/meshy_inbox/meshy_inbox.blend#Meshy_Inbox/mx_timber_gate",
+   "category": "infrastructure",
+   "role": "filler",
+   "tracks": [
+    "revolution",
+    "country"
+   ],
+   "note": "Palisade gate with lantern - camp/fort entrances, ranch gates.",
+   "tris": 939906,
+   "textures": "2048 x3",
+   "heightM": 3.0,
+   "targetTris": 6000,
+   "thumb": "docs/graphics-v2/img/meshy/mx_timber_gate.jpg"
+  },
+  {
+   "id": "mx_iron_spike_fence",
+   "status": "inbox",
+   "blend": "RydensRacers-Blender/meshy_inbox/meshy_inbox.blend#Meshy_Inbox/mx_iron_spike_fence",
+   "category": "infrastructure",
+   "role": "filler",
+   "tracks": [
+    "alondra",
+    "sweet"
+   ],
+   "note": "Wrought-iron fence section - front yards, lots. Tileable run.",
+   "tris": 769860,
+   "textures": "2048 x4",
+   "heightM": 2.0,
+   "targetTris": 2000,
+   "thumb": "docs/graphics-v2/img/meshy/mx_iron_spike_fence.jpg"
+  },
+  {
+   "id": "mx_graffiti_brick_wall",
+   "status": "inbox",
+   "blend": "RydensRacers-Blender/meshy_inbox/meshy_inbox.blend#Meshy_Inbox/mx_graffiti_brick_wall",
+   "category": "infrastructure",
+   "role": "filler",
+   "tracks": [
+    "alondra",
+    "sweet",
+    "neon"
+   ],
+   "note": "Graffiti brick wall panel - alleys, lots, underpasses.",
+   "tris": 684755,
+   "textures": "2048 x3",
+   "heightM": 2.5,
+   "targetTris": 2000,
+   "thumb": "docs/graphics-v2/img/meshy/mx_graffiti_brick_wall.jpg"
+  },
+  {
+   "id": "mx_metal_stairs",
+   "status": "inbox",
+   "blend": "RydensRacers-Blender/meshy_inbox/meshy_inbox.blend#Meshy_Inbox/mx_metal_stairs",
+   "category": "infrastructure",
+   "role": "filler",
+   "tracks": [
+    "neon"
+   ],
+   "note": "Industrial steps with rail - Neon Foundry catwalks, grandstand access.",
+   "tris": 181334,
+   "textures": "2048 x4",
+   "heightM": 1.6,
+   "targetTris": 2500,
+   "thumb": "docs/graphics-v2/img/meshy/mx_metal_stairs.jpg"
+  },
+  {
+   "id": "mx_generator_compressor",
+   "status": "inbox",
+   "blend": "RydensRacers-Blender/meshy_inbox/meshy_inbox.blend#Meshy_Inbox/mx_generator_compressor",
+   "category": "infrastructure",
+   "role": "filler",
+   "tracks": [
+    "neon",
+    "mesa",
+    "alondra"
+   ],
+   "note": "Portable generator/compressor - work sites, foundry yard, gas station.",
+   "tris": 2930188,
+   "textures": "4096/2048",
+   "heightM": 1.3,
+   "targetTris": 4000,
+   "thumb": "docs/graphics-v2/img/meshy/mx_generator_compressor.jpg"
+  },
+  {
+   "id": "mx_ac_condenser",
+   "status": "inbox",
+   "blend": "RydensRacers-Blender/meshy_inbox/meshy_inbox.blend#Meshy_Inbox/mx_ac_condenser",
+   "category": "infrastructure",
+   "role": "filler",
+   "tracks": [
+    "alondra",
+    "sweet",
+    "neon"
+   ],
+   "note": "AC condenser - beside houses, shops and rooftops.",
+   "tris": 931630,
+   "textures": "2048",
+   "heightM": 1.0,
+   "targetTris": 2000,
+   "thumb": "docs/graphics-v2/img/meshy/mx_ac_condenser.jpg"
+  },
+  {
+   "id": "mx_ice_freezer",
+   "status": "inbox",
+   "blend": "RydensRacers-Blender/meshy_inbox/meshy_inbox.blend#Meshy_Inbox/mx_ice_freezer",
+   "category": "infrastructure",
+   "role": "filler",
+   "tracks": [
+    "mesa",
+    "sweet",
+    "alondra"
+   ],
+   "note": "Gas-station ICE freezer - Route 99 gas stop, liquor-store fronts.",
+   "tris": 429706,
+   "textures": "2048 x3",
+   "heightM": 1.3,
+   "targetTris": 3000,
+   "thumb": "docs/graphics-v2/img/meshy/mx_ice_freezer.jpg"
+  },
+  {
+   "id": "mx_atm",
+   "status": "inbox",
+   "blend": "RydensRacers-Blender/meshy_inbox/meshy_inbox.blend#Meshy_Inbox/mx_atm",
+   "category": "infrastructure",
+   "role": "filler",
+   "tracks": [
+    "alondra",
+    "sweet"
+   ],
+   "note": "Street ATM - storefronts on Alondra/Compton.",
+   "tris": 164141,
+   "textures": "2048 x3",
+   "heightM": 1.8,
+   "targetTris": 3000,
+   "thumb": "docs/graphics-v2/img/meshy/mx_atm.jpg"
+  },
+  {
+   "id": "mx_dumpster",
+   "status": "inbox",
+   "blend": "RydensRacers-Blender/meshy_inbox/meshy_inbox.blend#Meshy_Inbox/mx_dumpster",
+   "category": "infrastructure",
+   "role": "filler",
+   "tracks": [
+    "alondra",
+    "sweet",
+    "neon",
+    "mesa"
+   ],
+   "note": "Game-ready (9k). Alleys, lots, foundry yard.",
+   "tris": 9420,
+   "textures": "2048 x3",
+   "heightM": 1.3,
+   "targetTris": 9420,
+   "thumb": "docs/graphics-v2/img/meshy/mx_dumpster.jpg"
+  },
+  {
+   "id": "mx_trash_can",
+   "status": "inbox",
+   "blend": "RydensRacers-Blender/meshy_inbox/meshy_inbox.blend#Meshy_Inbox/mx_trash_can",
+   "category": "infrastructure",
+   "role": "filler",
+   "tracks": [
+    "sweet",
+    "alondra",
+    "coast",
+    "neon"
+   ],
+   "note": "Galvanised trash can. Near game-ready (30k).",
+   "tris": 29996,
+   "textures": "2048 x3",
+   "heightM": 1.0,
+   "targetTris": 3000,
+   "thumb": "docs/graphics-v2/img/meshy/mx_trash_can.jpg"
+  },
+  {
+   "id": "mx_picnic_table",
+   "status": "inbox",
+   "blend": "RydensRacers-Blender/meshy_inbox/meshy_inbox.blend#Meshy_Inbox/mx_picnic_table",
+   "category": "infrastructure",
+   "role": "filler",
+   "tracks": [
+    "coast",
+    "mesa",
+    "country"
+   ],
+   "note": "Game-ready (10k). Pacifica overlooks, desert rest stop, camps.",
+   "tris": 9998,
+   "textures": "2048 x3",
+   "heightM": 0.8,
+   "targetTris": 9998,
+   "thumb": "docs/graphics-v2/img/meshy/mx_picnic_table.jpg"
+  },
+  {
+   "id": "mx_rat_rod",
+   "status": "inbox",
+   "blend": "RydensRacers-Blender/meshy_inbox/meshy_inbox.blend#Meshy_Inbox/mx_rat_rod",
+   "category": "decorative_vehicle",
+   "role": "hero",
+   "tracks": [
+    "mesa",
+    "country",
+    "neon"
+   ],
+   "note": "Blown rat rod - parked hero at a Route 99 garage or the Neon pits. Candidate playable car (your call).",
+   "tris": 1697217,
+   "textures": "2048",
+   "heightM": 1.5,
+   "targetTris": 25000,
+   "thumb": "docs/graphics-v2/img/meshy/mx_rat_rod.jpg"
+  },
+  {
+   "id": "mx_panel_truck",
+   "status": "inbox",
+   "blend": "RydensRacers-Blender/meshy_inbox/meshy_inbox.blend#Meshy_Inbox/mx_panel_truck",
+   "category": "decorative_vehicle",
+   "role": "filler",
+   "tracks": [
+    "alondra",
+    "neon",
+    "sweet"
+   ],
+   "note": "Vintage black panel/delivery truck - parked on side streets, foundry yard.",
+   "tris": 694483,
+   "textures": "2048 x4",
+   "heightM": 2.2,
+   "targetTris": 15000,
+   "thumb": "docs/graphics-v2/img/meshy/mx_panel_truck.jpg"
+  },
+  {
+   "id": "mx_blown_muscle_sedan",
+   "status": "inbox",
+   "blend": "RydensRacers-Blender/meshy_inbox/meshy_inbox.blend#Meshy_Inbox/mx_blown_muscle_sedan",
+   "category": "decorative_vehicle",
+   "role": "filler",
+   "tracks": [
+    "alondra",
+    "sweet"
+   ],
+   "note": "Black sedan with blower - parked outside shops/houses. Candidate playable car.",
+   "tris": 858473,
+   "textures": "4096/2048",
+   "heightM": 1.5,
+   "targetTris": 15000,
+   "thumb": "docs/graphics-v2/img/meshy/mx_blown_muscle_sedan.jpg"
+  },
+  {
+   "id": "mx_corvette_grand_sport",
+   "status": "inbox",
+   "blend": "RydensRacers-Blender/meshy_inbox/meshy_inbox.blend#Meshy_Inbox/mx_corvette_grand_sport",
+   "category": "decorative_vehicle",
+   "role": "hero",
+   "tracks": [
+    "coast",
+    "sweet"
+   ],
+   "note": "#12 Grand Sport racer - paddock/festival display at Pacifica. Candidate playable car.",
+   "tris": 1439181,
+   "textures": "2048 x3",
+   "heightM": 1.2,
+   "targetTris": 25000,
+   "thumb": "docs/graphics-v2/img/meshy/mx_corvette_grand_sport.jpg"
+  }
+ ]
+}

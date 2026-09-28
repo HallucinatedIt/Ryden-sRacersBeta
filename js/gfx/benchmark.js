@@ -1,0 +1,89 @@
+// Ryden's Racers · Graphics V2 · Benchmark scene
+// -----------------------------------------------------------------------------------------------
+// A fixed, repeatable scene for judging graphics changes:  Pacifica Cliffs + the GT40.
+//   Open  index.html?bench=pacifica            (add &tier=low|medium|high|ultra, &gfx=legacy|v2, &gfxdebug=1)
+// The GT40 is posed at five hand-picked shots on the cliff/lighthouse stretch and the beach-festival
+// finish, plus one moving "lighthouse run". No physics or AI runs (practice mode, player car only), so
+// every run renders the same frames. For each shot: warm-up, then N measured frames (FPS, frame time
+// p95 / 1% low, CPU submit time, draw calls, triangles, textures) and a screenshot.
+// Results are shown in a panel, downloadable as JSON/PNG, and kept per pipeline on this device so the
+// panel can show OLD (legacy) vs GRAPHICS V2 side by side.
+//
+// Shots are plain data (BENCH_SCENES): add a scene for another track the same way.
+(function(){
+  const BENCH_SCENES={
+    pacifica:{ track:'coast', car:'gt44', warm:30, frames:180,
+      // i = track sample (2 m each), lat = car lateral offset (m, + = right of travel).
+      // cam: back/up/side are metres relative to the car (side + = right), ahead = look-at point ahead of the car.
+      shots:[
+        {id:'cliff_lighthouse', name:'Cliff road → lighthouse', i:330, lat:-2.5, cam:{back:7.2,up:2.9,side:0,ahead:5,fov:66},
+          why:'cliff face, ocean, guardrail, curbs, lighthouse and headland at distance'},
+        {id:'lighthouse_wide', name:'Lighthouse bend, elevated', i:352, lat:-3, cam:{back:15,up:9,side:9,ahead:26,fov:58},
+          why:'long-distance scenery, water, road paint, vegetation on the point'},
+        {id:'tunnel_mouth', name:'Tunnel approach', i:214, lat:2, cam:{back:7.2,up:2.9,side:0,ahead:5,fov:66},
+          why:'cliff/rock material, tunnel portal, shadow transition'},
+        {id:'ocean_low', name:'Ocean side, low', i:150, lat:3.5, cam:{back:-3,up:1.1,side:7,ahead:-1,fov:52},
+          why:'car paint + reflections against sea and sky, guardrail close-up'},
+        {id:'festival_finish', name:'Beach festival finish', i:846, lat:-2, cam:{back:7.2,up:2.9,side:0,ahead:5,fov:66},
+          why:'architecture, gantry, crowd, palms, billboards, low sun (most draw calls)'},
+      ],
+      drive:{id:'lighthouse_run', name:'Lighthouse run (moving)', i0:280, i1:400, lat:-2.5, speed:36},
+    },
+  };
+  const qs=(()=>{ try{ return new URLSearchParams(location.search); }catch(e){ return new URLSearchParams(''); } })();
+  const B={ active:false, scene:null, results:null, shotsPng:{}, SCENES:BENCH_SCENES, errors:[], progress:null,
+    requested(){ return BENCH_SCENES[qs.get('bench')]?qs.get('bench'):null; },
+    // called from the boot code once GAME exists and the cars are loaded
+    maybeStart(){ const id=B.requested(); if(!id||!window.GAME) return false; B.start(id); return true; },
+    start(id){ const S=BENCH_SCENES[id], G=window.GAME; B.active=true; B.scene=id;
+      G.S.device=G.S.device||'pc'; G.mode='practice'; G.gp=null;
+      G.sel.track=TRACK_DATA.findIndex(t=>t.id===S.track); G.sel.vehicle=VEHICLES.findIndex(v=>v.id===S.car);
+      G.startRace();
+      const wait=()=>{ if(G.race&&G.race.W&&G.screen==='race'){ B.run(S); } else setTimeout(wait,200); }; wait(); },
+    // take over the race frame: animate the world, pose the car, drive the camera, measure
+    run(S){ const G=window.GAME, R=G.race, P=R.P, car=R.player, cam=G.camera; const hud=document.getElementById('hud'); if(hud) hud.style.visibility='hidden';
+      G.audio&&G.audio.setMusic&&G.audio.setMusic('menu');
+      const plan=[]; S.shots.forEach(s=>plan.push({kind:'shot',s})); if(S.drive) plan.push({kind:'drive',s:S.drive});
+      const out={scene:B.scene, track:S.track, car:S.car, tier:GFX.settings.currentName(), pipeline:GFX.settings.pipeline, when:new Date().toISOString(), device:GFX.renderer.describe(), shots:[]};
+      let step=0, f=0, t=0, cur=null; const origUpdate=R.update.bind(R);
+      const pose=(i,lat)=>{ car.place(((i%P.N)+P.N)%P.N,lat); car.visual(1/60,t); };
+      const aim=(i,lat,c)=>{ i=((Math.round(i)%P.N)+P.N)%P.N; const fx=P.tx[i], fz=P.tz[i], rx=P.rx[i], rz=P.rz[i]; const cx=car.x, cz=car.z, cy=car.y;
+        cam.position.set(cx-fx*c.back+rx*c.side, cy+c.up, cz-fz*c.back+rz*c.side); cam.lookAt(cx+fx*c.ahead, cy+1.1, cz+fz*c.ahead); cam.fov=c.fov||66; cam.updateProjectionMatrix(); };
+      R.update=(dt)=>{ try{ tick(); }catch(e){ B.errors.push(String(e&&e.stack||e).slice(0,300)); if(B.errors.length>20){ B.active=false; R.update=origUpdate; } } };
+      const tick=()=>{ // replaces the race tick while benchmarking (physics/AI/timers do not run)
+        const dt=1/60; t+=dt; R.time+=dt; B.progress={step,of:plan.length,f};
+        if(!cur){ if(step>=plan.length){ B.finish(out,R,origUpdate); return; } cur=plan[step]; f=0; GFX.perf.reset(); }
+        const s=cur.s; const total=S.warm+S.frames;
+        if(cur.kind==='shot'){ pose(s.i,s.lat); aim(s.i,s.lat,s.cam); }
+        else { const u=Math.min(1,f/total); const fi=s.i0+(s.i1-s.i0)*u; pose(Math.floor(fi),s.lat); aim(fi,s.lat,{back:7.2,up:2.9,side:0,ahead:5,fov:70}); }
+        GFX.lighting.follow(R.W,car.x,car.y,car.z);
+        R.W.update(dt,R.time); R.fx.sparks.update(dt); R.fx.dust.update(dt);
+        if(f===S.warm) GFX.perf.reset();
+        GFX.renderer.render(R.scene,G.camera,R.W.th.exposure,'bench');
+        if(f===S.warm+Math.floor(S.frames/2) && cur.kind==='shot'){ try{ B.shotsPng[s.id]=G.renderer.domElement.toDataURL('image/jpeg',0.86); }catch(e){} }
+        f++;
+        if(f>=total){ const sum=GFX.perf.summary(); const inf=GFX.perf.lastInfo||{}; let mats=null; try{ mats=GFX.materials.stats(R.scene); }catch(e){}
+          out.shots.push({id:s.id, name:s.name, kind:cur.kind, perf:sum, draws:inf.calls, tris:inf.tris, geometries:inf.geometries, textures:inf.textures, programs:inf.programs, materials:mats});
+          step++; cur=null; } };
+    },
+    finish(out,R,origUpdate){ B.results=out; B.active=false;
+      try{ const k='rydens_bench_'+out.scene+'_'+out.pipeline+'_'+out.tier; localStorage.setItem(k,JSON.stringify(out)); }catch(e){}
+      R.update=(dt)=>{ R.W.update(1/60,R.time+=1/60); R.render(); };   // keep the last shot on screen
+      B.panel(out); console.log('[bench]',JSON.stringify(out)); window.__benchDone=out; },
+    previous(out){ const other=out.pipeline==='v2'?'legacy':'v2'; try{ return JSON.parse(localStorage.getItem('rydens_bench_'+out.scene+'_'+other+'_'+out.tier)||'null'); }catch(e){ return null; } },
+    panel(out){ const prev=B.previous(out); const el=document.createElement('div'); el.id='gfxBench';
+      el.style.cssText='position:fixed;right:10px;top:10px;z-index:100;max-height:92vh;overflow:auto;background:rgba(6,10,20,.9);color:#e6f6ff;font:12px/1.4 ui-monospace,Menlo,Consolas,monospace;border:1px solid rgba(120,220,255,.4);border-radius:8px;padding:10px 12px;max-width:min(560px,94vw)';
+      const row=(a,b,c)=>`<tr><td style="padding:2px 8px 2px 0">${a}</td><td style="padding:2px 8px">${b}</td><td style="padding:2px 0;color:#9fb8c8">${c||''}</td></tr>`;
+      let h=`<b>BENCHMARK · Pacifica + GT40</b><br>${out.tier} · pipeline <b>${out.pipeline}</b> · ${out.device.backend} ${out.device.three} · ${out.device.drawingBuffer.join('×')} @${out.device.pixelRatio}x<br><span style="color:#9fb8c8">${String(out.device.gpu).slice(0,70)}</span><table style="margin-top:6px;border-collapse:collapse">`;
+      h+=row('shot','fps · p95 ms · draws · tris',prev?('vs '+prev.pipeline):'');
+      out.shots.forEach(s=>{ const p=prev&&prev.shots.find(q=>q.id===s.id); h+=row(s.name, `${s.perf?s.perf.fps:'-'} · ${s.perf?s.perf.p95:'-'} · ${s.draws} · ${((s.tris||0)/1000).toFixed(0)}k`, p&&p.perf?`${p.perf.fps} · ${p.perf.p95} · ${p.draws} · ${((p.tris||0)/1000).toFixed(0)}k`:''); });
+      h+='</table><div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">';
+      h+='<a id="bjson" href="#" style="color:#7fe3ff">Download results (JSON)</a><a id="bpng" href="#" style="color:#7fe3ff">Download screenshots</a><a href="?" style="color:#ffd86b">Back to the game</a></div>';
+      h+='<div style="margin-top:8px;display:grid;grid-template-columns:repeat(3,1fr);gap:4px">'+Object.entries(B.shotsPng).map(([k,v])=>`<img src="${v}" title="${k}" style="width:100%;border-radius:3px">`).join('')+'</div>';
+      el.innerHTML=h; document.body.appendChild(el);
+      const dl=(name,href)=>{ const a=document.createElement('a'); a.href=href; a.download=name; document.body.appendChild(a); a.click(); a.remove(); };
+      el.querySelector('#bjson').onclick=e=>{ e.preventDefault(); dl(`bench_${out.scene}_${out.pipeline}_${out.tier}.json`,URL.createObjectURL(new Blob([JSON.stringify(out,null,1)],{type:'application/json'}))); };
+      el.querySelector('#bpng').onclick=e=>{ e.preventDefault(); Object.entries(B.shotsPng).forEach(([k,v],n)=>setTimeout(()=>dl(`bench_${out.pipeline}_${out.tier}_${k}.jpg`,v),n*250)); }; },
+  };
+  window.GFX=window.GFX||{}; window.GFX.bench=B;
+})();
