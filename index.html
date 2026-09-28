@@ -5,7 +5,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="theme-color" content="#150a2e">
 <title>Ryden's Racers</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Racing+Sans+One&family=Yellowtail&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IM+Fell+English+SC&family=Racing+Sans+One&family=Yellowtail&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#150a2e;--pink:#ff2e97;--cyan:#22e4ff;--gold:#ffc23d;--ink:#f4ecff;--dim:#a99cc8;--panel:rgba(18,8,38,.78);
  --disp:"Racing Sans One",Impact,"Arial Black",sans-serif;--body:"Chakra Petch","Trebuchet MS",system-ui,sans-serif;--script:"Yellowtail","Brush Script MT",cursive}
@@ -305,10 +305,44 @@ body:not(.mobile) #menu .mgrid [data-act=howto]{grid-column:span 2}
 @media (max-height:460px){#menu .mcol{width:min(56vw,420px);margin-left:max(12px,env(safe-area-inset-left));--lr:34px;--lx:32px;justify-content:flex-start;gap:16px}#menu .mpanel{padding:10px;gap:8px;border-radius:10px}#menu .mgrid{gap:6px}#menu .btn{min-height:44px;font-size:14px;padding:0 12px}#menu .mprimary{min-height:48px;font-size:19px}#menu .mprimary i{width:28px;height:28px;font-size:13px}}
 /* narrow / portrait windows: showcase on top, menu below */
 @media (max-aspect-ratio:23/20){#menu .mcol{width:min(520px,94vw);margin:0 auto;justify-content:flex-start;padding-top:max(36vh,200px)}#menu .mlogo{margin:0 auto 4px;--lr:clamp(44px,12vw,72px);--lx:clamp(42px,11.5vw,70px)}#menu .mlogo>span{margin-left:auto;margin-right:auto}#menu .mhint{text-align:center}}
+#unlockModal{position:fixed;inset:0;z-index:40;display:none;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,rgba(40,14,70,.78),rgba(4,1,12,.92));padding:12px}
+#unlockModal.on{display:flex;animation:ulIn .45s ease-out}
+@keyframes ulIn{0%{opacity:0;transform:scale(1.06)}100%{opacity:1;transform:none}}
+#unlockModal .ulBox{width:min(760px,96vw);max-height:96vh;overflow:auto;background:linear-gradient(180deg,rgba(28,10,48,.96),rgba(10,3,22,.97));border:2px solid #ffd23f;border-radius:16px;padding:18px 20px 16px;box-shadow:0 0 60px rgba(255,210,63,.35),0 20px 60px rgba(0,0,0,.6);text-align:center}
+#unlockModal .ulHead{font-family:var(--disp);font-style:italic;font-size:clamp(34px,6vw,58px);line-height:1;color:#ffd23f;text-shadow:0 0 24px rgba(255,210,63,.55),3px 3px 0 #ff2e97;letter-spacing:.02em}
+#unlockModal .ulSub{margin:8px 0 10px;color:var(--dim);font-size:14px;letter-spacing:.04em}
+#unlockModal canvas{width:100%;aspect-ratio:960/420;border-radius:10px;display:block;border:1px solid rgba(255,255,255,.18)}
+#unlockModal .ulName{font-family:var(--disp);font-style:italic;font-size:clamp(26px,4.4vw,42px);margin-top:10px;color:#fff}
+#unlockModal .ulPlace{color:#ffd9a0;font-size:13px;letter-spacing:.14em;text-transform:uppercase;margin:2px 0 12px}
+#unlockModal .row{justify-content:center;gap:12px}
+@media (max-height:520px){#unlockModal .ulBox{padding:10px 14px}#unlockModal canvas{max-height:36vh;width:auto;margin:0 auto}#unlockModal .ulHead{font-size:32px}}
+.tcard{position:relative}.tcard .lock{position:absolute;right:8px;top:6px;font-style:normal;font-size:20px;filter:drop-shadow(0 0 6px #000)}
+.tcard.acct{border-color:rgba(255,210,63,.55)!important;box-shadow:inset 0 0 0 1px rgba(255,210,63,.25)}
+.tcard.locked .rec{color:#ffd23f!important}
+.lockBox{margin-top:10px;padding:10px 12px;border:1px solid rgba(255,210,63,.6);border-radius:10px;background:rgba(255,210,63,.08);text-align:left;font-size:14px;line-height:1.4}
+#goBtn.lockgo{background:linear-gradient(180deg,#3a2a08,#1f1604)!important;border-color:#ffd23f!important}
+#chapterTag{position:fixed;left:50%;top:21%;transform:translateX(-50%);z-index:5;pointer-events:none;text-align:center;opacity:0;font-family:'IM Fell English SC',Georgia,serif;color:#f6ecd2;text-shadow:0 2px 10px rgba(0,0,0,.75),0 0 2px #000}
+#chapterTag b{display:block;font-weight:400;font-size:clamp(20px,3vw,34px);letter-spacing:.12em}#chapterTag span{display:block;font-size:clamp(13px,1.6vw,18px);letter-spacing:.4em;color:#ffd48a;margin-top:2px}
+#chapterTag.on{animation:chIn 3.6s ease-out}
+@keyframes chIn{0%{opacity:0;transform:translate(-50%,-8px)}12%{opacity:1;transform:translate(-50%,0)}75%{opacity:1}100%{opacity:0}}
+body:not(.racing) #chapterTag{display:none}
+#portalFx{position:fixed;inset:0;pointer-events:none;opacity:0;z-index:6;background:radial-gradient(ellipse at 50% 48%,rgba(255,248,224,.97) 0%,rgba(150,215,255,.75) 32%,rgba(90,40,170,.35) 62%,rgba(20,6,40,0) 85%)}
+#portalFx.on{animation:portalFlash .6s ease-out}
+@keyframes portalFlash{0%{opacity:0;transform:scale(1.25)}18%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.92)}}
 #err{position:fixed;left:10px;bottom:10px;right:10px;color:#ff8080;font-size:12px;display:none;background:rgba(0,0,0,.8);padding:8px;z-index:99}
 </style></head>
 <body>
 <canvas id="gl"></canvas>
+<div id="portalFx"></div>
+<div id="chapterTag"></div>
+<div id="unlockModal" role="dialog" aria-modal="true" aria-labelledby="ulHead"><div class="ulBox">
+  <div class="ulHead" id="ulHead">New Map Unlocked</div>
+  <div class="ulSub" id="ulSub"></div>
+  <canvas id="ulCanvas" width="960" height="420"></canvas>
+  <div class="ulName" id="ulName"></div><div class="ulPlace" id="ulPlace"></div>
+  <div class="row"><div class="btn gold" data-act="unlockView"><span>View track</span></div><div class="btn" data-act="unlockClose"><span>Continue</span></div></div>
+</div></div>
+
 
 <div class="screen on" id="title">
   <div class="presents">Rimfire Games presents</div>
@@ -516,5 +550,5 @@ body:not(.mobile) #menu .mgrid [data-act=howto]{grid-column:span 2}
 <div id="acctTag"></div>
 <div id="err"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="js/game.js?v=1790534633"></script>
+<script src="js/game.js?v=1790560000"></script>
 </body></html>
