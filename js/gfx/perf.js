@@ -26,7 +26,10 @@
       const l=[]; l.push('GRAPHICS · '+tier.toUpperCase()+' · pipeline '+GFX.settings.pipeline+(GFX.bench&&GFX.bench.active?' · BENCH':''));
       if(s) l.push('FPS '+s.fps+'   frame '+s.ms+' ms   p95 '+s.p95+'   1% low '+s.low1+' fps   cpu '+s.cpuSubmitMs+' ms');
       l.push('draws '+(i.calls||0)+'   tris '+((i.tris||0)/1000).toFixed(1)+'k   geo '+(i.geometries||0)+'   tex '+(i.textures||0)+'   programs '+(i.programs||0));
-      if(st) l.push('materials '+st.materials+'   unique textures '+st.textures+' (~'+st.textureMB+' MB)');
+      if(st) l.push('materials '+st.materials+'   unique textures '+st.textures+' (~'+st.textureMB+' MB)   lights '+st.lights+' ('+st.shadowLights+' shadow)   casters '+st.shadowCasters+'/'+st.meshes);
+      const V=GFX.v2; if(V&&V.active){ const Q=GFX.renderer.settings||{}; const ps=GFX.post.stats; const on=[Q.msaa?'MSAA'+Q.msaa:null,Q.ssao?'GTAO':null,Q.bloom?'bloom':null,Q.colorGrade?'grade':null,'haze'].filter(Boolean).join(' ');
+        l.push('V2 '+V.look.name+'   '+(d.path==='post'?'post['+on+'] scene draws '+ps.sceneCalls+' +'+ps.passes+' passes':'direct')+'   tm '+(V.look.toneMapping||'')+(V.lod?'   culled '+V.lod.stats.hidden+' shadowOff '+V.lod.stats.shadowOff:'')); }
+      else l.push('legacy look'+(GFX.settings.pipeline==='legacy'?' (?gfx=legacy)':'')+'   colour management '+(GFX.compat.colorManaged()?'on':'off'));
       l.push(d.backend+' '+d.three+'   '+d.drawingBuffer.join('×')+' @'+d.pixelRatio+'x   css '+d.css.join('×'));
       l.push('GPU '+String(d.gpu).slice(0,60));
       l.push('scene '+(i.tag||'?')+'   track '+tr);
@@ -36,7 +39,9 @@
     init(){ let on=false; try{ on=localStorage.getItem('rydens_gfxdebug')==='1'; }catch(e){}
       try{ const q=new URLSearchParams(location.search).get('gfxdebug'); if(q!=null) on=q!=='0'; }catch(e){}
       GFX.renderer.onAfterRender(PM.sample);
-      addEventListener('keydown',e=>{ if((e.key==='`'||e.key==='~')&&!(e.target&&e.target.tagName==='INPUT')){ PM.toggle(); } });
+      addEventListener('keydown',e=>{ if(e.target&&e.target.tagName==='INPUT') return; if(e.key==='`'||e.key==='~'){ PM.toggle(); }
+        // developer comparison: with the overlay open, \ reloads with the other pipeline (OLD <-> GRAPHICS V2), keeping the other URL switches
+        else if(e.key==='\\'&&PM.visible){ const q=new URLSearchParams(location.search); q.set('gfx',GFX.settings.pipeline==='v2'?'legacy':'v2'); location.search=q.toString(); } });
       if(on) PM.show(true,false); },
   };
   window.GFX=window.GFX||{}; window.GFX.perf=PM;

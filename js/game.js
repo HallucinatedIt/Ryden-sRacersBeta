@@ -19,7 +19,7 @@ function ordSuffix(n){return ordinal(n).replace(/^\d+/,'');}
 function fmtTime(t){ if(t==null||!isFinite(t)) return '--:--.---'; const m=Math.floor(t/60), s=t-m*60; return m+':'+(s<10?'0':'')+s.toFixed(3); }
 function canvasTex(w,h,draw,opts={}){
   const c=document.createElement('canvas');c.width=w;c.height=h;const g=c.getContext('2d');draw(g,w,h);
-  const t=new THREE.CanvasTexture(c); if(opts.srgb!==false) t.encoding=THREE.sRGBEncoding;
+  const t=new THREE.CanvasTexture(c); if(opts.srgb!==false) GFX.compat.srgb(t);
   t.anisotropy=opts.aniso||4; if(opts.repeat){t.wrapS=t.wrapT=THREE.RepeatWrapping;}
   if(opts.clampU){t.wrapS=THREE.ClampToEdgeWrapping;}
   return t;
@@ -746,12 +746,12 @@ function loadCarGLBs(done,progress,only){
   if(!THREE.GLTFLoader){ GLB_ERROR='model loader missing'; done(); return; }
   const texSrc=(typeof GLB_TEX!=='undefined')?GLB_TEX:{};
   // 1) decode textures through plain <img> data URIs (works under strict hosting rules)
-  const jobs=[]; ids.forEach(id=>{ GLB_TEXTURES[id]=GLB_TEXTURES[id]||{}; Object.entries(texSrc[id]||{}).forEach(([slot,uri])=>{ jobs.push(new Promise(res=>{ const im=new Image(); im.onload=()=>{ const t=new THREE.Texture(im); t.flipY=false; if(slot==='base') t.encoding=THREE.sRGBEncoding; t.anisotropy=4; t.needsUpdate=true; GLB_TEXTURES[id][slot]=t; res(); }; im.onerror=()=>{ GLB_ERROR='texture '+id+'/'+slot; res(); }; im.src=uri; })); }); });
+  const jobs=[]; ids.forEach(id=>{ GLB_TEXTURES[id]=GLB_TEXTURES[id]||{}; Object.entries(texSrc[id]||{}).forEach(([slot,uri])=>{ jobs.push(new Promise(res=>{ const im=new Image(); im.onload=()=>{ const t=new THREE.Texture(im); t.flipY=false; if(slot==='base') GFX.compat.srgb(t); t.anisotropy=4; t.needsUpdate=true; GLB_TEXTURES[id][slot]=t; res(); }; im.onerror=()=>{ GLB_ERROR='texture '+id+'/'+slot; res(); }; im.src=uri; })); }); });
   Promise.all(jobs).then(()=>{
-    const L=new THREE.GLTFLoader(); let left=ids.length, k=0;
+    const L=GFX.assets.configureLoader(new THREE.GLTFLoader()); let left=ids.length, k=0;   // + KTX2/Meshopt decoders on r186
     const next=()=>{ if(k>=ids.length) return; const id=ids[k++];
       const parse=buf=>L.parse(buf,'',g=>{ CAR_GLTF[id]=g.scene; fin(); },e=>{ GLB_ERROR=id+': '+(e&&e.message||e); console.warn('GLB failed',id,e); fin(); });
-      const src=data[id];
+      const src=GFX.assets.src(id,data[id]);   // optimized V2 variant when available
       if(/\.glb(\?|$)/i.test(src)){ fetch(src).then(r=>{ if(!r.ok) throw new Error('HTTP '+r.status+' '+src); return r.arrayBuffer(); }).then(parse).catch(e=>{ GLB_ERROR=id+': '+e.message; fin(); }); return; }
       try{ const s=atob(src); const u=new Uint8Array(s.length); for(let i=0;i<s.length;i++) u[i]=s.charCodeAt(i); parse(u.buffer); }
       catch(e){ GLB_ERROR=id+': '+e.message; console.warn('GLB decode failed',id,e); fin(); } };
@@ -1230,7 +1230,7 @@ function revolutionWorld(W,def,P,Q,ENV){
         .replace('#include <project_vertex>','#include <project_vertex>\nvRW=(modelMatrix*vec4(transformed,1.0)).xyz;');
       if(kind==='leaf') return;
       sh.fragmentShader=sh.fragmentShader.replace('#include <common>','#include <common>\nvarying vec3 vRW;\n'+RVN).replace('#include <map_fragment>', kind==='ground'?
-        '#include <map_fragment>\n{ vec4 t2=texture2D(map,vUv*0.173+vec2(0.31,0.77)); diffuseColor.rgb*=mix(vec3(1.0),t2.rgb*1.3,0.4); float mac=rvn(vRW.xz*0.006)*0.55+rvn(vRW.xz*0.023)*0.3+rvn(vRW.xz*0.09)*0.15; diffuseColor.rgb*=0.8+0.36*mac; float warm=rvn(vRW.xz*0.011+7.3); diffuseColor.rgb*=mix(vec3(0.95,1.0,0.94),vec3(1.06,1.0,0.92),warm); }':
+        '#include <map_fragment>\n{ vec4 t2=texture2D(map,'+GFX.compat.uvMap+'*0.173+vec2(0.31,0.77)); diffuseColor.rgb*=mix(vec3(1.0),t2.rgb*1.3,0.4); float mac=rvn(vRW.xz*0.006)*0.55+rvn(vRW.xz*0.023)*0.3+rvn(vRW.xz*0.09)*0.15; diffuseColor.rgb*=0.8+0.36*mac; float warm=rvn(vRW.xz*0.011+7.3); diffuseColor.rgb*=mix(vec3(0.95,1.0,0.94),vec3(1.06,1.0,0.92),warm); }':
         '#include <map_fragment>\n{ float mac=rvn(vRW.xz*0.02)*0.6+rvn(vRW.xz*0.11)*0.4; diffuseColor.rgb*=0.87+0.22*mac; }'); };
     m.customProgramCacheKey=()=>'rv_'+kind; m.needsUpdate=true; };
   ENV.root.traverse(o=>{ if(!o.isMesh) return; const m=o.material, n=(m&&m.name)||'';
@@ -1312,7 +1312,7 @@ function revolutionWorld(W,def,P,Q,ENV){
   // volley groups: troops with anim 'fire' share a group timer
   const volleys={}; allTroops.forEach(q=>{ if(q.a==='fire'){ const g=q.g||'v'; (volleys[g]=volleys[g]||{list:[],next:3+Math.random()*6}).list.push(q); } });
   // ---- flags (CPU-waved cloth near the camera)
-  const flagTex=new THREE.TextureLoader().load('models/env/rv_flags.jpg?v=1'); flagTex.encoding=THREE.sRGBEncoding; flagTex.anisotropy=4;
+  const flagTex=new THREE.TextureLoader().load('models/env/rv_flags.jpg?v=1'); GFX.compat.srgb(flagTex); flagTex.anisotropy=4;
   const FLAG_UV={us13:[0,0],grand_union:[1,0],union:[0,1],red_ensign:[1,1],france:[0,2],pine_tree:[1,2],cinc:[0,3],rr_pennant:[1,3]};
   const flags=[]; const poleMat=new THREE.MeshStandardMaterial({color:0x5a4632,roughness:0.8});
   const boatFlags=[]; if(W.rev.boat){ const bt=W.rev.boat, sc=bt.scale.x, v=new THREE.Vector3(0,1.2,-3.9).multiplyScalar(sc).applyAxisAngle(new THREE.Vector3(0,1,0),bt.rotation.y).add(bt.position);
@@ -1357,8 +1357,8 @@ function revolutionWorld(W,def,P,Q,ENV){
   const atmo=(i)=>{ const {cur,nxt,t}=revChapterAt(P,i); const a=REV_ATMO[cur.id]||REV_ATMO.yorktown, b=nxt?(REV_ATMO[nxt.id]||a):a; const L2=(x,y)=>x+(y-x)*t;
     fogC.setHex(a.fog).lerp(c2.setHex(b.fog),t); W.fog.color.copy(fogC); W.fog.near=L2(a.near,b.near)*Q.fogMul; W.fog.far=L2(a.far,b.far)*Q.fogMul;
     if(sky){ const u=sky.material.uniforms; u.top.value.setHex(a.top).lerp(c2.setHex(b.top),t); u.hor.value.setHex(a.hor).lerp(c2.setHex(b.hor),t); u.sunc.value.setHex(a.sun).lerp(c2.setHex(b.sun),t); if(u.clouds) u.clouds.value=L2(a.cl||0,b.cl||0); }
-    W.sun.color.setHex(a.sun).lerp(c2.setHex(b.sun),t); W.sun.intensity=L2(a.sunI,b.sunI);
-    if(hemi){ hemi.color.setHex(a.hs).lerp(c2.setHex(b.hs),t); hemi.groundColor.setHex(a.hg).lerp(c2.setHex(b.hg),t); hemi.intensity=L2(a.hi,b.hi); }
+    W.sun.color.setHex(a.sun).lerp(c2.setHex(b.sun),t); W.sun.intensity=GFX.compat.li(L2(a.sunI,b.sunI));
+    if(hemi){ hemi.color.setHex(a.hs).lerp(c2.setHex(b.hs),t); hemi.groundColor.setHex(a.hg).lerp(c2.setHex(b.hg),t); hemi.intensity=GFX.compat.li(L2(a.hi,b.hi)); }
     W.th.exposure=L2(a.exp,b.exp); waters.forEach(m=>{ m.uniforms.sky.value.copy(sky?sky.material.uniforms.hor.value:fogC); m.uniforms.sunCol.value.copy(W.sun.color); });
     return t<0.5?cur:nxt; };
   W.rev.atmo=atmo;
@@ -2759,6 +2759,7 @@ const ITEMS={nitro:{name:'Nitro Cell',icon:'⚡',col:'#22e4ff'},aegis:{name:'Aeg
 class Race{
   constructor(game,opt){
     this.game=game; this.opt=opt; this.def=TRACK_DATA[opt.track]; if(this.def&&this.def.account&&!(game.online&&game.online.hasAccess())) throw new Error('This track is for signed-in racers. Create an account or log in to unlock it.'); this.practice=!!opt.practice; this.laps=this.practice?999:this.def.laps;
+    GFX.v2.begin(this.def,game);   // Graphics V2 look for this track (Pacifica), or nothing: graphics only
     const Q=game.Q; this.time=0; this.raceTime=0; this.state='intro'; this.stateT=0; this.acc=0; this.paused=false;
     this.P=buildTrackPath(this.def); this.A=analyzeTrack(this.P);
     this.W=buildWorld(this.def,this.P,Q);
@@ -2793,6 +2794,7 @@ class Race{
       else { this.player=car; this.auto=new AIDriver(car,this,1,0.5); }
       this.scene.add(car.model.root); this.cars.push(car);
     }
+    GFX.v2.finish(this);   // Graphics V2: lighting, sky, materials, road detail, decals, dressing (no gameplay data touched)
     this.cpIdx=[]; for(let k=0;k<NCP;k++) this.cpIdx.push(Math.round(k*this.P.N/NCP)%this.P.N);
     // route tracks: ordered checkpoints entry portal -> 10 circuit gates -> Yorktown line. The entry gate counts only on lap 1.
     this.route=this.P.route||null;
@@ -2989,7 +2991,7 @@ class Race{
   buildMiniPath(){ const P=this.P; let minx=1e9,maxx=-1e9,minz=1e9,maxz=-1e9; for(let i=0;i<P.N;i++){minx=Math.min(minx,P.x[i]);maxx=Math.max(maxx,P.x[i]);minz=Math.min(minz,P.z[i]);maxz=Math.max(maxz,P.z[i]);}
     this.mini={minx,maxx,minz,maxz}; }
   dispose(){
-    this.game.audio.stopLoops();
+    this.game.audio.stopLoops(); GFX.v2.end(this);
     this.scene.traverse(o=>{ if(o.geometry) o.geometry.dispose(); if(o.material){ (Array.isArray(o.material)?o.material:[o.material]).forEach(m=>{ if(m.map) m.map.dispose(); m.dispose(); }); } });
     if(this.env) this.env.dispose();
   }
@@ -3162,7 +3164,7 @@ class Game{
     const loop=()=>{ requestAnimationFrame(loop); this.frame(); }; requestAnimationFrame(loop);
     document.addEventListener('visibilitychange',()=>{ if(document.hidden && this.race && this.screen==='race') this.pause(true); });
   }
-  get Q(){ return QUALITY[GFX.settings.resolve(this.S.quality)]||QUALITY.medium; }
+  get Q(){ return GFX.settings.effective(this.S.quality)||QUALITY.medium; }   // tier (+ Graphics V2 overrides while a V2 look is active)
   applyQuality(){ GFX.renderer.applySettings(this.Q); this.resize(); }
   resize(){ GFX.renderer.resize(this.camera); }
   saveSettings(){ Store.set('settings',this.S); this.audio.apply(); this.ui.touchMode(); }
@@ -3290,14 +3292,14 @@ class Garage{
     ep(12,6,0xffffff,0,9,1); ep(3,10,0xff2e97,-9,3,-2); ep(3,10,0x22e4ff,9,3,-2); ep(20,3,0x3a2468,0,1.5,-10); ep(6,2,0xfff1e6,-4,3,9);
     const pm=new THREE.PMREMGenerator(game.renderer); this.env=pm.fromScene(es,0.04).texture; pm.dispose();
     // --- lights: soft key from front-left above, cool fill, restrained pink/cyan rims, mirrored key for the floor reflection
-    s.add(new THREE.HemisphereLight(0x6a58c8,0x12081e,0.28));
-    const key=this.key=new THREE.SpotLight(0xfff3ec,2.2,40,0.36,0.75,1.0); key.position.set(-1.8,9.5,3.2); key.target.position.set(0,0.4,0); key.castShadow=true; key.shadow.mapSize.set(1024,1024); key.shadow.bias=-0.0004; key.shadow.radius=4; s.add(key); s.add(key.target);
-    const fill=new THREE.DirectionalLight(0xb9c4ff,0.3); fill.position.set(4,3,10); s.add(fill);
-    const rimP=new THREE.SpotLight(0xff2e97,2.6,30,0.5,0.7,1.0); rimP.position.set(-7,3.2,-6); rimP.target.position.set(0,0.6,0); s.add(rimP); s.add(rimP.target);
-    const rimC=new THREE.SpotLight(0x22e4ff,2.2,30,0.5,0.7,1.0); rimC.position.set(8,3.0,-5); rimC.target.position.set(0,0.6,0); s.add(rimC); s.add(rimC.target);
-    const under=new THREE.DirectionalLight(0xffe8f2,0.9); under.position.set(-1.8,-9.5,3.2); s.add(under);
+    s.add(new THREE.HemisphereLight(0x6a58c8,0x12081e,GFX.compat.li(0.28)));
+    const key=this.key=new THREE.SpotLight(0xfff3ec,GFX.compat.spotI(2.2,40,1,9.8),40,0.36,0.75,1.0); key.position.set(-1.8,9.5,3.2); key.target.position.set(0,0.4,0); key.castShadow=true; key.shadow.mapSize.set(1024,1024); key.shadow.bias=-0.0004; key.shadow.radius=GFX.compat.modern?1.5:4;   /* r128 PCFSoft ignored radius */ s.add(key); s.add(key.target);
+    const fill=new THREE.DirectionalLight(0xb9c4ff,GFX.compat.li(0.3)); fill.position.set(4,3,10); s.add(fill);
+    const rimP=new THREE.SpotLight(0xff2e97,GFX.compat.spotI(2.6,30,1,9.6),30,0.5,0.7,1.0); rimP.position.set(-7,3.2,-6); rimP.target.position.set(0,0.6,0); s.add(rimP); s.add(rimP.target);
+    const rimC=new THREE.SpotLight(0x22e4ff,GFX.compat.spotI(2.2,30,1,9.7),30,0.5,0.7,1.0); rimC.position.set(8,3.0,-5); rimC.target.position.set(0,0.6,0); s.add(rimC); s.add(rimC.target);
+    const under=new THREE.DirectionalLight(0xffe8f2,GFX.compat.li(0.9)); under.position.set(-1.8,-9.5,3.2); s.add(under);
     // --- room (Blender-built showroom.glb) and its mirror image under the glossy floor
-    this.room=this.buildRoom(); s.add(this.room);
+    this.room=this.buildRoom(); s.add(this.room); GFX.compat.singlePassTransparency(s);
     this.mirror=new THREE.Group(); this.mirror.scale.y=-1; s.add(this.mirror);
     const rm=this.room.clone(true); const dim=new Map();
     rm.traverse(o=>{ if(!o.isMesh) return; o.castShadow=false; o.receiveShadow=false; const m=o.material;

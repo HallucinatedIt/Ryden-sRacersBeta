@@ -9,12 +9,15 @@ function glbAniso(m){ const a=(window.GAME&&GAME.renderer)?Math.min(8,GAME.rende
 (function(){
   const MM={
     aniso:(m)=>glbAniso(m),
-    stats(scene){ const mats=new Set(), tex=new Set(); const byType={}; let bytes=0;
-      scene.traverse(o=>{ const ms=o.material?(Array.isArray(o.material)?o.material:[o.material]):[]; for(const m of ms){ if(!m||mats.has(m)) continue; mats.add(m); byType[m.type]=(byType[m.type]||0)+1;
-        for(const k of ['map','normalMap','roughnessMap','metalnessMap','emissiveMap','aoMap','alphaMap','envMap','lightMap','bumpMap']){ const t=m[k]; if(t&&t.isTexture) tex.add(t); }
+    stats(scene){ const mats=new Set(), tex=new Set(); const byType={}; let bytes=0, lights=0, shadowLights=0, casters=0, meshes=0;
+      scene.traverse(o=>{ if(o.isLight){ lights++; if(o.castShadow) shadowLights++; } if(o.isMesh&&o.visible){ meshes++; if(o.castShadow) casters++; }
+        const ms=o.material?(Array.isArray(o.material)?o.material:[o.material]):[]; for(const m of ms){ if(!m||mats.has(m)) continue; mats.add(m); byType[m.type]=(byType[m.type]||0)+1;
+        for(const k of ['map','normalMap','roughnessMap','metalnessMap','emissiveMap','aoMap','alphaMap','envMap','lightMap','bumpMap','clearcoatMap','clearcoatNormalMap']){ const t=m[k]; if(t&&t.isTexture) tex.add(t); }
         if(m.uniforms) for(const u of Object.values(m.uniforms)){ if(u&&u.value&&u.value.isTexture) tex.add(u.value); } } });
-      for(const t of tex){ const im=t.image; const w=im&&(im.width||im.videoWidth)||0, h=im&&(im.height||im.videoHeight)||0; if(w&&h) bytes+=w*h*4*(t.generateMipmaps!==false?1.33:1); }
-      return {materials:mats.size, byType, textures:tex.size, textureMB:+(bytes/1048576).toFixed(1)}; },
+      for(const t of tex){ const im=t.image; const w=im&&(im.width||im.videoWidth)||0, h=im&&(im.height||im.videoHeight)||0;
+        if(t.isCompressedTexture&&t.mipmaps&&t.mipmaps.length){ for(const mp of t.mipmaps) bytes+=(mp.data&&mp.data.byteLength)||0; }   // KTX2/Basis: real transcoded size
+        else if(w&&h) bytes+=w*h*(t.type===THREE.HalfFloatType?8:4)*(t.generateMipmaps!==false?1.33:1)*(t.isCubeTexture?6:1); }
+      return {materials:mats.size, byType, textures:tex.size, textureMB:+(bytes/1048576).toFixed(1), lights, shadowLights, shadowCasters:casters, meshes}; },
   };
   window.GFX=window.GFX||{}; window.GFX.materials=MM;
 })();

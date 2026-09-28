@@ -64,13 +64,23 @@
         if(f===S.warm+Math.floor(S.frames/2) && cur.kind==='shot'){ try{ B.shotsPng[s.id]=G.renderer.domElement.toDataURL('image/jpeg',0.86); }catch(e){} }
         f++;
         if(f>=total){ const sum=GFX.perf.summary(); const inf=GFX.perf.lastInfo||{}; let mats=null; try{ mats=GFX.materials.stats(R.scene); }catch(e){}
-          out.shots.push({id:s.id, name:s.name, kind:cur.kind, perf:sum, draws:inf.calls, tris:inf.tris, geometries:inf.geometries, textures:inf.textures, programs:inf.programs, materials:mats});
+          const ps=GFX.post.stats, sh=GFX.renderer.shadow||{};
+          out.shots.push({id:s.id, name:s.name, kind:cur.kind, perf:sum, draws:inf.calls, tris:inf.tris, geometries:inf.geometries, textures:inf.textures, programs:inf.programs, materials:mats,
+            path:GFX.renderer.path, shadowDraws:sh.calls, shadowTris:sh.tris, sceneDraws:GFX.renderer.path==='post'?ps.sceneCalls-(sh.calls||0):(inf.calls||0)-(sh.calls||0), postPasses:GFX.renderer.path==='post'?ps.passes:0});
           step++; cur=null; } };
     },
     finish(out,R,origUpdate){ B.results=out; B.active=false;
       try{ const k='rydens_bench_'+out.scene+'_'+out.pipeline+'_'+out.tier; localStorage.setItem(k,JSON.stringify(out)); }catch(e){}
       R.update=(dt)=>{ R.W.update(1/60,R.time+=1/60); R.render(); };   // keep the last shot on screen
-      B.panel(out); console.log('[bench]',JSON.stringify(out)); window.__benchDone=out; },
+      console.log('[bench]',JSON.stringify(out)); window.__benchDone=out;
+      B.thumbs(out).then(()=>B.panel(out)).catch(()=>B.panel(out)); },
+    // small copies of the screenshots, kept per pipeline on this device, so the panel can put OLD and V2 side by side
+    thumbsKey(out,pipe){ return 'rydens_bench_thumbs_'+out.scene+'_'+(pipe||out.pipeline)+'_'+out.tier; },
+    thumbs(out){ const ent=Object.entries(B.shotsPng); const res={};
+      return Promise.all(ent.map(([k,v])=>new Promise(ok=>{ const im=new Image(); im.onload=()=>{ const c=document.createElement('canvas'); c.width=320; c.height=Math.round(320*im.height/im.width);
+          c.getContext('2d').drawImage(im,0,0,c.width,c.height); try{ res[k]=c.toDataURL('image/jpeg',0.72); }catch(e){} ok(); }; im.onerror=ok; im.src=v; })))
+        .then(()=>{ B.thumbsNow=res; try{ localStorage.setItem(B.thumbsKey(out),JSON.stringify(res)); }catch(e){} }); },
+    otherUrl(out){ const q=new URLSearchParams(location.search); q.set('gfx',out.pipeline==='v2'?'legacy':'v2'); return '?'+q.toString(); },
     previous(out){ const other=out.pipeline==='v2'?'legacy':'v2'; try{ return JSON.parse(localStorage.getItem('rydens_bench_'+out.scene+'_'+other+'_'+out.tier)||'null'); }catch(e){ return null; } },
     panel(out){ const prev=B.previous(out); const el=document.createElement('div'); el.id='gfxBench';
       el.style.cssText='position:fixed;right:10px;top:10px;z-index:100;max-height:92vh;overflow:auto;background:rgba(6,10,20,.9);color:#e6f6ff;font:12px/1.4 ui-monospace,Menlo,Consolas,monospace;border:1px solid rgba(120,220,255,.4);border-radius:8px;padding:10px 12px;max-width:min(560px,94vw)';
@@ -79,8 +89,12 @@
       h+=row('shot','fps · p95 ms · draws · tris',prev?('vs '+prev.pipeline):'');
       out.shots.forEach(s=>{ const p=prev&&prev.shots.find(q=>q.id===s.id); h+=row(s.name, `${s.perf?s.perf.fps:'-'} · ${s.perf?s.perf.p95:'-'} · ${s.draws} · ${((s.tris||0)/1000).toFixed(0)}k`, p&&p.perf?`${p.perf.fps} · ${p.perf.p95} · ${p.draws} · ${((p.tris||0)/1000).toFixed(0)}k`:''); });
       h+='</table><div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">';
-      h+='<a id="bjson" href="#" style="color:#7fe3ff">Download results (JSON)</a><a id="bpng" href="#" style="color:#7fe3ff">Download screenshots</a><a href="?" style="color:#ffd86b">Back to the game</a></div>';
-      h+='<div style="margin-top:8px;display:grid;grid-template-columns:repeat(3,1fr);gap:4px">'+Object.entries(B.shotsPng).map(([k,v])=>`<img src="${v}" title="${k}" style="width:100%;border-radius:3px">`).join('')+'</div>';
+      h+='<a id="bjson" href="#" style="color:#7fe3ff">Download results (JSON)</a><a id="bpng" href="#" style="color:#7fe3ff">Download screenshots</a><a href="'+B.otherUrl(out)+'" style="color:#7fe3ff">Run '+(out.pipeline==='v2'?'OLD (legacy)':'GRAPHICS V2')+' for comparison</a><a href="?" style="color:#ffd86b">Back to the game</a></div>';
+      let other=null; try{ other=JSON.parse(localStorage.getItem(B.thumbsKey(out,out.pipeline==='v2'?'legacy':'v2'))||'null'); }catch(e){}
+      if(other){ const L=out.pipeline==='v2'?['OLD',other,'V2',B.thumbsNow||{}]:['OLD',B.thumbsNow||{},'V2',other];
+        h+='<div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:4px"><b>OLD (legacy)</b><b>GRAPHICS V2</b>';
+        Object.keys(B.shotsPng).forEach(k=>{ h+=`<img src="${L[1][k]||''}" title="${k} OLD" style="width:100%;border-radius:3px"><img src="${L[3][k]||''}" title="${k} V2" style="width:100%;border-radius:3px">`; }); h+='</div>'; }
+      else h+='<div style="margin-top:8px;display:grid;grid-template-columns:repeat(3,1fr);gap:4px">'+Object.entries(B.shotsPng).map(([k,v])=>`<img src="${v}" title="${k}" style="width:100%;border-radius:3px">`).join('')+'</div>';
       el.innerHTML=h; document.body.appendChild(el);
       const dl=(name,href)=>{ const a=document.createElement('a'); a.href=href; a.download=name; document.body.appendChild(a); a.click(); a.remove(); };
       el.querySelector('#bjson').onclick=e=>{ e.preventDefault(); dl(`bench_${out.scene}_${out.pipeline}_${out.tier}.json`,URL.createObjectURL(new Blob([JSON.stringify(out,null,1)],{type:'application/json'}))); };
