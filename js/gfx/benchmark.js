@@ -39,7 +39,7 @@
       G.S.device=G.S.device||'pc'; G.mode='practice'; G.gp=null;
       G.sel.track=TRACK_DATA.findIndex(t=>t.id===S.track); G.sel.vehicle=VEHICLES.findIndex(v=>v.id===S.car);
       G.startRace();
-      const wait=()=>{ if(G.race&&G.race.W&&G.screen==='race'){ B.run(S); } else setTimeout(wait,200); }; wait(); },
+      const wait=()=>{ if(G.race&&G.race.W&&G.screen==='race'&&!(GFX.v2&&GFX.v2.pending)){ B.run(S); } else setTimeout(wait,200); }; wait(); },   // V2 dressing loads async
     // take over the race frame: animate the world, pose the car, drive the camera, measure
     run(S){ if(+qs.get('frames')){ S=Object.assign({},S,{frames:+qs.get('frames'),warm:Math.min(S.warm,5)}); }   // developer: quick runs
       const G=window.GAME, R=G.race, P=R.P, car=R.player, cam=G.camera; const hud=document.getElementById('hud'); if(hud) hud.style.visibility='hidden';

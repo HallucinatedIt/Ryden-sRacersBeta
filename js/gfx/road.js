@@ -82,7 +82,7 @@
           .replace('#include <map_fragment>',`#include <map_fragment>
           { float lat=vRoad.x, line=vRoad.y, hw=max(vRoad.z,1.);
             float mac=rdn(vRW.xz*0.021)*0.6+rdn(vRW.xz*0.083)*0.4;                 // macro drift, 12 m and 50 m scales
-            diffuseColor.rgb*=1.0+rdMacro*(mac-0.5)*2.0;
+            diffuseColor.rgb*=(1.0+rdMacro*(mac-0.5)*2.0)*1.3;                    // albedo lift: the legacy asphalt texture was authored dark for the old lighting
             diffuseColor.rgb*=mix(vec3(1.0),vec3(1.03,1.0,0.96),rdn(vRW.xz*0.006+3.7)); // warm/cool patches
             float dl=abs(lat-line); float lane=exp(-pow((dl-0.78)/0.42,2.0));          // two tyre lanes on the racing line
             float brk=0.6+0.4*rdn(vRW.xz*0.35); rdRub=lane*brk;

@@ -13,19 +13,19 @@
 (function(){
   const LOOKS={
     coast:{ name:'Pacifica · golden afternoon',
-      colorManaged:true, toneMapping:'neutral', exposure:1.22,
-      sunDir:[-0.8,0.34,0.2],
-      sun:{ color:0xffcf9a, intensity:3.3, shadowBias:-0.00025, normalBias:0.025, radius:2.2 },
-      sky:{ zenith:0x3569b8, horizon:0xd3dce2, warm:0xc8783c, ground:0x5a5046, mie:1.2, disk:30, sunRadiance:1.0, clouds:0.34, horizonPow:0.42, brightness:1.0 },
-      ibl:{ skyScale:1.0, intensity:0.9 },
+      colorManaged:true, toneMapping:'neutral', exposure:1.3,
+      sunDir:[-0.78,0.46,0.22],
+      sun:{ color:0xffe2bd, intensity:3.7, shadowBias:-0.00025, normalBias:0.025, radius:2.2 },
+      sky:{ zenith:0x2f64b8, horizon:0xcfdce6, warm:0xc8783c, ground:0x5a5046, mie:0.9, disk:30, sunRadiance:1.0, clouds:0.34, horizonPow:0.32, brightness:1.0 },
+      ibl:{ skyScale:1.0, intensity:0.7 },
       hemi:0.0,
       haze:{ density:0.00045, falloff:0.011, start:25, base:-9, color:0xd6cfc4, sunColor:0xffc68c },
       fog:{ near:900, far:5200 },
       bloom:{ threshold:1.6, knee:0.7, intensity:0.05, radius:1.0 },
       ao:{ radius:0.9, intensity:0.85, thickness:1.2, exponent:1.5, falloff:1.0 },
-      grade:{ saturation:1.08, contrast:1.05, wb:[1.035,1.0,0.95], lift:[0.004,0.004,0.008], gain:[1,1,1], gamma:1.0, vignette:0.14 },
+      grade:{ saturation:1.08, contrast:1.05, wb:[1.0,1.0,0.975], lift:[0.004,0.004,0.008], gain:[1,1,1], gamma:1.0, vignette:0.14 },
       ocean:{ deep:0x08314d, shallow:0x1c6f88, sunGlint:7, roughness:0.1 },
-      road:{ roughness:0.9, normalScale:0.6, detailTile:1.4, rubber:0.22, dust:0x9a8a70, dustAmt:0.32, macro:0.12, envMapIntensity:0.45 },
+      road:{ roughness:0.9, normalScale:0.6, detailTile:1.4, rubber:0.22, dust:0x9a8a70, dustAmt:0.32, macro:0.12, envMapIntensity:0.3 },
       decals:{ patchEvery:170, tarEvery:55, crackEvery:40 },
       // material rules by glTF material name (env GLB)
       materials:[
@@ -40,6 +40,15 @@
         {re:/^m_coast_rock$/, detail:'rock'},
         {re:/^m_ground$/, detail:'ground'},
         {re:/^m_(scrub|foliage)$/, set:{roughness:0.85}},
+      ],
+      // intentional dressing: every placement has a reason (i = track sample, lat = metres right of the centreline, yaw = radians)
+      dressing:[
+        // cliff overlook (the lay-by with the view over the ocean): somewhere to stop
+        {asset:'pc_picnic_table', i:146, lat:16.5, yaw:0.25}, {asset:'pc_picnic_table', i:154, lat:17.5, yaw:-0.35},
+        {asset:'pc_trash_can', i:142, lat:12.8, yaw:0.0}, {asset:'pc_trash_can', i:158, lat:13.0, yaw:1.2},
+        // festival paddock behind the start: a classic on display for the crowd
+        {asset:'pc_corvette_gs', i:878, lat:-19.5, yaw:-1.0, lod1:55, far:600},
+        {asset:'pc_trash_can', i:872, lat:-14.5, yaw:0.4},
       ],
       zones:[
         {re:/^pc_(grass)$/, zone:'near', cell:320, far:460},
@@ -89,7 +98,7 @@
       old.forEach(o=>{ o.visible=false; }); const dome=GFX.sky.makeDome(L,2600); W.group.add(dome); W.v2Sky=dome;
       if(Q.envLighting){ const env=GFX.sky.makeIBL(r,L); R.scene.environment=env; R.scene.environmentIntensity=L.ibl.intensity; V2.env=env; }
       // --- fog: the composite haze does aerial perspective; linear fog only hides the far clip
-      if(W.fog){ W.fog.color.set(L.haze.color); W.fog.near=Q.postFX?L.fog.near:L.fog.near*0.5; W.fog.far=Q.postFX?L.fog.far:L.fog.far*0.7; }
+      if(W.fog){ W.fog.color.set(L.haze.color); W.fog.near=Q.postFX?L.fog.near:L.fog.near*0.2; W.fog.far=Q.postFX?L.fog.far:L.fog.far*0.55; }   // no composite haze on the direct path: linear fog does the aerial perspective
       // --- ocean
       W.group.traverse(o=>{ if(o.isMesh&&o.material&&o.material.uniforms&&o.material.uniforms.deep&&o.material.uniforms.shallow){ const om=GFX.sky.makeOcean(L); o.material.dispose(); o.material=om; W.updaters.push((dt,t)=>{ om.uniforms.t.value=t; }); rep.ocean=true; } });
       // --- environment materials
@@ -103,7 +112,7 @@
             if(rule.detail && Q.roadDetail>=1) detailMaterial(m,rule.detail);
             if(rule.physical){ const pm=new THREE.MeshPhysicalMaterial(); ['name','color','map','roughness','metalness','roughnessMap','metalnessMap','normalMap','normalScale','emissive','emissiveMap','emissiveIntensity','side','vertexColors','envMapIntensity','aoMap','alphaTest','transparent','opacity','flatShading'].forEach(k=>{ const v=m[k]; if(v!==undefined) pm[k]=(v&&v.clone&&!v.isTexture)?v.clone():v; }); Object.assign(pm,rule.physical); env.traverse(q=>{ if(q.material===m) q.material=pm; }); }
             m.needsUpdate=true; break; } }); }
-      rep.materials=nm;
+      rep.materials=nm; if(env){ let ct=0,tt=0; const seenT=new Set(); env.traverse(o=>{ const m=o.material; if(m&&m.map&&!seenT.has(m.map)){ seenT.add(m.map); tt++; if(m.map.isCompressedTexture) ct++; } }); rep.textures={total:tt,ktx2:ct}; }
       road.forEach(o=>GFX.road.upgradeAsphalt(o,W,P,A,L,Q)); lines.forEach(o=>GFX.road.upgradeLines(o,L)); rep.road=road.length;
       // --- decals on the real road surface
       if(Q.decals && road.length){ const surf=GFX.road.surface(road); const dg=GFX.decals.build(W,P,A,surf,L,R.def.id); W.group.add(dg); rep.decals=dg.userData.stats; }
@@ -116,9 +125,24 @@
       R.cars.forEach(c=>c.model.root.traverse(o=>{ if(o.isMesh&&o.material&&o.material.map&&o.material.transparent&&/shadow/i.test(o.name||'')) o.material.opacity=0.6; }));
       // --- post look
       GFX.post.enable(Object.assign({},L,{haze:Object.assign({},L.haze,L.hazeC),sunDir:L.sunDir}));
+      // --- intentional dressing (Meshy props processed in Blender: real scale, LOD0/LOD1, KTX2 + Meshopt)
+      V2.report=rep; if(env&&L.dressing&&Q.propDensity>0) V2.dress(R,L,Q); else V2.pending=null;
       rep.ms=Math.round(performance.now()-t0); V2.report=rep; if(qs.get('gfxdebug')) console.log('[gfx v2] Pacifica look applied',JSON.stringify(rep));
     },
-    end(R){ if(!V2.active&&!V2.env) return; V2.active=false; V2.look=null; V2.race=null; V2.lod=null; GFX.post.disable(); GFX.compat.colorManagement(false);
+    dress(R,L,Q){ const W=R.W, P=R.P; const ray=new THREE.Raycaster(); const targets=[];
+      W.env.root.traverse(o=>{ if(o.isMesh&&!/grass|scrub|cypress|palms|foam|crowd|horizon|rocks/.test(o.userData.chunkOf||o.name)) targets.push(o); });
+      const ids=[...new Set(L.dressing.map(d=>d.asset))]; const ld=GFX.assets.configureLoader(new THREE.GLTFLoader());
+      V2.pending=Promise.all(ids.map(u=>new Promise(res=>ld.load('models/props/'+u+'.glb?v=1',g=>res([u,g.scene]),undefined,e=>{ console.warn('[gfx v2] dressing asset failed',u,e); res([u,null]); }))))
+        .then(pairs=>{ if(V2.race!==R) return; const T=Object.fromEntries(pairs); const grp=new THREE.Group(); grp.name='v2_dressing'; let n=0, tris=0;
+          for(const d of L.dressing){ const sc=T[d.asset]; if(!sc) continue; const i=((d.i%P.N)+P.N)%P.N; const x=P.x[i]+P.rx[i]*d.lat, z=P.z[i]+P.rz[i]*d.lat;
+            ray.set(new THREE.Vector3(x,P.y[i]+60,z),new THREE.Vector3(0,-1,0)); ray.far=140; const hit=ray.intersectObjects(targets,false)[0]; const y=hit?hit.point.y:P.y[i];
+            const l0=sc.getObjectByName('lod0'), l1=sc.getObjectByName('lod1'); if(!l0) continue; const levels=[{obj:l0.clone(),dist:0}]; if(l1) levels.push({obj:l1.clone(),dist:d.lod1||40});
+            levels.forEach(l=>{ l.obj.position.set(0,0,0); l.obj.rotation.set(0,0,0); l.obj.traverse(o=>{ if(o.isMesh){ o.castShadow=true; o.receiveShadow=true; } }); });
+            l0.traverse(o=>{ if(o.isMesh) tris+=(o.geometry.index?o.geometry.index.count:o.geometry.attributes.position.count)/3; });
+            const lod=GFX.lod.makeLOD(levels,Q.lodBias); lod.name='dress_'+d.asset; lod.position.set(x,y+(d.dy||0),z); lod.rotation.y=Math.atan2(P.tx[i],P.tz[i])+(d.yaw||0); lod.updateMatrixWorld(true);
+            grp.add(lod); n++; if(V2.lod) V2.lod.register(lod,{far:d.far||450,radius:4}); }
+          W.group.add(grp); V2.report.dressing={placed:n,lod0Tris:Math.round(tris)}; V2.pending=null; }); },
+    end(R){ V2.pending=null; if(!V2.active&&!V2.env) return; V2.active=false; V2.look=null; V2.race=null; V2.lod=null; GFX.post.disable(); GFX.compat.colorManagement(false);
       if(V2.env){ V2.env.dispose(); V2.env=null; } const g=window.GAME; if(g&&g.renderer) g.applyQuality(); },
   };
   window.GFX=window.GFX||{}; window.GFX.v2=V2;

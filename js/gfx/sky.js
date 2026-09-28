@@ -18,9 +18,9 @@
       float y=d.y, h=max(y,0.); float mu=dot(d,skSunDir);
       vec3 c=mix(skHor,skZen,pow(clamp(h,0.,1.),skHorPow));
       float hz=pow(1.-h,4.);                                    // air mass towards the horizon
-      c+=skWarm*hz*(0.12+0.88*pow(max(mu,0.)*0.5+0.5,4.));      // warm band, strongest on the sun side
+      c+=skWarm*hz*(0.02+0.98*pow(max(mu,0.)*0.5+0.5,5.));      // warm band, on the sun side
       float g=0.78; float ph=(1.-g*g)/pow(1.+g*g-2.*g*mu,1.5);   // Henyey-Greenstein forward scattering
-      c+=skSun*skMie*ph*(0.25+0.75*hz)*0.08;
+      float gl=skMie*ph*(0.25+0.75*hz)*0.08; c=mix(c,skSun*1.1,min(gl,0.85))+skSun*max(gl-0.85,0.);   // golden glow replaces (not adds to) the blue
       if(skClouds>0.001&&y>-0.02){ vec2 uc=d.xz/(y+0.18)*1.1+vec2(skCt*0.006,skCt*0.0022); float n=skfb(uc);
         float cov=smoothstep(1.02-skClouds,1.36-skClouds,n); float thick=smoothstep(1.02-skClouds,1.7-skClouds,skfb(uc*1.7+3.1));
         float lit=pow(max(mu,0.),4.); vec3 cc=mix(skHor*1.05,vec3(1.)*length(skHor)*0.62,0.5)*(1.-0.35*thick)+skSun*(0.05+lit*0.35)*(1.-thick*0.5);

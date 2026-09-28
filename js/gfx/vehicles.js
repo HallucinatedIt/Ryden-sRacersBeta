@@ -19,11 +19,11 @@
     _generic:{ paint:{roughness:null, clearcoat:0.8, clearcoatRoughness:0.08}, env:1.0 },
     gt44:{ // Ford GT40-style race car: solid (non-metallic) red/black race paint under a deep clear coat
       matid:'models/cars/gt40_matid.png?v=1',
-      paint:{ roughness:0.42, metalness:0.0, clearcoat:1.0, clearcoatRoughness:0.035, flake:0 },
+      paint:{ roughness:0.42, metalness:0.0, clearcoat:0.85, clearcoatRoughness:0.035, flake:0 },
       glass:{ tint:[0.16,0.19,0.2], roughness:0.03, specular:1.0 },
       metal:{ roughness:0.18 },
       rubber:{ roughness:0.88, tint:0.85 },
-      env:1.0, normalScale:0.8,
+      env:0.9, normalScale:0.8,
     },
   };
   const texCache={};
