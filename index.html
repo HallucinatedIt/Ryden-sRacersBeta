@@ -305,6 +305,7 @@ body:not(.mobile) #menu .mgrid [data-act=howto]{grid-column:span 2}
 @media (max-height:460px){#menu .mcol{width:min(56vw,420px);margin-left:max(12px,env(safe-area-inset-left));--lr:34px;--lx:32px;justify-content:flex-start;gap:16px}#menu .mpanel{padding:10px;gap:8px;border-radius:10px}#menu .mgrid{gap:6px}#menu .btn{min-height:44px;font-size:14px;padding:0 12px}#menu .mprimary{min-height:48px;font-size:19px}#menu .mprimary i{width:28px;height:28px;font-size:13px}}
 /* narrow / portrait windows: showcase on top, menu below */
 @media (max-aspect-ratio:23/20){#menu .mcol{width:min(520px,94vw);margin:0 auto;justify-content:flex-start;padding-top:max(36vh,200px)}#menu .mlogo{margin:0 auto 4px;--lr:clamp(44px,12vw,72px);--lx:clamp(42px,11.5vw,70px)}#menu .mlogo>span{margin-left:auto;margin-right:auto}#menu .mhint{text-align:center}}
+#rvVig{position:fixed;inset:0;pointer-events:none;display:none;background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 58%,rgba(18,10,2,.34) 100%);mix-blend-mode:multiply}body.racing #rvVig.on{display:block}
 #unlockModal{position:fixed;inset:0;z-index:40;display:none;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,rgba(40,14,70,.78),rgba(4,1,12,.92));padding:12px}
 #unlockModal.on{display:flex;animation:ulIn .45s ease-out}
 @keyframes ulIn{0%{opacity:0;transform:scale(1.06)}100%{opacity:1;transform:none}}
@@ -550,5 +551,5 @@ body:not(.racing) #chapterTag{display:none}
 <div id="acctTag"></div>
 <div id="err"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="js/game.js?v=1790560000"></script>
+<script src="js/game.js?v=1790570000"></script>
 </body></html>
