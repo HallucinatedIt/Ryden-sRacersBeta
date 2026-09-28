@@ -22,9 +22,9 @@
           why:'long-distance scenery, water, road paint, vegetation on the point'},
         {id:'tunnel_mouth', name:'Tunnel approach', i:214, lat:2, cam:{back:7.2,up:2.9,side:0,ahead:5,fov:66},
           why:'cliff/rock material, tunnel portal, shadow transition'},
-        {id:'ocean_low', name:'Ocean side, low', i:150, lat:3.5, cam:{back:-3,up:1.1,side:7,ahead:-1,fov:52},
+        {id:'ocean_low', name:'Ocean side, low', i:150, lat:3.5, cam:{back:-2.5,up:1.2,side:-6.5,ahead:-1,fov:52},
           why:'car paint + reflections against sea and sky, guardrail close-up'},
-        {id:'festival_finish', name:'Beach festival finish', i:846, lat:-2, cam:{back:7.2,up:2.9,side:0,ahead:5,fov:66},
+        {id:'festival_finish', name:'Beach festival finish', i:870, lat:-2, cam:{back:8,up:3.2,side:0,ahead:24,fov:66},
           why:'architecture, gantry, crowd, palms, billboards, low sun (most draw calls)'},
       ],
       drive:{id:'lighthouse_run', name:'Lighthouse run (moving)', i0:280, i1:400, lat:-2.5, speed:36},
@@ -41,7 +41,8 @@
       G.startRace();
       const wait=()=>{ if(G.race&&G.race.W&&G.screen==='race'){ B.run(S); } else setTimeout(wait,200); }; wait(); },
     // take over the race frame: animate the world, pose the car, drive the camera, measure
-    run(S){ const G=window.GAME, R=G.race, P=R.P, car=R.player, cam=G.camera; const hud=document.getElementById('hud'); if(hud) hud.style.visibility='hidden';
+    run(S){ if(+qs.get('frames')){ S=Object.assign({},S,{frames:+qs.get('frames'),warm:Math.min(S.warm,5)}); }   // developer: quick runs
+      const G=window.GAME, R=G.race, P=R.P, car=R.player, cam=G.camera; const hud=document.getElementById('hud'); if(hud) hud.style.visibility='hidden';
       G.audio&&G.audio.setMusic&&G.audio.setMusic('menu');
       const plan=[]; S.shots.forEach(s=>plan.push({kind:'shot',s})); if(S.drive) plan.push({kind:'drive',s:S.drive});
       const out={scene:B.scene, track:S.track, car:S.car, tier:GFX.settings.currentName(), pipeline:GFX.settings.pipeline, when:new Date().toISOString(), device:GFX.renderer.describe(), shots:[]};

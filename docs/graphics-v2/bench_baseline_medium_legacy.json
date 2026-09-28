@@ -1,0 +1,217 @@
+{
+ "scene": "pacifica",
+ "track": "coast",
+ "car": "gt44",
+ "tier": "medium",
+ "pipeline": "legacy",
+ "when": "2026-09-28T18:22:22.865Z",
+ "device": {
+  "backend": "WebGL2",
+  "three": "r128",
+  "gpu": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "vendor": "Google Inc. (Google)",
+  "drawingBuffer": [
+   960,
+   540
+  ],
+  "css": [
+   960,
+   540
+  ],
+  "pixelRatio": 1,
+  "maxTexture": 8192,
+  "maxAniso": 16,
+  "precision": "highp",
+  "shadows": true,
+  "toneMapping": "ACESFilmic",
+  "outputEncoding": "sRGB"
+ },
+ "shots": [
+  {
+   "id": "cliff_lighthouse",
+   "name": "Cliff road → lighthouse",
+   "kind": "shot",
+   "perf": {
+    "frames": 85,
+    "fps": 1.8,
+    "ms": 543.16,
+    "p95": 828.8,
+    "worst": 935,
+    "low1": 1.1,
+    "cpuSubmitMs": 2.98
+   },
+   "draws": 54,
+   "tris": 268204,
+   "geometries": 143,
+   "textures": 25,
+   "programs": 28,
+   "materials": {
+    "materials": 95,
+    "byType": {
+     "ShaderMaterial": 5,
+     "MeshStandardMaterial": 68,
+     "MeshBasicMaterial": 19,
+     "MeshPhysicalMaterial": 2,
+     "SpriteMaterial": 1
+    },
+    "textures": 25,
+    "textureMB": 83.8
+   }
+  },
+  {
+   "id": "lighthouse_wide",
+   "name": "Lighthouse bend, elevated",
+   "kind": "shot",
+   "perf": {
+    "frames": 48,
+    "fps": 2.3,
+    "ms": 429.45,
+    "p95": 864.1,
+    "worst": 958.2,
+    "low1": 1,
+    "cpuSubmitMs": 2.39
+   },
+   "draws": 54,
+   "tris": 268204,
+   "geometries": 143,
+   "textures": 25,
+   "programs": 28,
+   "materials": {
+    "materials": 95,
+    "byType": {
+     "ShaderMaterial": 5,
+     "MeshStandardMaterial": 68,
+     "MeshBasicMaterial": 19,
+     "MeshPhysicalMaterial": 2,
+     "SpriteMaterial": 1
+    },
+    "textures": 25,
+    "textureMB": 83.8
+   }
+  },
+  {
+   "id": "tunnel_mouth",
+   "name": "Tunnel approach",
+   "kind": "shot",
+   "perf": {
+    "frames": 164,
+    "fps": 1.3,
+    "ms": 764.44,
+    "p95": 947.1,
+    "worst": 986.3,
+    "low1": 1,
+    "cpuSubmitMs": 2.58
+   },
+   "draws": 73,
+   "tris": 269696,
+   "geometries": 153,
+   "textures": 27,
+   "programs": 29,
+   "materials": {
+    "materials": 95,
+    "byType": {
+     "ShaderMaterial": 5,
+     "MeshStandardMaterial": 68,
+     "MeshBasicMaterial": 19,
+     "MeshPhysicalMaterial": 2,
+     "SpriteMaterial": 1
+    },
+    "textures": 25,
+    "textureMB": 83.8
+   }
+  },
+  {
+   "id": "ocean_low",
+   "name": "Ocean side, low",
+   "kind": "shot",
+   "perf": {
+    "frames": 167,
+    "fps": 1.7,
+    "ms": 571.76,
+    "p95": 727.4,
+    "worst": 979.7,
+    "low1": 1.2,
+    "cpuSubmitMs": 2.27
+   },
+   "draws": 57,
+   "tris": 265500,
+   "geometries": 161,
+   "textures": 27,
+   "programs": 29,
+   "materials": {
+    "materials": 95,
+    "byType": {
+     "ShaderMaterial": 5,
+     "MeshStandardMaterial": 68,
+     "MeshBasicMaterial": 19,
+     "MeshPhysicalMaterial": 2,
+     "SpriteMaterial": 1
+    },
+    "textures": 25,
+    "textureMB": 83.8
+   }
+  },
+  {
+   "id": "festival_finish",
+   "name": "Beach festival finish",
+   "kind": "shot",
+   "perf": {
+    "frames": 108,
+    "fps": 1.5,
+    "ms": 677.4,
+    "p95": 996.2,
+    "worst": 998.4,
+    "low1": 1,
+    "cpuSubmitMs": 3.37
+   },
+   "draws": 147,
+   "tris": 300036,
+   "geometries": 178,
+   "textures": 27,
+   "programs": 29,
+   "materials": {
+    "materials": 95,
+    "byType": {
+     "ShaderMaterial": 5,
+     "MeshStandardMaterial": 68,
+     "MeshBasicMaterial": 19,
+     "MeshPhysicalMaterial": 2,
+     "SpriteMaterial": 1
+    },
+    "textures": 25,
+    "textureMB": 83.8
+   }
+  },
+  {
+   "id": "lighthouse_run",
+   "name": "Lighthouse run (moving)",
+   "kind": "drive",
+   "perf": {
+    "frames": 167,
+    "fps": 1.4,
+    "ms": 731.04,
+    "p95": 839.1,
+    "worst": 866.1,
+    "low1": 1.2,
+    "cpuSubmitMs": 2.38
+   },
+   "draws": 45,
+   "tris": 265190,
+   "geometries": 178,
+   "textures": 27,
+   "programs": 29,
+   "materials": {
+    "materials": 95,
+    "byType": {
+     "ShaderMaterial": 5,
+     "MeshStandardMaterial": 68,
+     "MeshBasicMaterial": 19,
+     "MeshPhysicalMaterial": 2,
+     "SpriteMaterial": 1
+    },
+    "textures": 25,
+    "textureMB": 83.8
+   }
+  }
+ ]
+}

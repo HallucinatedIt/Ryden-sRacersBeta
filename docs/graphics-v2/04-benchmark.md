@@ -47,7 +47,19 @@ Captured in the cloud test harness (software GPU, 960×540). **Use the draw-call
 figures as the baseline. The FPS figures are not meaningful on a software GPU:** re-run on your Mac and a
 phone to get real frame times.
 
-See `bench_baseline_medium_legacy.json` in this folder and the screenshots in `img/bench/`.
+| shot | draw calls | triangles | geometries | shader programs | materials | texture memory |
+|---|---|---|---|---|---|---|
+| `cliff_lighthouse` | 54 | 268k | 143 | 28 | 95 | ~83.8 MB |
+| `lighthouse_wide` | 54 | 268k | 143 | 28 | 95 | ~83.8 MB |
+| `tunnel_mouth` | 73 | 270k | 153 | 29 | 95 | ~83.8 MB |
+| `ocean_low` | 57 | 266k | 161 | 29 | 95 | ~83.8 MB |
+| `festival_finish` | 147 | 300k | 178 | 29 | 95 | ~83.8 MB |
+| `lighthouse_run` | 45 | 265k | 178 | 29 | 95 | ~83.8 MB |
+
+Full data: [`bench_baseline_medium_legacy.json`](bench_baseline_medium_legacy.json).
+
+<img src="img/bench/cliff_lighthouse.jpg" width="300"> <img src="img/bench/lighthouse_wide.jpg" width="300"> <img src="img/bench/tunnel_mouth.jpg" width="300"> <img src="img/bench/ocean_low.jpg" width="300"> <img src="img/bench/festival_finish.jpg" width="300">
+
 
 ## Using it for Phase 2
 
