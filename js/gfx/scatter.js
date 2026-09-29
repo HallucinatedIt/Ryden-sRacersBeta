@@ -11,6 +11,8 @@
 //   hero   lod0      the first ~25-40 m (x lodBias): real geometry, casts shadows
 //   mid    lod1/2    decimated, baked texture, casts shadows only in the near level
 //   far    lodImp    impostor cards, no shadows: thousands cost almost nothing
+// Explicit placements use the same machinery: rule.points [{i,lat,ds,yaw}] or rule.line {from,to,lat,every}
+// (parked cars, fence runs, bins): every copy of a model still costs one draw per LOD level.
 // Placement is deterministic (seeded per track and rule) and rule-driven, never random over the map:
 // a band beside the road (metres from the road edge), a track section, clustering, slope limit, and the
 // terrain height from a ray cast on the scenery meshes. Density scales with the tier's vegDensity
@@ -42,7 +44,7 @@
     const grp=new THREE.Group(); grp.name='v2_scatter'; const S={group:grp, sets:[], stats:{placed:0, draws:0, assets:0}};
     // ray-cast targets: terrain + rock, not plants/roads/props
     const targets=[]; W.env.root.traverse(o=>{ if(o.isMesh&&o.material&&/^m_(ground|strata|rock|rock_plain|sand|coast_rock|grass_ground)$/.test(o.material.name||'')) targets.push(o); });
-    const ray=new THREE.Raycaster(); ray.far=400;
+    const ray=new THREE.Raycaster(); ray.far=400; let surf=null;
     // coarse grid of centre-line samples, so a placement beside one part of the track is not ON another part
     const G=new Map(), cs=24; for(let i=0;i<P.N;i++){ const k=Math.floor(P.x[i]/cs)+','+Math.floor(P.z[i]/cs); let b=G.get(k); if(!b){ b=[]; G.set(k,b); } b.push(i); }
     const clearOfRoad=(x,z,m)=>{ const gx=Math.floor(x/cs), gz=Math.floor(z/cs); for(let a=-1;a<=1;a++) for(let b=-1;b<=1;b++){ const L2=G.get((gx+a)+','+(gz+b)); if(!L2) continue;
@@ -64,6 +66,15 @@
               ray.set(_p.set(x,(P.y[i]||0)+200,z),new THREE.Vector3(0,-1,0)); const hit=targets.length?ray.intersectObjects(targets,false)[0]:null; if(!hit) continue; if(rule.minY!=null&&hit.point.y<rule.minY) continue;
               const n=hit.face?hit.face.normal.clone().transformDirection(hit.object.matrixWorld):_up; if(n.y<(rule.minUp!=null?rule.minUp:0.8)) continue;
               const s=rr(...(rule.scale||[0.8,1.2])); inst.push({x, y:hit.point.y-(rule.sink||0.05)*s, z, s, yaw:rnd()*6.283, tilt:rule.tilt?n:null}); } }
+          // explicit placements (parked cars, fence runs, bins): points [{i,lat,ds,yaw,s}] and/or line {from,to,lat,every,yaw}
+          // yaw is relative to the track direction; y comes from the first flat surface under the point (street, sidewalk, lot)
+          const pts=(rule.points||[]).slice();
+          if(rule.line){ const Ln=rule.line, step=Math.max(1,Math.round((Ln.every||4)/P.spacing)); for(let i=Ln.from;i<=Ln.to;i+=step) pts.push({i,lat:Ln.lat,ds:0,yaw:Ln.yaw||0,s:Ln.s}); }
+          if(pts.length){ if(!surf){ surf=[]; W.env.root.traverse(o=>{ if(o.isMesh&&!/foliage|trunk|crowd|fence|lamp|glass|signs|event|banner/.test((o.material&&o.material.name)||'')) surf.push(o); }); }
+            for(const q of pts){ if(rule.thin&&rnd()>dens) continue; const i=((q.i%P.N)+P.N)%P.N; const x=P.x[i]+P.rx[i]*q.lat+P.tx[i]*(q.ds||0), z=P.z[i]+P.rz[i]*q.lat+P.tz[i]*(q.ds||0);
+              ray.set(_p.set(x,(P.y[i]||0)+(rule.probe||5),z),new THREE.Vector3(0,-1,0)); const hits=ray.intersectObjects(surf,false); const h=hits.find(hh=>!hh.face||hh.face.normal.clone().transformDirection(hh.object.matrixWorld).y>0.7);
+              const yaw=Math.atan2(P.tx[i],P.tz[i])+(q.yaw!=null?q.yaw:rr(-0.08,0.08))+(rule.yawJitter?rr(-rule.yawJitter,rule.yawJitter):0);
+              inst.push({x, y:(h?h.point.y:P.y[i])-(rule.sink||0), z, s:q.s||rr(...(rule.scale||[1,1])), yaw, tilt:null}); } }
           if(!inst.length) return;
           // one InstancedMesh per part per level, sized for every instance; counts are set per update
           const sets=lv.map((l,k)=>({l, dist:l.dist*bias, meshes:l.parts.map(p=>{ const im=new THREE.InstancedMesh(p.geometry,p.material,inst.length); im.count=0; im.frustumCulled=false;

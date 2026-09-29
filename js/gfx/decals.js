@@ -11,7 +11,7 @@
 //
 // Atlas cells (4x4, 256 px): 0 crack · 1 crack network · 2 tar snake · 3 patch · 4 oil · 5 braking marks ·
 // 6 dirt smear · 7 gravel spill · 8 edge grit · 9 faded arrow · 10 sand drift · 11 faded repair patch ·
-// 12 sealed transverse crack. Add a kind = add a cell + a draw function. Per look (L.decals): spacing of each
+// 12 sealed transverse crack · 13 utility cover · 14 patched pothole · 15 lane oil drips. Add a kind = add a cell + a draw function. Per look (L.decals): spacing of each
 // kind, and tints (grit, dirt) multiplied through the vertex colour so one atlas serves every climate.
 (function(){
   let ATLAS=null;
@@ -42,10 +42,68 @@
     // 12 transverse thermal crack, tar-sealed (u = across the road): a wavy band over the full width
     cell(12,()=>{ g.strokeStyle='rgba(6,6,7,0.9)'; g.lineWidth=16; g.lineCap='round'; g.beginPath(); let y=128; g.moveTo(0,y); for(let x=0;x<=256;x+=8){ y+=(r()-0.5)*10; y=Math.max(100,Math.min(156,y)); g.lineTo(x,y); } g.stroke();
       g.strokeStyle='rgba(2,2,2,0.95)'; g.lineWidth=3; g.stroke(); });
+    // 13 manhole / utility cover: cast-iron disc with a raised grid and a rust ring
+    cell(13,()=>{ const c=128, R=92; g.fillStyle='rgba(28,27,26,0.95)'; g.beginPath(); g.arc(c,c,R,0,6.28); g.fill(); g.strokeStyle='rgba(95,70,48,0.8)'; g.lineWidth=7; g.stroke();
+      g.strokeStyle='rgba(70,68,64,0.9)'; g.lineWidth=3; for(let k=-4;k<=4;k++){ g.beginPath(); g.moveTo(c+k*18,c-Math.sqrt(Math.max(0,R*R-(k*18)**2))+6); g.lineTo(c+k*18,c+Math.sqrt(Math.max(0,R*R-(k*18)**2))-6); g.stroke(); g.beginPath(); g.moveTo(c-Math.sqrt(Math.max(0,R*R-(k*18)**2))+6,c+k*18); g.lineTo(c+Math.sqrt(Math.max(0,R*R-(k*18)**2))-6,c+k*18); g.stroke(); }
+      g.fillStyle='rgba(140,120,90,0.35)'; for(let k=0;k<200;k++){ const a=r()*6.28, rr_=r()*R; g.fillRect(c+Math.cos(a)*rr_,c+Math.sin(a)*rr_,2,2); } });
+    // 14 patched pothole: fresh, darker cold-patch with a sawn edge, a little lumpy
+    cell(14,()=>{ g.fillStyle='rgba(12,12,13,0.82)'; g.beginPath(); g.moveTo(40,34); g.lineTo(214,26); g.lineTo(226,196); g.lineTo(52,224); g.closePath(); g.fill();
+      for(let k=0;k<700;k++){ g.fillStyle=`rgba(${r()<0.5?'0,0,0':'60,60,62'},${r()*0.35})`; g.fillRect(44+r()*176,32+r()*186,2+r()*2,2+r()*2); }
+      g.strokeStyle='rgba(3,3,3,0.9)'; g.lineWidth=4; g.stroke(); });
+    // 15 lane oil drips: a trail of small dark spots down the middle of a lane
+    cell(15,()=>{ for(let k=0;k<46;k++){ const y=r()*256, x=128+(r()-0.5)*38, rr_=3+r()*10; const gr=g.createRadialGradient(x,y,0,x,y,rr_); gr.addColorStop(0,'rgba(5,5,6,0.7)'); gr.addColorStop(1,'rgba(5,5,6,0)'); g.fillStyle=gr; g.beginPath(); g.ellipse(x,y,rr_,rr_*1.4,0,0,6.28); g.fill(); } });
     const t=new THREE.CanvasTexture(cv); GFX.compat.srgb(t); t.anisotropy=Math.min(8,GFX.renderer.maxAnisotropy()); t.generateMipmaps=true; t.minFilter=THREE.LinearMipmapLinearFilter; ATLAS=t; return t; }
 
+  // Wall art atlas (2048x1024, 8x4 cells of 256): graffiti tags and throw-ups, pasted posters, hand-painted
+  // shop ads, stencils. Generated once; all words are invented (no real brands, no gang references).
+  let WALL=null;
+  function wallAtlas(){ if(WALL) return WALL; const C=256, cv=document.createElement('canvas'); cv.width=2048; cv.height=1024; const g=cv.getContext('2d');
+    let sd=777; const r=()=>{ sd=(sd*16807)%2147483647; return (sd-1)/2147483646; }; const pick=a=>a[Math.floor(r()*a.length)];
+    const cellAt=(k,fn)=>{ g.save(); g.translate((k%8)*C,Math.floor(k/8)*C); g.beginPath(); g.rect(0,0,C,C); g.clip(); fn(); g.restore(); };
+    const tagCols=['#ff3fa4','#29d3ff','#ffd23f','#7cff5a','#ff6a2b','#b86bff','#f4f4f4','#ff2a2a'];
+    const bubble=(txt,col,out,size)=>{ g.font=`bold ${size}px "Racing Sans One", "Chakra Petch", sans-serif`; g.textAlign='center'; g.textBaseline='middle'; g.lineJoin='round';
+      g.lineWidth=size*0.28; g.strokeStyle='#111'; g.strokeText(txt,128,128); g.lineWidth=size*0.16; g.strokeStyle=out; g.strokeText(txt,128,128); g.fillStyle=col; g.fillText(txt,128,128);
+      g.fillStyle='rgba(255,255,255,0.55)'; g.fillRect(40,128-size*0.28,176,size*0.06); for(let k=0;k<7;k++){ const x=60+r()*136; g.fillStyle=col; g.fillRect(x,128+size*0.3,3,10+r()*30); } };
+    const words=['RYDN','BLVD','DRFT','ROLL','99','GRIP','SKRT','FAST','KING','ZOOM','NOLA','MOJO'];
+    for(let k=0;k<10;k++) cellAt(k,()=>{ g.translate(128,128); g.rotate((r()-0.5)*0.3); g.translate(-128,-128); bubble(pick(words),pick(tagCols),pick(tagCols),60+r()*26); });   // 0-9 throw-ups
+    for(let k=10;k<14;k++) cellAt(k,()=>{ g.strokeStyle=pick(['#111','#1b2b8a','#c01818']); g.lineWidth=7; g.lineCap='round'; g.beginPath(); let x=30,y=150+r()*30; g.moveTo(x,y); for(let q=0;q<14;q++){ x+=12+r()*6; y+=(r()-0.5)*70; g.quadraticCurveTo(x-6,y-40*(r()-0.5),x,y); } g.stroke(); });   // 10-13 hand tags
+    const ads=[['CAR WASH','$5','#1f5fbf'],['TIRES','NEW · USED','#c8281e'],['TACOS','OPEN LATE','#e0a020'],['MUFFLERS','& BRAKES','#2a8a3c'],['CHECKS','CASHED','#6a2aa0'],['PHONES','REPAIR','#d24a1a']];
+    for(let k=14;k<20;k++){ const A=ads[k-14]; cellAt(k,()=>{ g.fillStyle='rgba(245,238,220,0.92)'; g.fillRect(10,40,236,176); g.strokeStyle=A[2]; g.lineWidth=8; g.strokeRect(18,48,220,160);
+      g.fillStyle=A[2]; g.font='bold 54px "Chakra Petch", sans-serif'; g.textAlign='center'; g.textBaseline='middle'; g.fillText(A[0],128,108); g.font='bold 30px "Chakra Petch", sans-serif'; g.fillStyle='#222'; g.fillText(A[1],128,166);
+      g.globalCompositeOperation='destination-out'; for(let q=0;q<260;q++){ g.fillStyle=`rgba(0,0,0,${r()*0.5})`; g.fillRect(r()*256,r()*256,2+r()*5,2+r()*5); } g.globalCompositeOperation='source-over'; }); }   // 14-19 painted ads
+    for(let k=20;k<26;k++) cellAt(k,()=>{ for(let q=0;q<3;q++){ const x=20+q*74+r()*10, y=30+r()*40, w=64, h=96+r()*40; g.save(); g.translate(x+w/2,y+h/2); g.rotate((r()-0.5)*0.12); g.fillStyle=pick(['#f2efe6','#ffe07a','#ff8fb8','#9fe0ff']); g.fillRect(-w/2,-h/2,w,h);
+        g.fillStyle='#111'; g.font='bold 15px "Chakra Petch", sans-serif'; g.textAlign='center'; g.fillText(pick(['LIVE','SHOW','SAT','RACE','NIGHT','SALE']),0,-h/2+20); g.fillRect(-w/2+8,-10,w-16,26); g.font='11px sans-serif'; g.fillText(pick(['FRI 9PM','ALL AGES','$10','FREE']),0,h/2-12); g.restore(); } });   // 20-25 posters
+    const sten=['NO PARKING','BPD','TOW AWAY','LOADING'];
+    for(let k=26;k<30;k++) cellAt(k,()=>{ g.fillStyle=k===27?'rgba(20,30,90,0.85)':'rgba(15,15,15,0.8)'; g.font='bold 40px "Chakra Petch", monospace'; g.textAlign='center'; g.textBaseline='middle'; g.fillText(sten[k-26],128,128);
+      g.globalCompositeOperation='destination-out'; g.fillStyle='rgba(0,0,0,1)'; for(let q=0;q<6;q++) g.fillRect(20+q*40,100,3,56); g.globalCompositeOperation='source-over'; });   // 26-29 stencils
+    for(let k=30;k<32;k++) cellAt(k,()=>{ g.fillStyle=pick(tagCols); g.beginPath(); for(let q=0;q<5;q++){ const a=q*1.2566-1.57, b=a+0.628; g.lineTo(128+Math.cos(a)*100,128+Math.sin(a)*100); g.lineTo(128+Math.cos(b)*42,128+Math.sin(b)*42); } g.closePath(); g.fill(); g.strokeStyle='#111'; g.lineWidth=8; g.stroke(); });   // 30-31 stars
+    const t=new THREE.CanvasTexture(cv); GFX.compat.srgb(t); t.anisotropy=Math.min(8,GFX.renderer.maxAnisotropy()); WALL=t; return t; }
+
+  // Wall decals: rays from the kerb find walls that face the road; each hit gets one quad of wall art.
+  // opt: {every: m, height:[a,b], size:[a,b], sections:[[i0,i1],...], wallRe, kinds:{tag,ad,poster,stencil} weights, max}
+  function buildWalls(W,P,opt){ const env=W.env&&W.env.root; if(!env) return null; const wallRe=opt.wallRe||/^m_(stucco|brick|block|concrete|paint|metal)$/;
+    const walls=[]; env.traverse(o=>{ if(o.isMesh&&o.material&&wallRe.test(o.material.name||'')) walls.push(o); });
+    let sd=4711; const r=()=>{ sd=(sd*16807)%2147483647; return (sd-1)/2147483646; }; const rr=(a,b)=>a+r()*(b-a);
+    const K=Object.assign({tag:5,hand:2,ad:2,poster:2,stencil:1,star:1},opt.kinds||{}); const cells={tag:[0,10],hand:[10,14],ad:[14,20],poster:[20,26],stencil:[26,30],star:[30,32]};
+    const bag=[]; for(const k in K) for(let n=0;n<K[k];n++) bag.push(k);
+    const ray=new THREE.Raycaster(); ray.far=opt.reach||26; const pos=[], uv=[], ix=[], nrm=[]; let n=0, tries=0;
+    const inSec=i=>!opt.sections||opt.sections.some(([a,b])=>i>=a&&i<=b);
+    const step=Math.max(1,Math.round((opt.every||14)/P.spacing));
+    for(let i=0;i<P.N&&n<(opt.max||120);i+=step){ if(!inSec(i)) continue;
+      for(const side of [-1,1]){ tries++; if(r()<0.35) continue; const hw=P.w[i]/2+1; const ox=P.x[i]+P.rx[i]*hw*side, oz=P.z[i]+P.rz[i]*hw*side; const y=P.y[i]+rr(...(opt.height||[1.4,2.6]));
+        const dir=new THREE.Vector3(P.rx[i]*side,0,P.rz[i]*side).applyAxisAngle(new THREE.Vector3(0,1,0),rr(-0.35,0.35)); ray.set(new THREE.Vector3(ox,y,oz),dir);
+        const h=ray.intersectObjects(walls,false)[0]; if(!h||!h.face||h.distance<1.5) continue; const nn=h.face.normal.clone().transformDirection(h.object.matrixWorld); if(Math.abs(nn.y)>0.2||nn.dot(dir)>-0.55) continue;
+        const kind=bag[Math.floor(r()*bag.length)]; const cr=cells[kind]; const cell=cr[0]+Math.floor(r()*(cr[1]-cr[0]));
+        const sz=rr(...(opt.size||[1.6,3.4]))*(kind==='poster'?0.8:kind==='ad'?1.3:1); const hx=new THREE.Vector3(0,1,0).cross(nn).normalize().multiplyScalar(sz/2), hy=new THREE.Vector3(0,sz/2,0);
+        const c=h.point.clone().addScaledVector(nn,0.04); const cu=(cell%8)/8, cv=1-(Math.floor(cell/8)+1)/4;
+        [[-1,-1],[1,-1],[1,1],[-1,1]].forEach(([a,b])=>{ const v=c.clone().addScaledVector(hx,a).addScaledVector(hy,b); pos.push(v.x,v.y,v.z); nrm.push(nn.x,nn.y,nn.z); uv.push(cu+(a+1)/2/8*0.98+0.001,cv+(b+1)/2/4*0.98+0.001); });
+        ix.push(n*4,n*4+1,n*4+2,n*4,n*4+2,n*4+3); n++; } }
+    if(!n) return null; const g=new THREE.BufferGeometry(); g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3)); g.setAttribute('normal',new THREE.Float32BufferAttribute(nrm,3)); g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2)); g.setIndex(ix);
+    const m=new THREE.MeshStandardMaterial({map:wallAtlas(),transparent:true,depthWrite:false,roughness:0.85,metalness:0,polygonOffset:true,polygonOffsetFactor:-3,polygonOffsetUnits:-3});
+    const mesh=new THREE.Mesh(g,m); mesh.name='v2_walls'; mesh.receiveShadow=true; mesh.renderOrder=2; mesh.userData.stats={quads:n,rays:tries}; return mesh; }
+
   const DC={
-    atlas,
+    atlas, wallAtlas, buildWalls,
     // builds the decal meshes for a track. surf: GFX.road.surface(...), A: analyzeTrack() result
     build(W,P,A,surf,L,seedStr){ const D=L.decals||{}; let sd=0; for(const ch of seedStr) sd=(sd*31+ch.charCodeAt(0))>>>0; sd=sd%2147483646+1;
       const rnd=()=>{ sd=(sd*16807)%2147483647; return (sd-1)/2147483646; }; const rr=(a,b)=>a+rnd()*(b-a);
@@ -75,6 +133,11 @@
       if(D.driftEvery) every(D.driftEvery,i=>{ const sd2=rnd()<0.5?-1:1; const w=rr(2.2,4.2); put('matte',i,rr(5,14),j=>sd2*(P.w[j]/2+0.4-w/2),w*sd2,10,rr(0.55,0.9),true); });
       if(D.thermalEvery) every(D.thermalEvery,i=>{ put('gloss',i,rr(0.5,0.8),0,P.w[i]+0.4,12,rr(0.7,0.95),false); });
       if(D.fadedPatchEvery) every(D.fadedPatchEvery,i=>{ const lane=(rnd()<0.5?-1:1)*P.w[i]*rr(0.1,0.28); put('matte',i,rr(3,10),lane,rr(2,3.4),11,rr(0.45,0.75),false); });
+      // --- city: utility covers and patched potholes in the lanes, oil down the middle of each lane
+      const laneLat=i=>{ const n=Math.max(1,Math.round(P.w[i]/3.6)); const k=Math.floor(rnd()*n); return -P.w[i]/2+(k+0.5)*P.w[i]/n; };
+      if(D.manholeEvery) every(D.manholeEvery,i=>{ put('matte',i,rr(0.9,1.1),laneLat(i)+rr(-0.5,0.5),1.0,13,0.95,false); });
+      if(D.potholeEvery) every(D.potholeEvery,i=>{ put('matte',i,rr(1.2,2.6),laneLat(i)+rr(-0.4,0.4),rr(1.1,2.2),14,rr(0.7,0.9),false); });
+      if(D.oilEvery) every(D.oilEvery,i=>{ put('gloss',i,rr(6,16),laneLat(i),rr(0.6,0.9),15,rr(0.45,0.75),true); });
       // --- edge grit, both sides, continuous (u runs road -> shoulder)
       for(const sd2 of [-1,1]){ let run=0, i0=0; const flush=(i1)=>{ const n=((i1-i0+N)%N); if(n>2) put('matte',i0,n*sp,i=>sd2*(P.w[i]/2+0.3),2.2*sd2,8,0.9,false); };
         for(let i=0;i<=N;i++){ const k=i%N; if(ok(k)&&i<N){ if(!run){ run=1; i0=k; } if(i-i0>80){ flush(k); i0=k; } } else if(run){ run=0; flush(k); } } }
