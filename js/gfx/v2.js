@@ -224,6 +224,8 @@
       // the env is already split by neighbourhood (ab_n_*, ab_f_*, ab_street_*, ab_veg_*): chunking it further
       // multiplied draws (104 meshes -> 1071 chunks, 276 -> 585 draws), so zones only cull whole neighbourhoods
       // by distance and switch their shadows off beyond shadowFar
+      // one draw per material per 350 m cell across all neighbourhoods (see GFX.lod.mergeByMaterial)
+      mergeMaterials:{ re:/^ab_(n_|f_|street_|streets|outskirts|park|railyard|railcut|overpass|stand|event|gantry|barrier|catchfence|banners)/, skip:/crowd|_lit/, cell:350 },
       zones:[
         {re:/^ab_(n_|f_)/, zone:'mid', cell:1e5, far:1400, shadowFar:480},
         {re:/^ab_(street_|streets)/, zone:'near', cell:1e5, far:700, shadowFar:260},
@@ -231,6 +233,63 @@
         {re:/^ab_veg_far/, zone:'mid', cell:1e5, far:1600, shadowFar:1},
         {re:/^ab_(park|railyard|railcut|outskirts)/, zone:'mid', cell:1e5, far:1500, shadowFar:420},
       ],
+    },
+    // Revolution: one look per chapter, blended with the course's own chapter system (revChapterAt: 70 samples
+    // of blend before each chapter). The base values are Yorktown's; each chapter overrides sun, sky, haze,
+    // grade and exposure. Sun direction stays fixed for the whole course (shadows must not swing).
+    revolution:{ name:'Revolution · seven chapters, 1775–1781',
+      colorManaged:true, toneMapping:'neutral', exposure:1.1,
+      sunDir:[-0.7,0.34,0.55],
+      sun:{ color:0xffc98a, intensity:3.5, shadowBias:-0.0003, normalBias:0.035, radius:2.2 },
+      sky:{ zenith:0x4f78b4, horizon:0xf0d4a6, warm:0xe8b47c, ground:0x7c6a4c, mie:1.1, disk:30, sunRadiance:1.0, clouds:0.36, horizonPow:0.5, brightness:1.0 },
+      ibl:{ skyScale:1.0, intensity:0.8 },
+      hemi:0.12,
+      haze:{ density:0.0012, falloff:0.012, start:25, base:0, color:0xe6cfa6, sunColor:0xffd6a0 },
+      fog:{ near:700, far:2400 },
+      bloom:{ threshold:1.5, knee:0.7, intensity:0.06, radius:1.0 },   // muzzle flashes and the portals bloom, smoke does not
+      ao:{ radius:1.2, intensity:0.8, thickness:1.3, exponent:1.4, falloff:1.0 },
+      grade:{ saturation:1.06, contrast:1.07, wb:[1.02,1.0,0.96], lift:[0.008,0.006,0.004], gain:[1,0.99,0.97], gamma:1.0, vignette:0.16 },
+      road:{ material:/^__none__$/ },   // dirt, mud, cobble and snow roads keep the course's own ground/road shaders (no asphalt, no road decals)
+      materials:[
+        // m_ground, m_road, m_foliage keep the course's own shaders (two-scale ground, road wear, leaf wind)
+        {re:/^m_(stone|stonewall)$/, detail:'stone', set:{roughness:0.9}},
+        {re:/^m_earth$/, detail:'ground', set:{roughness:0.97}},                        // earthworks, redoubts
+        {re:/^m_facade$/, detail:'storefront', ground:0, set:{roughness:0.75, envMapIntensity:1.1}},   // colonial facades: the dark window panes read as glass
+        {re:/^m_(timber|planks|wicker|bark)$/, set:{roughness:0.94}},
+        {re:/^m_snow$/, set:{roughness:0.62, envMapIntensity:1.15}},                   // wind-packed snow: a soft sheen, not white plastic
+        {re:/^m_shingle$/, set:{roughness:0.93}},
+        {re:/^m_iron$/, set:{metalness:0.7, roughness:0.5}},                            // cannon, hardware
+        {re:/^m_(canvas|sandbag)$/, set:{roughness:0.95}},
+        {re:/^m_(signs|paint)$/, set:{roughness:0.8}},
+      ],
+      // no zones: the course culls its own vegetation / building tiles by the fog distance (course code), and the
+      // troops cast shadows only in their near tier. The chapter fog below is therefore also the cull distance:
+      // it keeps the legacy chapter distances (same tiles in view as before), the haze does the aerial perspective
+      zones:[],
+      chapters:{
+        // South Carolina swamp: a humid, low golden sun through green-grey mist
+        swamp:{ fog:{near:360, far:600}, sun:{color:0xffb574, intensity:2.7}, sky:{zenith:0x4f6b86, horizon:0xdcc39a, warm:0xd9a674, ground:0x3c4a30, clouds:0.46, mie:1.3},
+          haze:{density:0.0034, falloff:0.02, color:0xa9b49c, sunColor:0xffc890}, exposure:1.02, ibl:0.72, grade:{saturation:1.0, contrast:1.05, wb:[1.01,1.0,0.95]} },
+        // Lexington & Concord, April 1775: a crisp, clear spring morning
+        lexington:{ fog:{near:810, far:1350}, sun:{color:0xfff0d8, intensity:3.7}, sky:{zenith:0x3f78c8, horizon:0xdce6ee, warm:0xe6d2b4, ground:0x5e6e40, clouds:0.3, mie:0.9},
+          haze:{density:0.0008, falloff:0.012, color:0xd6dfe4, sunColor:0xfff0d8}, exposure:1.08, ibl:0.85, grade:{saturation:1.07, contrast:1.06, wb:[1.0,1.0,0.99]} },
+        // Bunker Hill, June 1775: a hot afternoon, dust and powder smoke
+        bunker:{ fog:{near:690, far:1150}, sun:{color:0xffdfa8, intensity:3.8}, sky:{zenith:0x4a7cbe, horizon:0xeedcb6, warm:0xe8c490, ground:0x7a6c40, clouds:0.28, mie:1.1},
+          haze:{density:0.0012, falloff:0.013, color:0xe0d2b2, sunColor:0xffdcaa}, exposure:1.06, ibl:0.82, grade:{saturation:1.05, contrast:1.07, wb:[1.02,1.0,0.96]} },
+        // Crossing the Delaware, Christmas night 1776: overcast winter dusk. Grey, cold, but not blue: the white
+        // balance is pulled warm and the saturation down, so the snow reads white and the river slate-grey
+        delaware:{ fog:{near:460, far:760}, sun:{color:0xf2ebe0, intensity:1.9}, sky:{zenith:0x8a94a0, horizon:0xdcdbd6, warm:0xcfc1ae, ground:0x8e9094, clouds:0.8, mie:0.7, horizonPow:0.62},
+          haze:{density:0.0024, falloff:0.014, color:0xcfcfcb, sunColor:0xe8e2d8}, exposure:1.0, ibl:1.0, grade:{saturation:0.9, contrast:1.04, wb:[1.03,1.0,0.955], lift:[0.01,0.01,0.01]} },
+        // Trenton, the morning after: low winter sun on fresh snow, clean and bright
+        trenton:{ fog:{near:420, far:700}, sun:{color:0xffe6c8, intensity:2.8}, sky:{zenith:0x6f8fb6, horizon:0xe2e0da, warm:0xe0c8a8, ground:0x9a9ca0, clouds:0.55, mie:0.9},
+          haze:{density:0.0016, falloff:0.013, color:0xd9d7d1, sunColor:0xffe6c8}, exposure:1.0, ibl:0.95, grade:{saturation:0.95, contrast:1.05, wb:[1.025,1.0,0.96]} },
+        // Saratoga, autumn 1777: golden light in the fall woods
+        saratoga:{ fog:{near:600, far:1000}, sun:{color:0xffcc8a, intensity:3.4}, sky:{zenith:0x5579b0, horizon:0xf0cc98, warm:0xe6a868, ground:0x6e5430, clouds:0.42, mie:1.2},
+          haze:{density:0.0013, falloff:0.013, color:0xe2c69e, sunColor:0xffcc8a}, exposure:1.05, ibl:0.8, grade:{saturation:1.09, contrast:1.07, wb:[1.03,1.0,0.94]} },
+        // Yorktown, 1781: the payoff. Grand late-afternoon gold over the siege lines and the harbour
+        yorktown:{ fog:{near:780, far:1300}, sun:{color:0xffc27c, intensity:3.8}, sky:{zenith:0x4f78b4, horizon:0xf4d09a, warm:0xeeae70, ground:0x806a46, clouds:0.36, mie:1.25},
+          haze:{density:0.0012, falloff:0.012, color:0xeacfa2, sunColor:0xffcf92}, exposure:1.1, ibl:0.8, grade:{saturation:1.08, contrast:1.08, wb:[1.03,1.0,0.94]}, bloom:0.075 },
+      },
     },
   };
   const qs=(()=>{ try{ return new URLSearchParams(location.search); }catch(e){ return new URLSearchParams(''); } })();
@@ -310,7 +369,7 @@
       // --- fog: the composite haze does aerial perspective; linear fog only hides the far clip
       if(W.fog){ W.fog.color.set(L.haze.color); W.fog.near=Q.postFX?L.fog.near:L.fog.near*0.2; W.fog.far=Q.postFX?L.fog.far:L.fog.far*0.55; }   // no composite haze on the direct path: linear fog does the aerial perspective
       // --- ocean
-      W.group.traverse(o=>{ if(o.isMesh&&o.material&&o.material.uniforms&&o.material.uniforms.deep&&o.material.uniforms.shallow){ const om=GFX.sky.makeOcean(L); o.material.dispose(); o.material=om; W.updaters.push((dt,t)=>{ om.uniforms.t.value=t; }); rep.ocean=true; } });
+      if(L.ocean) W.group.traverse(o=>{ if(o.isMesh&&o.material&&o.material.uniforms&&o.material.uniforms.deep&&o.material.uniforms.shallow){ const om=GFX.sky.makeOcean(L); o.material.dispose(); o.material=om; W.updaters.push((dt,t)=>{ om.uniforms.t.value=t; }); rep.ocean=true; } });
       // --- environment materials
       const env=W.env&&W.env.root; const road=[], lines=[]; let nm=0;
       if(env){ const seen=new Set();
@@ -332,6 +391,7 @@
       if(Q.decals && env && L.walls){ const wm=GFX.decals.buildWalls(W,P,Object.assign({},L.walls,{max:Math.round((L.walls.max||120)*Math.max(0.35,Q.propDensity||1))})); if(wm){ W.group.add(wm); rep.walls=wm.userData.stats; } }
       // --- draw-call control: flat-colour material slots of one object -> one draw (?merge=0 to compare)
       if(env&&qs.get('merge')!=='0') rep.mergeFlat=GFX.lod.mergeFlat(env);
+      if(env&&L.mergeMaterials&&qs.get('merge')!=='0') rep.mergeByMaterial=GFX.lod.mergeByMaterial(env,L.mergeMaterials);
       // --- scenery zones: chunk merged meshes, distance culling, far shadows off
       if(env){ const lod=GFX.lod.manager(Q); rep.zones=lod.zoneEnvironment(env,L.zones); V2.lod=lod; W.updaters.push(()=>{ if(R.game&&R.game.camera) lod.update(R.game.camera); }); }
       // --- MSAA-friendly foliage edges
@@ -341,6 +401,8 @@
       R.cars.forEach(c=>c.model.root.traverse(o=>{ if(o.isMesh&&o.material&&o.material.map&&o.material.transparent&&/shadow/i.test(o.name||'')) o.material.opacity=0.6; }));
       // --- post look
       GFX.post.enable(Object.assign({},L,{haze:Object.assign({},L.haze,L.hazeC),sunDir:L.sunDir}));
+      // --- chapter looks (Revolution): blend the per-chapter looks with the course's own chapter system
+      if(L.chapters&&W.rev&&typeof revChapterAt==='function') rep.chapters=V2.chapterLooks(R,L,Q,r);
       if(L.grade&&typeof L.grade.lut==='string'&&Q.colorGrade) GFX.post.loadLUT(L.grade.lut).catch(e=>console.warn('[gfx v2] LUT failed',e));   // optional .cube grade per look
       // --- intentional dressing (Meshy props processed in Blender: real scale, LOD0/LOD1, KTX2 + Meshopt)
       if(env&&L.roadside&&Q.propDensity>0){ const rs=GFX.roadside.build(R,L.roadside); if(rs){ W.group.add(rs); rep.roadside=rs.userData.stats; if(V2.lod) rs.children.forEach(c=>V2.lod.register(c,{far:1500,shadowFar:160})); } }
@@ -352,6 +414,39 @@
         .catch(e=>console.warn('[gfx v2] prewarm',e)).then(()=>{ if(V2.race===R) V2.pending=null; });
       rep.ms=Math.round(performance.now()-t0); V2.report=rep; if(qs.get('gfxdebug')) console.log('[gfx v2] look applied: '+L.name,JSON.stringify(rep));
     },
+    // one derived look per chapter; per frame: find the chapter blend at the player (or the posed car in a
+    // benchmark), interpolate sun / sky / haze / grade / exposure, and switch the IBL at the blend midpoint
+    // (pre-baked PMREM per chapter: no PMREM work while racing). Runs after the course's own atmosphere updater,
+    // so it has the last word on the lights; fog stays the V2 far-clip fog.
+    chapterLooks(R,L,Q,renderer){ const W=R.W, P=R.P, C=L.chapters, ids=Object.keys(C);
+      const col=h=>new THREE.Color(h);
+      const mk=id=>{ const c=C[id]||{}; const sky=Object.assign({},L.sky,c.sky||{}), sun=Object.assign({},L.sun,c.sun||{}), hz=Object.assign({},L.haze,c.haze||{}), gr=Object.assign({},L.grade,c.grade||{});
+        return { sunC:col(sun.color), sunI:sun.intensity, zen:col(sky.zenith), hor:col(sky.horizon), warm:col(sky.warm), gnd:col(sky.ground), clouds:sky.clouds||0, mie:sky.mie||1, hpow:sky.horizonPow||0.5,
+          hd:hz.density, hf:hz.falloff, hc:col(hz.color), hs:col(hz.sunColor), exp:c.exposure||L.exposure, ibl:c.ibl!=null?c.ibl:L.ibl.intensity,
+          fn:(c.fog||L.fog).near, ff:(c.fog||L.fog).far, sat:gr.saturation, con:gr.contrast, wb:gr.wb.slice(), lift:(gr.lift||[0,0,0]).slice(), bloom:c.bloom!=null?c.bloom:L.bloom.intensity,
+          look:Object.assign({},L,{sky,sun,haze:hz,sunDir:L.sunDir}) }; };
+      const K={}; ids.forEach(id=>{ K[id]=mk(id); });
+      const envs={}; if(Q.envLighting&&R.scene.environment){ ids.forEach(id=>{ envs[id]=GFX.sky.makeIBL(renderer,K[id].look); }); if(V2.env) V2.env.dispose(); V2.env=null; V2.chEnvs=envs; }
+      const dome=W.v2Sky&&W.v2Sky.material.uniforms, PL=GFX.post.look||{}; PL.haze=Object.assign({},PL.haze); PL.grade=Object.assign({},PL.grade); PL.bloom=Object.assign({},PL.bloom);
+      const tc=new THREE.Color(); const mixC=(out,a,b,t)=>out.copy(a).lerp(b,t); const Ln=(a,b,t)=>a+(b-a)*t;
+      let idx=0, lastEnv=null; const st={chapters:ids.length, pmrem:Object.keys(envs).length};
+      const findIdx=()=>{ const G=window.GAME, Rc=G&&G.race, pl=Rc&&Rc.player; if(!pl) return idx;
+        if(Rc.state==='race'&&pl.pr&&pl.pr.i!=null&&!(GFX.bench&&GFX.bench.active)) return pl.pr.i;
+        // posed car (benchmark / intro): nearest sample, searched near the last one first
+        let best=idx, bd=1e18; const x=pl.x, z=pl.z; for(let k=0;k<P.N;k++){ const dx=P.x[k]-x, dz=P.z[k]-z, d=dx*dx+dz*dz; if(d<bd){ bd=d; best=k; } } return best; };
+      const apply=()=>{ idx=findIdx(); const {cur,nxt,t}=revChapterAt(P,idx); const A=K[cur.id]||K[ids[ids.length-1]], B=(nxt&&K[nxt.id])||A;
+        mixC(W.sun.color,A.sunC,B.sunC,t); W.sun.intensity=Ln(A.sunI,B.sunI,t);
+        if(W.hemi) W.hemi.intensity=L.hemi||0;
+        if(dome){ mixC(dome.skZen.value,A.zen,B.zen,t); mixC(dome.skHor.value,A.hor,B.hor,t); mixC(dome.skWarm.value,A.warm,B.warm,t); mixC(dome.skGround.value,A.gnd,B.gnd,t);
+          dome.skSun.value.copy(W.sun.color); dome.skClouds.value=Ln(A.clouds,B.clouds,t); dome.skMie.value=Ln(A.mie,B.mie,t); dome.skHorPow.value=Ln(A.hpow,B.hpow,t); }
+        PL.haze.density=Ln(A.hd,B.hd,t); PL.haze.falloff=Ln(A.hf,B.hf,t); if(PL.haze.color&&PL.haze.color.isColor) mixC(PL.haze.color,A.hc,B.hc,t); else PL.haze.color=mixC(new THREE.Color(),A.hc,B.hc,t);
+        if(PL.haze.sunColor&&PL.haze.sunColor.isColor) mixC(PL.haze.sunColor,A.hs,B.hs,t); else PL.haze.sunColor=mixC(new THREE.Color(),A.hs,B.hs,t);
+        PL.exposure=Ln(A.exp,B.exp,t); PL.grade.saturation=Ln(A.sat,B.sat,t); PL.grade.contrast=Ln(A.con,B.con,t); PL.grade.wb=A.wb.map((v,k)=>Ln(v,B.wb[k],t)); PL.grade.lift=A.lift.map((v,k)=>Ln(v,B.lift[k],t)); PL.bloom.intensity=Ln(A.bloom,B.bloom,t);
+        if(W.th) W.th.exposure=1;
+        if(W.fog){ const fn=Ln(A.fn,B.fn,t)*(Q.fogMul||1), ff=Ln(A.ff,B.ff,t)*(Q.fogMul||1); W.fog.color.copy(PL.haze.color); W.fog.near=Q.postFX?fn:fn*0.2; W.fog.far=Q.postFX?ff:ff*0.55; }   // also the course's tile cull distance
+        const envId=t<0.5?cur.id:(nxt?nxt.id:cur.id); if(envs[envId]&&lastEnv!==envId){ R.scene.environment=envs[envId]; lastEnv=envId; }
+        R.scene.environmentIntensity=Ln(A.ibl,B.ibl,t); V2.chapter={id:cur.id, next:nxt&&nxt.id, t:+t.toFixed(2), i:idx}; };
+      apply(); W.updaters.push(apply); return st; },
     dress(R,L,Q){ const W=R.W, P=R.P; const ray=new THREE.Raycaster(); const targets=[], rockT=[];
       W.env.root.traverse(o=>{ if(!o.isMesh) return; const nm=o.userData.chunkOf||o.name; if(/rocks|arch/.test(nm)) rockT.push(o); if(!/grass|scrub|cypress|palms|foam|crowd|horizon|rocks|joshua/.test(nm)) targets.push(o); });
       const ids=[...new Set(L.dressing.map(d=>d.asset))]; const ld=GFX.assets.configureLoader(new THREE.GLTFLoader());
@@ -369,7 +464,7 @@
             grp.add(lod); n++; if(V2.lod) V2.lod.register(lod,{far:d.far||450,radius:d.big?12:4, shadowFar:d.big?400:140}); }
           W.group.add(grp); V2.report.dressing={placed:n,lod0Tris:Math.round(tris)}; }); },
     end(R){ V2.pending=null; V2.scatter=null; if(!V2.active&&!V2.env) return; V2.active=false; V2.look=null; V2.race=null; V2.lod=null; GFX.post.disable(); GFX.compat.colorManagement(false);
-      if(V2.env){ V2.env.dispose(); V2.env=null; } const g=window.GAME; if(g&&g.renderer) g.applyQuality(); },
+      if(V2.env){ V2.env.dispose(); V2.env=null; } if(V2.chEnvs){ Object.values(V2.chEnvs).forEach(e=>e.dispose()); V2.chEnvs=null; } V2.chapter=null; const g=window.GAME; if(g&&g.renderer) g.applyQuality(); },
   };
   window.GFX=window.GFX||{}; window.GFX.v2=V2;
 })();

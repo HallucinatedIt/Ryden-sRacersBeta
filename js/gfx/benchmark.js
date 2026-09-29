@@ -59,13 +59,31 @@
       ],
       drive:{id:'boulevard_run', name:'Boulevard run (moving)', i0:20, i1:150, lat:-3, speed:36},
     },
+    // Revolution: one shot per chapter (placed relative to the chapter starts), Yorktown twice (the payoff and
+    // the stress scene: siege lines, troops, artillery, harbour, smoke), and a moving run through a chapter blend
+    revolution:{ track:'revolution', car:'gt44', title:"Y'all Fuck With Racin? (Revolution) + GT40", warm:30, frames:180,
+      shots:[
+        {id:'swamp', name:'The Swamp Fox', ch:'start', off:25, lat:-2, cam:{back:7.5,up:3,side:0,ahead:16,fov:66}, why:'humid mist, swamp water, cypress, mud road'},
+        {id:'lexington', name:'Lexington & Concord', ch:'lexington', off:45, lat:-2, cam:{back:7.5,up:3,side:0,ahead:16,fov:66}, why:'clear spring morning, village, stone walls, militia'},
+        {id:'bunker', name:'Bunker Hill', ch:'bunker', off:45, lat:-2, cam:{back:8,up:3.4,side:0,ahead:18,fov:66}, why:'redoubt, powder smoke and muzzle flashes readable against the sky'},
+        {id:'delaware', name:'Crossing the Delaware', ch:'delaware', off:35, lat:-2, cam:{back:7.5,up:3,side:0,ahead:16,fov:66}, why:'winter dusk: must read grey and cold, not blue; river ice, snow'},
+        {id:'trenton', name:'Trenton', ch:'trenton', off:45, lat:-2, cam:{back:7.5,up:3,side:0,ahead:16,fov:66}, why:'snow in low sun, town, troops'},
+        {id:'saratoga', name:'Saratoga', ch:'saratoga', off:45, lat:-2, cam:{back:7.5,up:3,side:0,ahead:16,fov:66}, why:'autumn woods, golden light'},
+        {id:'yorktown', name:'Yorktown', ch:'yorktown', off:50, lat:-2, cam:{back:8,up:3.6,side:0,ahead:20,fov:66}, why:'the payoff: siege lines, artillery, flags'},
+        {id:'yorktown_wide', name:'Yorktown wide (stress)', ch:'yorktown', off:90, lat:-2, cam:{back:14,up:9,side:-4,ahead:30,fov:70}, why:'stress scene candidate: most troops, smoke and structures in view'},
+      ],
+      drive:{id:'chapter_blend_run', name:'Bunker Hill -> Delaware blend (moving)', ch:'delaware', off0:-90, off1:30, lat:-2, speed:36},
+    },
   };
   const qs=(()=>{ try{ return new URLSearchParams(location.search); }catch(e){ return new URLSearchParams(''); } })();
   const B={ active:false, scene:null, results:null, shotsPng:{}, SCENES:BENCH_SCENES, errors:[], progress:null,
     requested(){ return BENCH_SCENES[qs.get('bench')]?qs.get('bench'):null; },
     // called from the boot code once GAME exists and the cars are loaded
     maybeStart(){ const id=B.requested(); if(!id||!window.GAME) return false; B.start(id); return true; },
-    start(id){ const S=BENCH_SCENES[id], G=window.GAME; B.active=true; B.scene=id;
+    start(id){ const S=BENCH_SCENES[id], G=window.GAME;
+      // account tracks (Revolution) are benchmarked only for a signed-in racer: wait for access, never bypass it
+      const tdef=TRACK_DATA.find(t=>t.id===S.track); if(typeof trackLocked==='function'&&trackLocked(tdef)){ if(!B._lockNote){ B._lockNote=1; console.warn('[bench] '+id+' needs a signed-in account: sign in, the benchmark starts when access is granted'); } setTimeout(()=>B.start(id),500); return; }
+      B.active=true; B.scene=id;
       G.S.device=G.S.device||'pc'; G.mode='practice'; G.gp=null;
       G.sel.track=TRACK_DATA.findIndex(t=>t.id===S.track); G.sel.vehicle=Math.max(0,VEHICLES.findIndex(v=>v.id===(qs.get('car')||S.car)));   // &car=<id>: same shots with another car (developer)
       G.startRace();
@@ -74,7 +92,12 @@
     run(S){ if(+qs.get('frames')){ S=Object.assign({},S,{frames:+qs.get('frames'),warm:Math.min(S.warm,5)}); }   // developer: quick runs
       const G=window.GAME, R=G.race, P=R.P, car=R.player, cam=G.camera; const hud=document.getElementById('hud'); if(hud) hud.style.visibility='hidden';
       G.audio&&G.audio.setMusic&&G.audio.setMusic('menu');
-      const plan=[]; S.shots.forEach(s=>plan.push({kind:'shot',s})); if(S.drive) plan.push({kind:'drive',s:S.drive});
+      // shots may be placed relative to a Revolution chapter: {ch:'delaware', off:30} -> i = chapter start + 30
+      // ('start' = the race start on the swamp drag strip: the swamp chapter's own start is the hidden connector)
+      const CH=(P.route&&P.route.chapters)||[]; const at=(ch,off)=>{ if(ch==='start'&&P.route) return (P.route.start+(off||0)+P.N)%P.N; const c=CH.find(c=>c.id===ch); return c?(c.i+(off||0)+P.N)%P.N:(off||0); };
+      const shots=S.shots.map(s=>s.ch?Object.assign({},s,{i:at(s.ch,s.off)}):s);
+      const drive=S.drive&&S.drive.ch?Object.assign({},S.drive,{i0:at(S.drive.ch,S.drive.off0),i1:at(S.drive.ch,S.drive.off1)}):S.drive;
+      const plan=[]; shots.forEach(s=>plan.push({kind:'shot',s})); if(drive) plan.push({kind:'drive',s:drive});
       const out={scene:B.scene, track:S.track, car:qs.get('car')||S.car, tier:GFX.settings.currentName(), pipeline:GFX.settings.pipeline, when:new Date().toISOString(), device:GFX.renderer.describe(), shots:[]};
       let step=0, f=0, t=0, cur=null; const origUpdate=R.update.bind(R);
       const pose=(i,lat)=>{ car.place(((i%P.N)+P.N)%P.N,lat); car.visual(1/60,t); };
@@ -97,6 +120,7 @@
         if(f>=total){ const sum=GFX.perf.summary(); if(cur.kind==='shot'){ try{ B.shotsPng[s.id]=G.renderer.domElement.toDataURL('image/jpeg',0.86); }catch(e){} } const inf=GFX.perf.lastInfo||{}; let mats=null; try{ mats=GFX.materials.stats(R.scene); }catch(e){}
           const ps=GFX.post.stats, sh=GFX.renderer.shadow||{};
           out.shots.push({id:s.id, name:s.name, kind:cur.kind, perf:sum, draws:inf.calls, tris:inf.tris, geometries:inf.geometries, textures:inf.textures, programs:inf.programs, materials:mats,
+            chapter:GFX.v2&&GFX.v2.chapter?Object.assign({},GFX.v2.chapter):undefined, i:s.i!=null?s.i:undefined,
             path:GFX.renderer.path, shadowDraws:sh.calls, shadowTris:sh.tris, sceneDraws:GFX.renderer.path==='post'?ps.sceneCalls-(sh.calls||0):(inf.calls||0)-(sh.calls||0), postPasses:GFX.renderer.path==='post'?ps.passes:0});
           step++; cur=null; } };
     },

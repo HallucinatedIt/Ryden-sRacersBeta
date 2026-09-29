@@ -45,7 +45,7 @@
           if(it.cast){ const cs=d<it.shadowFar; if(it.obj.castShadow!==cs) it.obj.castShadow=cs; if(!cs) so++; } }
         M.stats.hidden=h; M.stats.shadowOff=so; },
       // split the big merged meshes of an environment root by zone rules [{re, zone, cell, far, shadowFar}]
-      zoneEnvironment(root,rules){ const todo=[]; root.traverse(o=>{ if(!o.isMesh||!o.geometry||!o.geometry.index) return; const r=rules.find(r=>r.re.test(o.name)); if(r) todo.push([o,r]); });
+      zoneEnvironment(root,rules){ rules=rules||[]; const todo=[]; root.traverse(o=>{ if(!o.isMesh||!o.geometry||!o.geometry.index) return; const r=rules.find(r=>r.re.test(o.name)); if(r) todo.push([o,r]); });
         for(const [o,r] of todo){ o.geometry.computeBoundingSphere(); const big=o.geometry.boundingSphere.radius*o.matrixWorld.getMaxScaleOnAxis()>r.cell*0.75;
           const parts=big?chunk(o,r.cell):null; const list=parts||[o];
           if(parts){ const par=o.parent; parts.forEach(m=>par.add(m)); par.remove(o); M.stats.chunks+=parts.length; M.stats.sourceMeshes++; }
@@ -83,7 +83,40 @@
       mesh.userData=Object.assign({},list[0].userData,{mergedFlat:list.length}); par.add(mesh); list.forEach(o=>{ par.remove(o); o.geometry.dispose(); }); }
     return {meshesBefore:before, meshesAfter:after, drawsSaved:before-after}; }
 
+  // Draw-call control for textured city blocks: a neighbourhood object with 18 materials is 18 draws, and eight
+  // neighbourhoods share the same 18 materials. mergeByMaterial() combines static meshes that share one material
+  // (and shadow flags) into one mesh per material per spatial cell (cells keep frustum culling useful). Geometry
+  // is baked to the root's space and dequantized (Meshopt/quantized attributes -> Float32). Materials, UVs and
+  // vertex colours are untouched, so shading is identical; only the number of draws changes.
+  function mergeByMaterial(root,opt){ opt=opt||{}; const re=opt.re||/./, cell=opt.cell||400; root.updateMatrixWorld(true);
+    const inv=new THREE.Matrix4().copy(root.matrixWorld).invert(), M=new THREE.Matrix4(), nm=new THREE.Matrix3(), c=new THREE.Vector3(), v=new THREE.Vector3();
+    const sig=g=>Object.keys(g.attributes).sort().map(k=>k+g.attributes[k].itemSize).join(',');
+    const B=new Map(); let before=0;
+    root.traverse(o=>{ if(!o.isMesh||o.isInstancedMesh||o.isSkinnedMesh||!o.visible||Array.isArray(o.material)||!o.geometry||!o.geometry.attributes.position) return;
+      const nmN=o.name+' '+((o.parent&&o.parent.name)||''); if(!re.test(nmN)||(opt.skip&&opt.skip.test(nmN))) return; const g=o.geometry; if(g.morphAttributes&&Object.keys(g.morphAttributes).length) return;
+      if(!g.boundingSphere) g.computeBoundingSphere(); c.copy(g.boundingSphere.center).applyMatrix4(o.matrixWorld);
+      const key=[o.material.uuid,o.castShadow?1:0,o.receiveShadow?1:0,o.renderOrder,o.frustumCulled?1:0,Math.floor(c.x/cell),Math.floor(c.z/cell),sig(g)].join('|');
+      if(!B.has(key)) B.set(key,[]); B.get(key).push(o); before++; });
+    let after=0, merged=0;
+    for(const [key,list] of B){ if(list.length<2) { after++; continue; }
+      const names=Object.keys(list[0].geometry.attributes); let nv=0, ni=0; list.forEach(o=>{ const g=o.geometry; nv+=g.attributes.position.count; ni+=g.index?g.index.count:g.attributes.position.count; });
+      const out={}; names.forEach(k=>{ out[k]=new Float32Array(nv*list[0].geometry.attributes[k].itemSize); }); const I=nv>65535?new Uint32Array(ni):new Uint16Array(ni); let ov=0, oi=0;
+      list.forEach(o=>{ const g=o.geometry, n=g.attributes.position.count; M.multiplyMatrices(inv,o.matrixWorld); nm.getNormalMatrix(M);
+        names.forEach(k=>{ const a=g.attributes[k], is=a.itemSize, dst=out[k];
+          for(let i=0;i<n;i++){ const b=(ov+i)*is;
+            if(k==='position'){ v.fromBufferAttribute(a,i).applyMatrix4(M); dst[b]=v.x; dst[b+1]=v.y; dst[b+2]=v.z; }
+            else if(k==='normal'){ v.fromBufferAttribute(a,i).applyMatrix3(nm).normalize(); dst[b]=v.x; dst[b+1]=v.y; dst[b+2]=v.z; }
+            else if(k==='tangent'){ v.set(a.getX(i),a.getY(i),a.getZ(i)).transformDirection(M); dst[b]=v.x; dst[b+1]=v.y; dst[b+2]=v.z; dst[b+3]=a.getW(i); }
+            else { dst[b]=a.getX(i); if(is>1) dst[b+1]=a.getY(i); if(is>2) dst[b+2]=a.getZ(i); if(is>3) dst[b+3]=a.getW(i); } } });
+        if(g.index){ const ix=g.index; for(let i=0;i<ix.count;i++) I[oi++]=ix.getX(i)+ov; } else { for(let i=0;i<n;i++) I[oi++]=ov+i; }
+        ov+=n; });
+      const G=new THREE.BufferGeometry(); names.forEach(k=>G.setAttribute(k,new THREE.BufferAttribute(out[k],list[0].geometry.attributes[k].itemSize))); G.setIndex(new THREE.BufferAttribute(I,1)); G.computeBoundingSphere(); G.computeBoundingBox();
+      const f=list[0], m=new THREE.Mesh(G,f.material); m.name=(opt.prefix||'mm_')+((f.material&&f.material.name)||'mat')+'_'+after; m.castShadow=f.castShadow; m.receiveShadow=f.receiveShadow; m.renderOrder=f.renderOrder; m.frustumCulled=f.frustumCulled;
+      m.userData.mergedFrom=list.length; m.matrixAutoUpdate=false; root.add(m); m.updateMatrixWorld(true);
+      list.forEach(o=>{ if(o.parent) o.parent.remove(o); o.geometry.dispose(); }); after++; merged+=list.length; }
+    return {meshesBefore:before, meshesAfter:after, merged, drawsSaved:before-after}; }
+
   function makeLOD(levels,bias){ const L=new THREE.LOD(); levels.forEach(l=>L.addLevel(l.obj,(l.dist||0)*(bias||1))); L.autoUpdate=true; return L; }
 
-  window.GFX=window.GFX||{}; window.GFX.lod={chunk,manager,makeLOD,mergeFlat};
+  window.GFX=window.GFX||{}; window.GFX.lod={chunk,manager,makeLOD,mergeFlat,mergeByMaterial};
 })();
