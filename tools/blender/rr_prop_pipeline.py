@@ -118,6 +118,9 @@ def main():
         if cur > t:
             d = o.modifiers.new('dec', 'DECIMATE'); d.ratio = max(0.0005, t / cur); d.use_collapse_triangulate = True
             bpy.context.view_layer.objects.active = o; bpy.ops.object.modifier_apply(modifier='dec')
+        # NOTE: Decimate can also reach the target and still scramble a chart-soup texture (Phase 4: graffiti
+        # wall). That cannot be detected from the mesh statistics, so always check the LOD sheet
+        # (tools/blender/rr_lod_sheet.py) and re-run such an asset with --rebake always.
         if A.rebake == 'always' or (A.rebake == 'auto' and tris(o) > t * 1.3):
             nb = rebake(ob, t, A, 'lod%d' % k)
             bpy.data.objects.remove(o); nb.name = 'lod%d' % k; o = nb; rep.setdefault('rebaked', []).append(k)
