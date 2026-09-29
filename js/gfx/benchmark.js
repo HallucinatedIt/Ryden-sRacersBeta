@@ -1,7 +1,7 @@
 // Ryden's Racers · Graphics V2 · Benchmark scene
 // -----------------------------------------------------------------------------------------------
 // Fixed, repeatable scenes for judging graphics changes:  Pacifica Cliffs + the GT40, Mojave Mesa Run + the GT40.
-//   Open  index.html?bench=pacifica  or  ?bench=mojave   (add &tier=low|medium|high|ultra, &gfx=legacy|v2, &gfxdebug=1)
+//   Open  index.html?bench=pacifica  ·  ?bench=mojave  ·  ?bench=alondra   (add &tier=low|medium|high|ultra, &gfx=legacy|v2, &gfxdebug=1)
 // The GT40 is posed at five hand-picked shots on the cliff/lighthouse stretch and the beach-festival
 // finish, plus one moving "lighthouse run". No physics or AI runs (practice mode, player car only), so
 // every run renders the same frames. For each shot: warm-up, then N measured frames (FPS, frame time
@@ -43,6 +43,21 @@
           why:'dense roadside: the service station, diner, parked cars, signs (most draw calls)'},
       ],
       drive:{id:'arch_run', name:'Arch run (moving)', i0:20, i1:160, lat:-2.5, speed:36},
+    },
+    alondra:{ track:'alondra', car:'gt44', title:'Alondra Blvd + GT40', warm:30, frames:180,
+      shots:[
+        {id:'commercial_strip', name:'Commercial strip', i:60, lat:-3, cam:{back:7.2,up:2.9,side:0,ahead:5,fov:66},
+          why:'storefronts, glass, signs, sidewalks, parked cars, wall art, the boulevard asphalt'},
+        {id:'dense_intersection', name:'Dense intersection', i:106, lat:-2.5, cam:{back:9,up:3.6,side:-3,ahead:14,fov:66},
+          why:'cross street, crossing, traffic stop, poles and wires, the most buildings in view'},
+        {id:'residential_sweep', name:'Residential sweep', i:200, lat:-2, cam:{back:8,up:3.4,side:0,ahead:18,fov:66},
+          why:'houses, yards, fences, driveways, trees, utility line'},
+        {id:'police_lot', name:'Police lot', i:314, lat:3, cam:{back:11,up:5,side:-8,ahead:10,fov:62},
+          why:'BPD / Donut Patrol presence: parked cruisers, stencils'},
+        {id:'hot_block', name:'The Hot Block', i:490, lat:-2, cam:{back:8,up:3.2,side:0,ahead:20,fov:66},
+          why:'heaviest detail: murals, lit signs, tags, dense storefronts (stress scene candidate)'},
+      ],
+      drive:{id:'boulevard_run', name:'Boulevard run (moving)', i0:20, i1:150, lat:-3, speed:36},
     },
   };
   const qs=(()=>{ try{ return new URLSearchParams(location.search); }catch(e){ return new URLSearchParams(''); } })();

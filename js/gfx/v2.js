@@ -155,6 +155,44 @@
         {re:/^mz_joshua/, zone:'mid', cell:750, far:1500, shadowFar:350},
       ],
     },
+    // Alondra: a smoggy Southern California afternoon. Mid-height warm-neutral sun that throws long building
+    // shadows across the boulevard, a hazy mid-blue sky with a milky horizon, a lot of sky and concrete bounce
+    // (the street reads bright even in shade), glossy shop windows, grimy stucco. Not Mojave's hard noon, not
+    // Pacifica's golden coast.
+    alondra:{ name:'Alondra · smoggy SoCal afternoon',
+      colorManaged:true, toneMapping:'neutral', exposure:1.18,
+      sunDir:[-0.55,0.6,-0.58],
+      sun:{ color:0xfff0de, intensity:3.8, shadowBias:-0.00025, normalBias:0.03, radius:2.0 },
+      sky:{ zenith:0x3f78c2, horizon:0xd6d8d6, warm:0xd8b58e, ground:0x8e877c, mie:0.85, disk:30, sunRadiance:1.0, clouds:0.16, horizonPow:0.44, brightness:1.0 },
+      ibl:{ skyScale:1.0, intensity:0.88 },
+      hemi:0.12,
+      haze:{ density:0.0011, falloff:0.014, start:30, base:0, color:0xd3ccbe, sunColor:0xffdcae },   // smog: denser than the desert, warm grey
+      fog:{ near:600, far:2600 },
+      bloom:{ threshold:1.6, knee:0.7, intensity:0.045, radius:1.0 },
+      ao:{ radius:1.1, intensity:0.75, thickness:1.2, exponent:1.4, falloff:1.0 },   // contact under cars, kerbs and awnings, never black
+      grade:{ saturation:1.05, contrast:1.06, wb:[1.0,0.995,0.975], lift:[0.006,0.006,0.008], gain:[1,1,0.99], gamma:1.0, vignette:0.13 },
+      road:{ material:/^m_road$/, mesh:/^ab_road$/, roughness:0.9, normalScale:0.62, detailTile:1.4, rubber:0.3, dust:0x6c665e, dustAmt:0.45, macro:0.2, envMapIntensity:0.3, albedo:1.15, edgeStart:0.84 },
+      decals:{ patchEvery:85, tarEvery:48, crackEvery:30, manholeEvery:52, potholeEvery:115, oilEvery:34, gritTint:0x6e6961, dirtTint:0x5e5850 },
+      walls:{ every:12, height:[1.3,2.8], size:[1.5,3.2], reach:24, max:140 },
+      materials:[
+        {re:/^m_stucco$/, detail:'stucco', ground:0.4, set:{roughness:0.92}},
+        {re:/^m_brick$/, detail:'brick', ground:0.4, set:{roughness:0.9}},
+        {re:/^m_block$/, detail:'brick', ground:0.4, set:{roughness:0.88}},
+        {re:/^m_facade$/, detail:'storefront', ground:0.4, set:{roughness:0.6, envMapIntensity:1.35}},
+        {re:/^m_glass$/, set:{metalness:0.0, roughness:0.04, envMapIntensity:1.6}},
+        {re:/^m_concrete$/, detail:'stone'},
+        {re:/^m_metal$/, set:{metalness:0.65, roughness:0.42, envMapIntensity:1.0}},          // roll-up doors, awnings
+        {re:/^m_steel$/, set:{metalness:0.8, roughness:0.45, envMapIntensity:1.0}},
+        {re:/^m_(shingle|tar)$/, set:{roughness:0.95}},
+        {re:/^m_(signs|event|murals_a|murals_b|tags|court)$/, set:{roughness:0.8}},
+        {re:/^m_paint$/, set:{roughness:0.7}},
+        {re:/^m_(foliage|trunk)$/, set:{roughness:0.88}, color:[0.95,0.97,0.9]},             // dusty city greenery
+        {re:/^m_ground$/, detail:'ground'},
+      ],
+      dressing:[],
+      scatter:[],
+      zones:[],
+    },
   };
   const qs=(()=>{ try{ return new URLSearchParams(location.search); }catch(e){ return new URLSearchParams(''); } })();
 
@@ -179,9 +217,9 @@
     m.roughness=Math.max(m.roughness,kind==='stone'?0.85:0.92);
     const src=GFX.compat.uvMap;
     // desert kinds re-balance the whole albedo (texture x vertex colour), so they run after the vertex colours
-    const desertKind=kind==='strata'||kind==='desertRock'||kind==='sand';
+    const desertKind=kind==='strata'||kind==='desertRock'||kind==='sand'||kind==='stucco'||kind==='storefront'||kind==='brick';   // these run after the vertex colours
     m.onBeforeCompile=sh=>{ sh.vertexShader=sh.vertexShader.replace('#include <common>','#include <common>\nvarying vec3 vDW; varying vec3 vDN;').replace('#include <project_vertex>','#include <project_vertex>\nvDW=(modelMatrix*vec4(transformed,1.0)).xyz; vDN=normalize(mat3(modelMatrix)*objectNormal);');
-      sh.fragmentShader=sh.fragmentShader.replace('#include <common>','#include <common>\nvarying vec3 vDW; varying vec3 vDN; float dth(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);} float dtn(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(dth(i),dth(i+vec2(1,0)),f.x),mix(dth(i+vec2(0,1)),dth(i+vec2(1,1)),f.x),f.y);}')
+      sh.fragmentShader=sh.fragmentShader.replace('#include <common>','#include <common>\nvarying vec3 vDW; varying vec3 vDN; float sfGlass=0.; const float GR='+(m.userData.v2ground||0).toFixed(2)+'; float dth(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);} float dtn(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(dth(i),dth(i+vec2(1,0)),f.x),mix(dth(i+vec2(0,1)),dth(i+vec2(1,1)),f.x),f.y);}')
         .replace(desertKind?'#include <color_fragment>':'#include <map_fragment>',(desertKind?'#include <color_fragment>':'#include <map_fragment>')+'\n'+(
           kind==='rock'? '{ vec2 q=vDW.xz+vDW.y*vec2(0.7,-0.4); float mac=dtn(q*0.018)*0.6+dtn(q*0.07)*0.4; float strata=0.5+0.5*sin(vDW.y*1.9+dtn(vDW.xz*0.05)*5.); float up=clamp(vDN.y,0.,1.);'
              +' diffuseColor.rgb*=0.74+0.46*mac; diffuseColor.rgb*=mix(vec3(0.9,0.93,0.98),vec3(1.08,1.0,0.9),strata*0.8); diffuseColor.rgb=mix(diffuseColor.rgb,diffuseColor.rgb*vec3(0.86,0.92,0.72),smoothstep(0.7,0.95,up)*0.35); }'
@@ -191,10 +229,19 @@
              +' diffuseColor.rgb=mix(diffuseColor.rgb,diffuseColor.rgb*vec3(1.12,1.05,0.95),smoothstep(0.7,0.95,clamp(vDN.y,0.,1.))*0.5); }'   // sand-dusted tops
           : kind==='sand'? // flat ground is sand; the same material on steep faces (the mesas are part of the terrain mesh) becomes banded rock
              '{ vec3 c0=diffuseColor.rgb; float stp=smoothstep(0.32,0.62,1.-clamp(vDN.y,0.,1.)); '+STRATA+' vec3 rockC=diffuseColor.rgb; diffuseColor.rgb=c0; '+SAND+' diffuseColor.rgb=mix(diffuseColor.rgb,rockC,stp); }'
+          : kind==='stucco'? // city walls: fine grain, grime at the base, water stains streaking down from sills and roof edges
+             '{ float mac=dtn(vDW.xz*0.06+vDW.y*0.21)*0.55+dtn(vec2(vDW.x+vDW.z,vDW.y)*1.3)*0.45; diffuseColor.rgb*=0.9+0.17*mac; float vert=1.-abs(vDN.y);'
+             +' float grime=(1.-smoothstep(0.15,1.5,vDW.y-GR))*vert; diffuseColor.rgb*=1.-0.28*grime*(0.6+0.4*dtn(vDW.xz*0.8));'
+             +' float h=vDW.x*0.71+vDW.z*0.71; float streak=smoothstep(0.62,0.9,dtn(vec2(h*1.6,vDW.y*0.07)))*vert; diffuseColor.rgb*=1.-0.13*streak; }'
+          : kind==='brick'? '{ float mac=dtn(vec2(vDW.x+vDW.z,vDW.y)*0.35)*0.6+dtn(vDW.xz*0.9)*0.4; diffuseColor.rgb*=0.88+0.2*mac; float vert=1.-abs(vDN.y); diffuseColor.rgb*=1.-0.22*(1.-smoothstep(0.1,1.2,vDW.y-GR))*vert; }'
+          : kind==='storefront'? // shop fronts: the dark window areas of the facade atlas become glass (glossy, reflect the sky and the street)
+             '{ float l=dot(diffuseColor.rgb,vec3(0.3,0.59,0.11)); float mx=max(diffuseColor.r,max(diffuseColor.g,diffuseColor.b)), mn=min(diffuseColor.r,min(diffuseColor.g,diffuseColor.b));'
+             +' sfGlass=smoothstep(0.26,0.12,l)*smoothstep(0.3,0.08,mx-mn)*(1.-abs(vDN.y)); float vert=1.-abs(vDN.y); diffuseColor.rgb*=1.-0.2*(1.-smoothstep(0.1,1.0,vDW.y-GR))*vert*(1.-sfGlass); }'
           : kind==='ground'? '{ float mac=dtn(vDW.xz*0.012)*0.55+dtn(vDW.xz*0.05)*0.3+dtn(vDW.xz*0.2)*0.15; diffuseColor.rgb*=0.84+0.3*mac; float dry=dtn(vDW.xz*0.008+5.1); diffuseColor.rgb*=mix(vec3(0.96,1.02,0.94),vec3(1.06,1.0,0.9),dry); float sl=1.-clamp(vDN.y,0.,1.); diffuseColor.rgb=mix(diffuseColor.rgb,diffuseColor.rgb*vec3(0.95,0.9,0.86),smoothstep(0.25,0.6,sl)*0.5); }'
           : '{ float mac=dtn(vDW.xz*0.05+vDW.y*0.1)*0.6+dtn(vDW.xz*0.23)*0.4; diffuseColor.rgb*=0.9+0.18*mac; }'));
+      if(kind==='storefront') sh.fragmentShader=sh.fragmentShader.replace('#include <roughnessmap_fragment>','#include <roughnessmap_fragment>\nroughnessFactor=mix(roughnessFactor,0.06,sfGlass);').replace('#include <metalnessmap_fragment>','#include <metalnessmap_fragment>\nmetalnessFactor=mix(metalnessFactor,0.1,sfGlass);');
     };
-    m.customProgramCacheKey=()=>'rr_detail_'+kind; m.needsUpdate=true; }
+    m.customProgramCacheKey=()=>'rr_detail_'+kind+'_'+(m.userData.v2ground||0); m.needsUpdate=true; }
 
   const V2={
     LOOKS, active:false, look:null, race:null,
@@ -228,11 +275,12 @@
       const env=W.env&&W.env.root; const road=[], lines=[]; let nm=0;
       if(env){ const seen=new Set();
         env.traverse(o=>{ if(!o.isMesh) return; const m=o.material, n=(m&&m.name)||'';
-          if(/^m_asphalt$/.test(n)) road.push(o); else if(/^m_line_[wy]$/.test(n)) lines.push(o);
+          const RS=L.road||{}; if((RS.material||/^m_asphalt$/).test(n)&&(!RS.mesh||RS.mesh.test(o.name))) road.push(o); else if(/^m_line_[wy]$/.test(n)) lines.push(o);
           if(seen.has(m)) return; seen.add(m);
           for(const rule of L.materials){ if(!rule.re.test(n)) continue; nm++;
             if(rule.set) Object.assign(m,rule.set);
             if(rule.color&&m.color) m.color.multiply(new THREE.Color(...rule.color));
+            if(rule.ground!=null) m.userData.v2ground=rule.ground;   // street level for base grime (city kinds)
             if(rule.detail && Q.roadDetail>=1) detailMaterial(m,rule.detail);
             if(rule.physical){ const pm=new THREE.MeshPhysicalMaterial(); ['name','color','map','roughness','metalness','roughnessMap','metalnessMap','normalMap','normalScale','emissive','emissiveMap','emissiveIntensity','side','vertexColors','envMapIntensity','aoMap','alphaTest','transparent','opacity','flatShading'].forEach(k=>{ const v=m[k]; if(v!==undefined) pm[k]=(v&&v.clone&&!v.isTexture)?v.clone():v; }); Object.assign(pm,rule.physical); env.traverse(q=>{ if(q.material===m) q.material=pm; }); }
             m.needsUpdate=true; break; } }); }
@@ -240,6 +288,8 @@
       road.forEach(o=>GFX.road.upgradeAsphalt(o,W,P,A,L,Q)); lines.forEach(o=>GFX.road.upgradeLines(o,L)); rep.road=road.length;
       // --- decals on the real road surface
       if(Q.decals && road.length){ const surf=GFX.road.surface(road); const dg=GFX.decals.build(W,P,A,surf,L,R.def.id); W.group.add(dg); rep.decals=dg.userData.stats; }
+      // --- wall art (graffiti, posters, painted ads, stencils): one merged mesh on walls that face the road
+      if(Q.decals && env && L.walls){ const wm=GFX.decals.buildWalls(W,P,Object.assign({},L.walls,{max:Math.round((L.walls.max||120)*Math.max(0.35,Q.propDensity||1))})); if(wm){ W.group.add(wm); rep.walls=wm.userData.stats; } }
       // --- draw-call control: flat-colour material slots of one object -> one draw (?merge=0 to compare)
       if(env&&qs.get('merge')!=='0') rep.mergeFlat=GFX.lod.mergeFlat(env);
       // --- scenery zones: chunk merged meshes, distance culling, far shadows off
