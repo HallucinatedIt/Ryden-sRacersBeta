@@ -41,6 +41,31 @@
       slots:{ car_paint:{rough:0.45, keep:0.3, cc:0.8, ccRough:0.06} } },
     donut:{ env:0.9, normalScale:0.85, police:true,   // Donut Patrol
       slots:{ car_paint:{rough:0.45, keep:0.3, cc:0.8, ccRough:0.06} } },
+    // Phase 4: the remaining eight GLB cars, each with its own finish so they do not all read as one "car paint"
+    hellcat:{ env:0.95, normalScale:0.85,   // Colonial Hellcat: deep navy metallic, thick show-car clear coat, hot headlamps
+      // the classifier read the metallic navy as chrome (34 %) and the dark lower panels as trim (29 %): both are
+      // shaded as the same metallic paint, so the car reads as one finish (hand pass: rims -> car_wheel)
+      slots:{ car_paint:{rough:0.34, keep:0.2, metal:0.35, cc:1.0, ccRough:0.025}, car_chrome:{rough:0.32, keep:0.2, metal:0.45, cc:1.0, ccRough:0.025, tint:[1,1,1]},
+              car_trim:{rough:0.36, keep:0.2, metal:0.3, cc:0.9, ccRough:0.04}, car_lights:{emis:0.55} } },
+    leopard:{ env:0.9, normalScale:0.9,     // Black Lightning (leopard print): satin-wrap vinyl over the body
+      // black gloss upper panels were read as glass: the glass slot is softened so hood/roof do not turn into mirrors
+      slots:{ car_paint:{rough:0.5, keep:0.4, cc:0.4, ccRough:0.16}, car_glass:{rough:0.14, tint:[0.62,0.64,0.66], cc:0.7}, car_chrome:{rough:0.25, tint:[0.7,0.7,0.72]} } },
+    concord:{ env:1.05, normalScale:0.8,    // Concordance: silk-black limousine, mirror-deep clear coat, polished chrome and gold crests
+      // black paint upper body read as glass: glass keeps most of the atlas colour, so paint and glass read alike
+      slots:{ car_paint:{rough:0.28, keep:0.15, metal:0.15, cc:1.0, ccRough:0.015}, car_chrome:{rough:0.06}, car_glass:{rough:0.06, tint:[0.7,0.72,0.74]} } },
+    lightning:{ env:1.0, normalScale:0.85,  // White Lightning GT3 R: pearl white (a touch of metal flake), carbon trim, race lamps
+      // pearl white read as chrome over half the body: chrome is shaded as the same pearl paint
+      slots:{ car_paint:{rough:0.34, keep:0.2, metal:0.25, cc:1.0, ccRough:0.03}, car_chrome:{rough:0.3, keep:0.2, metal:0.3, cc:1.0, ccRough:0.03, tint:[1,1,1]},
+              car_trim:{rough:0.38, cc:0.6}, car_lights:{emis:0.6} } },
+    genlee:{ env:0.95, normalScale:0.85,    // General Lee: 1969 solid orange enamel, older and softer than a modern clear coat; chrome bumpers
+      slots:{ car_paint:{rough:0.44, keep:0.3, cc:0.7, ccRough:0.07}, car_chrome:{rough:0.1} } },
+    brcc:{ env:0.85, normalScale:0.95,      // BRCC rally hatch: black-and-gold camo wrap (matte), gold wheels
+      // black camo patches read as glass: glass softened towards the wrap
+      slots:{ car_paint:{rough:0.62, keep:0.5, cc:0.2, ccRough:0.3}, car_glass:{rough:0.2, tint:[0.66,0.66,0.66], cc:0.5}, car_wheel:{rough:0.3, metal:0.9} } },
+    fdc:{ env:0.85, normalScale:0.95,       // Firearms Direct Club pickup: sand-tan bedliner-textured paint, rough rubber and steel
+      slots:{ car_paint:{rough:0.68, keep:0.55, cc:0.12, ccRough:0.4}, car_trim:{rough:0.8, cc:0.0}, car_chrome:{rough:0.35, tint:[0.8,0.8,0.8]} } },
+    voyager:{ env:0.95, normalScale:0.8,    // Midnight Voyager (Bus V2): fleet-white coach paint, big tinted side glass, bright lamp clusters
+      slots:{ car_paint:{rough:0.38, keep:0.25, cc:0.85, ccRough:0.05}, car_glass:{tint:[0.2,0.22,0.24], rough:0.03}, car_lights:{emis:0.7} } },
   };
   // per-slot shading (rough/metal: value used; keep: how much of the atlas' own roughness survives;
   // cc: clearcoat amount; tint: albedo multiplier; emis: albedo-as-emission strength)
@@ -129,6 +154,12 @@
     PROFILES, SLOTS, SLOT_DEFAULTS, foldSlots, slotMaterial,
     profile(id){ return PROFILES[id]||PROFILES._generic; },
     // swap a car's materials to its V2 profile. car: a Car (car.def / car.model), env: PMREM texture
+    // Phase 4: the showroom (menu + car select) with the track's slot materials. OPT-IN (?showroomv2=1): the
+    // showroom is still an unmanaged legacy scene (no colour management, no post), and there the physical slot
+    // materials read darker with a pink cast from the room strips and dark rims (tested, see
+    // docs/graphics-v2/22-vehicles-phase4.md). It needs the showroom on the V2 path first (Phase 5)
+    showroom(v,model,env){ let q=''; try{ q=location.search; }catch(e){} if(GFX.settings.pipeline!=='v2'||GFX.compat.rev<160||!/[?&]showroomv2=1/.test(q)) return 0;
+      return VM.apply({v,model},env); },
     apply(car,env){ const v=car.v||car.def||{}; const id=v.id; const prof=VM.profile(id); const root=car.model&&car.model.root; if(!root) return 0; let n=0;
       const cache=new Map();
       root.traverse(o=>{ if(!o.isMesh||!o.visible||!o.material||Array.isArray(o.material)) return; const src=o.material;

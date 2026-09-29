@@ -3356,7 +3356,7 @@ class Garage{
     (m.wheels||[]).forEach(wh=>{ const p=new THREE.Vector3(); wh.parent.getWorldPosition(p); m.root.worldToLocal(p); add(0.75,0.95,p.x,p.z,1); });
     return grp; }
   buildShowcase(){
-    const v=VEHICLES[this.showIdx]; setEnvOnCarMats(this.env); const m=buildCarModel(v,this.env); m.root.traverse(o=>{ if(o.isMesh) o.castShadow=true; });
+    const v=VEHICLES[this.showIdx]; setEnvOnCarMats(this.env); const m=buildCarModel(v,this.env); m.root.traverse(o=>{ if(o.isMesh) o.castShadow=true; }); if(GFX.vehicles&&GFX.vehicles.showroom) GFX.vehicles.showroom(v,m,this.env);
     (m.steerPivots||[]).forEach(p=>p.rotation.y=-0.32);          // wheels turned toward the camera, showroom pose
     m.root.updateMatrixWorld(true); this.showModel=m;
     this.showcase.add(m.root); this.showcase.add(this.contactShadow(m)); this.showcase.rotation.y=this.showYaw;
@@ -3367,7 +3367,7 @@ class Garage{
     this.showPts=pts.length?pts:null; }
   setCar(i){ if(this.carIdx===i) return; this.carIdx=i; [this.turn,this.turnMirror].forEach(g=>g.children.slice().forEach(c=>g.remove(c)));
     const v=VEHICLES[i]; if(!window.CARS_READY && GLB_DATA[v.id] && !CAR_GLTF[v.id]){ window.CARS_WAIT.push(()=>{ if(this.carIdx===i){ this.carIdx=-1; this.setCar(i); } }); return; }
-    if(!this.models[i]){ setEnvOnCarMats(this.env); const m=buildCarModel(VEHICLES[i],this.env); m.root.traverse(o=>{ if(o.isMesh) o.castShadow=true; }); m.root.updateMatrixWorld(true); m.shadow=this.contactShadow(m); m.mirrorRoot=m.root.clone(true); this.models[i]=m; }
+    if(!this.models[i]){ setEnvOnCarMats(this.env); const m=buildCarModel(VEHICLES[i],this.env); m.root.traverse(o=>{ if(o.isMesh) o.castShadow=true; }); if(GFX.vehicles&&GFX.vehicles.showroom) GFX.vehicles.showroom(VEHICLES[i],m,this.env); m.root.updateMatrixWorld(true); m.shadow=this.contactShadow(m); m.mirrorRoot=m.root.clone(true); this.models[i]=m; }
     const m=this.models[i]; this.turn.add(m.root); this.turn.add(m.shadow); this.turnMirror.add(m.mirrorRoot); this.pop=0; this.frameKey=''; }
   // where on screen the car should sit, from the live layout of the current screen
   stageFor(scr){ const W=innerWidth,H=innerHeight, land=W/H>=1.15;
