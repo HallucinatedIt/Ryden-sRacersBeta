@@ -12,6 +12,10 @@
 //
 // Developer switches: ?gfx=legacy (Phase 1 look), ?three=r128 (the original renderer), ?post=off|noao|nobloom|nohaze|nograde
 (function(){
+  // Alondra yard spots: free ground found by probing the env (see docs/graphics-v2/19-alondra-v2.md)
+  const AB_LILY=[[141,-21],[141,-25],[144,-21],[144,-25],[144,21],[144,25],[147,-25],[147,30],[147,36],[150,-17],[162,36],[180,-36],[180,17],[198,-36],[204,-36],[207,-36],[222,-36],[228,-25],[231,-21],[231,-25],[231,-30],[234,-21],[234,-25],[234,-36],[237,-17],[237,17],[237,21],[237,25],[240,-17],[240,17],[240,25],[243,21],[246,17],[246,36],[252,-17],[252,-36],[255,-21],[258,-17],[261,-21],[261,-36],[264,-36],[267,17],[270,-36],[273,17],[273,36],[276,-17],[279,-36],[279,17],[279,36],[282,-36],[285,36],[540,-36],[543,-21],[543,-30],[543,-36],[546,-17],[546,-21],[546,-30],[549,-17],[549,-21],[549,-36],[552,-21],[555,-17],[555,-36],[555,17],[555,21],[555,25],[555,30],[558,-25],[558,-30],[558,-36],[558,21],[558,30],[561,-21],[561,-25],[561,30],[564,17],[567,-17],[567,-36],[573,-21],[573,36],[576,-30],[576,36],[579,-30],[582,-17],[582,21],[582,25],[582,36],[585,-21],[588,-21],[588,-30],[591,-21],[591,-25],[594,-21],[594,-25],[594,17],[594,36],[597,-25],[597,-36],[597,36],[600,-30],[600,-36],[603,-17],[603,-30],[603,36],[606,-17],[606,-25],[606,-36],[609,-30],[609,-36],[615,-36],[627,21],[627,25],[633,-36],[636,-17],[636,-25],[639,-36]];
+  const AB_BANANA=[[147,21],[204,-17],[207,-17],[219,17],[222,36],[228,-21],[228,-30],[234,17],[234,21],[240,30],[255,-36],[549,-30],[552,-30],[555,-30],[558,-21],[561,-36],[564,-36],[570,-36],[582,-25],[585,36],[588,36],[591,-17],[591,-30],[591,-36],[594,-36],[597,-21],[600,-21],[600,36],[612,-36],[624,-36],[630,-36],[630,25],[630,36]];
+  const jit=(L,n,r)=>{ const o=[]; L.forEach(([i,lat],k)=>{ for(let c=0;c<=n;c++){ const a=(k*7+c*13)%17/17*6.283; o.push({i,lat:lat+(c?Math.cos(a)*r:0),ds:c?Math.sin(a)*r*1.4:0,yaw:a}); } }); return o; };
   const LOOKS={
     coast:{ name:'Pacifica · golden afternoon',
       colorManaged:true, toneMapping:'neutral', exposure:1.3,
@@ -189,9 +193,44 @@
         {re:/^m_(foliage|trunk)$/, set:{roughness:0.88}, color:[0.95,0.97,0.9]},             // dusty city greenery
         {re:/^m_ground$/, detail:'ground'},
       ],
-      dressing:[],
-      scatter:[],
-      zones:[],
+      // storytelling: every group is a small scene with a reason (i = track sample, lat = metres right of the centreline)
+      dressing:[
+        // the delivery van unloading in the side lot of the liquor store south of the Hot Block
+        {asset:'mz_panel_truck', i:426, lat:24, yaw:-1.5, lods:[0,50,120], far:700},
+        // (ab_graffiti_wall was tried here: its rebaked texture reads as a dark smear at street distance, so the
+        //  graffiti comes from the wall-art decals on the real walls instead)
+      ],
+      // instanced street life (Meshy vehicles are long along X: yaw 0 = nose-in, -1.57 = along the road; the
+      // cruisers are built from the game cars, long along Z: the opposite). Nothing is on the racing surface (kerb line or beyond): decorative only, no collision
+      scatter:[
+        // BPD presence: the precinct lot on the east side (nose-in cruisers + Donut Patrol), a traffic stop in the lot by the intersection
+        {asset:'ab_police_cruiser', points:[{i:312,lat:13.5,yaw:1.2},{i:315,lat:13.5,yaw:1.2},{i:321,lat:13.6,yaw:1.25},{i:110,lat:-24,yaw:0.04}], lods:[0,45,110], far:520, shadowLevels:2},
+        {asset:'ab_donut_cruiser', points:[{i:318,lat:13.6,yaw:1.2},{i:96,lat:24,yaw:-1.5}], lods:[0,45,110], far:520, shadowLevels:2},
+        // the car that got pulled over; cars parked in lots and driveways
+        {asset:'mz_muscle_sedan', points:[{i:113,lat:-24,yaw:-1.57},{i:465,lat:-25,yaw:0.1},{i:229,lat:-22,yaw:0.05},{i:147,lat:22,yaw:3.1},{i:258,lat:-23,yaw:-0.1},{i:588,lat:-25,yaw:0.15}], lods:[0,45,110], far:480, shadowLevels:2},
+        {asset:'pc_corvette_gs', points:[{i:441,lat:21,yaw:3.05},{i:240,lat:22,yaw:3.14},{i:600,lat:-30,yaw:0.05}], lods:[0,45,110], far:480, shadowLevels:2},
+        {asset:'mz_rat_rod', points:[{i:468,lat:-21,yaw:-0.2}], lods:[0,40,100], far:420, shadowLevels:2},
+        // service alleys: dumpsters behind the shops
+        {asset:'mz_dumpster', points:[{i:96,lat:30,yaw:0.2},{i:504,lat:-25,yaw:1.57},{i:462,lat:-30,yaw:0.1},{i:144,lat:-30,yaw:1.5},{i:411,lat:21,yaw:-0.2}], far:360},
+        // sidewalk bins on the commercial strip and the Hot Block, wheelie bins out on the kerb in the residential streets
+        {asset:'pc_trash_can', points:[57,75,93,108,396,420,447,471,489].map((i,k)=>({i,lat:k%2?11.2:-11.2,yaw:0})).concat([150,174,201,222,246,270].map((i,k)=>({i,lat:k%2?-10.8:10.8,yaw:0.3}))), far:260, thin:true},
+        // ATMs at the storefronts; AC units on the flat commercial roofs (probed from above: the first flat surface is the roof)
+        {asset:'ab_atm', points:[{i:42,lat:-12.4,yaw:-1.57},{i:66,lat:12.6,yaw:1.57},{i:486,lat:-12.5,yaw:-1.57},{i:393,lat:12.6,yaw:1.57}], far:240},
+        {asset:'ab_ac_unit', points:[{i:42,lat:-22},{i:45,lat:20},{i:120,lat:20},{i:300,lat:-20},{i:318,lat:20},{i:360,lat:-19},{i:396,lat:-19},{i:486,lat:-20},{i:66,lat:-24}], probe:40, far:420, thin:true},
+        // yards: lily beds and bananas in the front gardens of the south side and around the park
+        {asset:'ab_red_lily', points:jit(AB_LILY,2,1.1), scale:[0.8,1.2], far:300, thin:true},
+        {asset:'pc_banana', points:AB_BANANA.map(([i,lat])=>({i,lat})), scale:[0.8,1.1], yawJitter:3.1, far:420, shadowLevels:1, thin:true},
+      ],
+      // the env is already split by neighbourhood (ab_n_*, ab_f_*, ab_street_*, ab_veg_*): chunking it further
+      // multiplied draws (104 meshes -> 1071 chunks, 276 -> 585 draws), so zones only cull whole neighbourhoods
+      // by distance and switch their shadows off beyond shadowFar
+      zones:[
+        {re:/^ab_(n_|f_)/, zone:'mid', cell:1e5, far:1400, shadowFar:480},
+        {re:/^ab_(street_|streets)/, zone:'near', cell:1e5, far:700, shadowFar:260},
+        {re:/^ab_(veg_near|veg_res|veg_start|veg_commercial|veg_mural|park_veg)/, zone:'near', cell:1e5, far:900, shadowFar:300},
+        {re:/^ab_veg_far/, zone:'mid', cell:1e5, far:1600, shadowFar:1},
+        {re:/^ab_(park|railyard|railcut|outskirts)/, zone:'mid', cell:1e5, far:1500, shadowFar:420},
+      ],
     },
   };
   const qs=(()=>{ try{ return new URLSearchParams(location.search); }catch(e){ return new URLSearchParams(''); } })();

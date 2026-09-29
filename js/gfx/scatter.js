@@ -31,8 +31,9 @@
 
   // [{name, dist, parts:[{geometry, material}], radius}] from a pipeline GLB scene
   function levelsOf(scene,dists){ const out=[]; const names=['lod0','lod1','lod2','lodImp'];
-    names.forEach((n,k)=>{ const node=scene.getObjectByName(n); if(!node) return; const parts=[]; node.updateMatrixWorld(true);
-      node.traverse(o=>{ if(!o.isMesh) return; const g=o.geometry.clone(); g.applyMatrix4(new THREE.Matrix4().copy(node.matrixWorld).invert().multiply(o.matrixWorld));
+    names.forEach((n,k)=>{ const node=scene.getObjectByName(n); if(!node) return; const parts=[]; scene.updateMatrixWorld(true);
+      // relative to the GLB root, not to the lod node: the pipeline puts the real-world scale (and the ground offset) on the lod node
+      node.traverse(o=>{ if(!o.isMesh) return; const g=o.geometry.clone(); g.applyMatrix4(new THREE.Matrix4().copy(scene.matrixWorld).invert().multiply(o.matrixWorld));
         let mat=o.material; if(n==='lodImp') mat=impostorMaterial(mat); else { mat=mat.clone(); mat.side=THREE.FrontSide; }
         g.computeBoundingSphere(); parts.push({geometry:g, material:mat}); });
       if(parts.length) out.push({name:n, imp:n==='lodImp', parts, radius:Math.max(...parts.map(p=>p.geometry.boundingSphere.radius+p.geometry.boundingSphere.center.length()))}); });
