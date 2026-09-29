@@ -13,6 +13,7 @@
 //                       Distances scale with settings.lodBias.
 //   register(obj,opt)   distance-based visibility and shadow casting for any object
 //   makeLOD(levels)     THREE.LOD wrapper (LOD0/LOD1/LOD2 meshes, distances x lodBias) for placed assets
+//   mergeFlat(root)     draw-call control: sibling flat-colour materials -> one vertex-coloured mesh
 //
 // Nothing here changes what is on the road: collision and gameplay never read scenery meshes.
 (function(){
@@ -53,7 +54,36 @@
     };
     return M; }
 
+  // Draw-call control: a Blender object with N flat-colour materials arrives as N meshes = N draws.
+  // mergeFlat() combines sibling meshes whose materials are plain, untextured, opaque, non-emissive
+  // MeshStandardMaterials into one mesh per (side, roughness, metalness, env intensity) bucket, with each
+  // material's colour moved into a vertex colour. Same shading, a fraction of the draws.
+  // Materials with maps, emissive, transparency/alpha test, clearcoat (Physical) or a name matching `keep`
+  // are never touched (road, lines, signs, glass, lamps...).
+  function mergeFlat(root,opt){ opt=opt||{}; const keep=opt.keep||/asphalt|line_|curb|glass|lamp|neon|sign|water|foam|ocean|checker|horizon|crowd/;
+    const flat=m=>m&&m.isMeshStandardMaterial&&!m.isMeshPhysicalMaterial&&!m.map&&!m.normalMap&&!m.roughnessMap&&!m.metalnessMap&&!m.aoMap&&!m.emissiveMap&&!m.alphaMap&&!m.transparent&&!(m.alphaTest>0)
+      &&!(m.emissive&&(m.emissive.r+m.emissive.g+m.emissive.b)*(m.emissiveIntensity==null?1:m.emissiveIntensity)>0.001)&&!m.onBeforeCompile.toString().includes('replace')&&!keep.test(m.name||'');
+    const byParent=new Map(); root.traverse(o=>{ if(!o.isMesh||o.isInstancedMesh||o.isSkinnedMesh||!o.geometry||!o.geometry.attributes.position||!flat(o.material)) return; const g=o.geometry; if(g.morphAttributes&&Object.keys(g.morphAttributes).length) return;
+      const m=o.material; const key=[m.side,(Math.round(m.roughness*10)/10),(Math.round(m.metalness*10)/10),(m.envMapIntensity==null?1:m.envMapIntensity).toFixed(2),m.flatShading?1:0,o.castShadow?1:0,o.receiveShadow?1:0,o.renderOrder].join('|');
+      const pk=o.parent; if(!byParent.has(pk)) byParent.set(pk,new Map()); const B=byParent.get(pk); if(!B.has(key)) B.set(key,[]); B.get(key).push(o); });
+    let before=0, after=0; const v=new THREE.Vector3(), n=new THREE.Vector3(), nm=new THREE.Matrix3();
+    for(const [par,B] of byParent) for(const [key,list] of B){ if(list.length<2) continue; before+=list.length; after++;
+      let nv=0, ni=0; list.forEach(o=>{ nv+=o.geometry.attributes.position.count; ni+=o.geometry.index?o.geometry.index.count:o.geometry.attributes.position.count; });
+      const P=new Float32Array(nv*3), N=new Float32Array(nv*3), C=new Float32Array(nv*3), I=new Uint32Array(ni); let ov=0, oi=0;
+      list.forEach(o=>{ const g=o.geometry, pa=g.attributes.position, na=g.attributes.normal, ca=g.attributes.color; o.updateMatrix(); const M=o.matrix; nm.getNormalMatrix(M); const col=o.material.color;
+        for(let k=0;k<pa.count;k++){ v.fromBufferAttribute(pa,k).applyMatrix4(M); P[(ov+k)*3]=v.x; P[(ov+k)*3+1]=v.y; P[(ov+k)*3+2]=v.z;
+          if(na){ n.fromBufferAttribute(na,k).applyMatrix3(nm).normalize(); N[(ov+k)*3]=n.x; N[(ov+k)*3+1]=n.y; N[(ov+k)*3+2]=n.z; }
+          const vc=(ca&&o.material.vertexColors)?[ca.getX(k),ca.getY(k),ca.getZ(k)]:[1,1,1]; C[(ov+k)*3]=col.r*vc[0]; C[(ov+k)*3+1]=col.g*vc[1]; C[(ov+k)*3+2]=col.b*vc[2]; }
+        if(g.index){ const ix=g.index.array; for(let k=0;k<ix.length;k++) I[oi+k]=ix[k]+ov; oi+=ix.length; } else { for(let k=0;k<pa.count;k++) I[oi+k]=ov+k; oi+=pa.count; }
+        ov+=pa.count; });
+      const g=new THREE.BufferGeometry(); g.setAttribute('position',new THREE.BufferAttribute(P,3)); g.setAttribute('normal',new THREE.BufferAttribute(N,3)); g.setAttribute('color',new THREE.BufferAttribute(C,3));
+      g.setIndex(new THREE.BufferAttribute(nv<65536?new Uint16Array(I):I,1)); g.computeBoundingSphere(); g.computeBoundingBox();
+      const m0=list[0].material; const mat=m0.clone(); mat.color.setRGB(1,1,1); mat.vertexColors=true; mat.name='merged_flat['+list.map(o=>o.material.name).filter((x,i,a)=>a.indexOf(x)===i).join(',').slice(0,80)+']';
+      const mesh=new THREE.Mesh(g,mat); mesh.name=list[0].name.replace(/_\d+$/,'')+'_flat'; mesh.castShadow=list[0].castShadow; mesh.receiveShadow=list[0].receiveShadow; mesh.renderOrder=list[0].renderOrder;
+      mesh.userData=Object.assign({},list[0].userData,{mergedFlat:list.length}); par.add(mesh); list.forEach(o=>{ par.remove(o); o.geometry.dispose(); }); }
+    return {meshesBefore:before, meshesAfter:after, drawsSaved:before-after}; }
+
   function makeLOD(levels,bias){ const L=new THREE.LOD(); levels.forEach(l=>L.addLevel(l.obj,(l.dist||0)*(bias||1))); L.autoUpdate=true; return L; }
 
-  window.GFX=window.GFX||{}; window.GFX.lod={chunk,manager,makeLOD};
+  window.GFX=window.GFX||{}; window.GFX.lod={chunk,manager,makeLOD,mergeFlat};
 })();

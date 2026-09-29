@@ -54,6 +54,27 @@
       RM._drsSum+=dt; RM._drsN++; if(now-RM._drsT<3000) return; const avg=RM._drsSum/RM._drsN; RM._drsSum=0; RM._drsN=0; RM._drsT=now;
       let s=RM.dynScale; if(avg>20.8&&s>0.7){ s=Math.max(0.7,+(s-0.1).toFixed(2)); RM._drsGood=0; } else if(avg<17.4){ RM._drsGood++; if(RM._drsGood>=3&&s<1){ s=Math.min(1,+(s+0.1).toFixed(2)); RM._drsGood=0; } } else RM._drsGood=0;
       if(s!==RM.dynScale){ RM.dynScale=s; RM.applySettings(Q); if(window.GAME&&GAME.resize) GAME.resize(); } },
+    // First-use hitching: a program is compiled (and a texture uploaded) the first time something is drawn,
+    // which shows up as a 30+ ms frame when a new LOD level, impostor or prop first comes into view.
+    // prewarm() does that work during the countdown instead:
+    //   1. compileAsync (KHR_parallel_shader_compile where available) for every material in the scene,
+    //      including LOD levels / instanced levels that are hidden right now,
+    //   2. one full frame, scissored to 1 pixel and with frustum culling off: compiles the shadow-depth and
+    //      post-processing programs and uploads every texture, without anything visible on screen.
+    // Returns a promise with the time it took (ms). ?prewarm=0 turns it off (A/B the hitch).
+    prewarm(scene,camera,exposure,opt){ const r=RM.r; let q=''; try{ q=location.search; }catch(e){} opt=opt||{};
+      if(!r||!scene||!camera||/[?&]prewarm=0/.test(q)) return Promise.resolve(null); const t0=performance.now();
+      const reveal=()=>{ const undo=[]; scene.traverse(o=>{
+          if(!o.visible&&o.parent&&(o.parent.isLOD||/^v2_(scatter|dressing)/.test(o.parent.name))){ o.visible=true; undo.push(()=>{ o.visible=false; }); }
+          if(o.isInstancedMesh&&o.count===0){ o.count=1; undo.push(()=>{ o.count=0; }); }
+          if(o.isMesh&&o.frustumCulled){ o.frustumCulled=false; undo.push(()=>{ o.frustumCulled=true; }); } });
+        return ()=>undo.forEach(f=>f()); };
+      let undo=reveal(); let p; try{ p=r.compileAsync?r.compileAsync(scene,camera):Promise.resolve(r.compile(scene,camera)); } finally { undo(); }   // compile() gathers synchronously: restore at once
+      return p.catch(()=>null).then(()=>{ const t1=performance.now(); if(opt.canBlock&&!opt.canBlock()){ RM.prewarmStats={compileMs:Math.round(t1-t0),frameMs:0,skippedFrame:true}; return RM.prewarmStats; }   // racing already: no blocking frame
+        const u=reveal();
+        try{ r.setScissorTest(true); r.setScissor(0,0,1,1); RM.render(scene,camera,exposure,'prewarm'); } finally { r.setScissorTest(false); u(); }
+        RM.prewarmStats={compileMs:Math.round(t1-t0), frameMs:Math.round(performance.now()-t1), programs:r.info.programs?r.info.programs.length:null};
+        return RM.prewarmStats; }); },
     onBeforeRender(f){ RM.hooks.before.push(f); }, onAfterRender(f){ RM.hooks.after.push(f); },
     maxAnisotropy(){ return RM.r?RM.r.capabilities.getMaxAnisotropy():8; },
     // capability report for the debug overlay / benchmark results

@@ -10,7 +10,8 @@
   const N=240;                       // rolling window (~4 s at 60 fps)
   const PM={
     dt:new Float32Array(N), cpu:new Float32Array(N), k:0, n:0, last:0, el:null, visible:false, statsT:0, lastStats:null, lastInfo:null,
-    sample(scene,camera,tag,cpuMs){ const now=performance.now(); if(PM.last){ const d=now-PM.last; if(d<1000){ PM.dt[PM.k]=d; PM.cpu[PM.k]=cpuMs; PM.k=(PM.k+1)%N; PM.n=Math.min(N,PM.n+1); } } PM.last=now;
+    sample(scene,camera,tag,cpuMs){ if(tag==='prewarm'){ PM.last=0; return; }   // the 1-pixel prewarm frame is not a game frame
+      const now=performance.now(); if(PM.last){ const d=now-PM.last; if(d<1000){ PM.dt[PM.k]=d; PM.cpu[PM.k]=cpuMs; PM.k=(PM.k+1)%N; PM.n=Math.min(N,PM.n+1); } } PM.last=now;
       const r=GFX.renderer.r; if(r){ const i=r.info; PM.lastInfo={calls:i.render.calls,tris:i.render.triangles,points:i.render.points,lines:i.render.lines,geometries:i.memory.geometries,textures:i.memory.textures,programs:(i.programs||[]).length,tag}; }
       if(PM.visible){ PM.statsT-=1; if(PM.statsT<=0){ PM.statsT=120; try{ PM.lastStats=GFX.materials.stats(scene); }catch(e){} } PM.draw(); } },
     // summary over the window: fps avg, ms avg / p95 / worst, 1% low fps, cpu submit ms

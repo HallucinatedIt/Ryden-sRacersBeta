@@ -52,7 +52,7 @@
     maybeStart(){ const id=B.requested(); if(!id||!window.GAME) return false; B.start(id); return true; },
     start(id){ const S=BENCH_SCENES[id], G=window.GAME; B.active=true; B.scene=id;
       G.S.device=G.S.device||'pc'; G.mode='practice'; G.gp=null;
-      G.sel.track=TRACK_DATA.findIndex(t=>t.id===S.track); G.sel.vehicle=VEHICLES.findIndex(v=>v.id===S.car);
+      G.sel.track=TRACK_DATA.findIndex(t=>t.id===S.track); G.sel.vehicle=Math.max(0,VEHICLES.findIndex(v=>v.id===(qs.get('car')||S.car)));   // &car=<id>: same shots with another car (developer)
       G.startRace();
       const wait=()=>{ if(G.race&&G.race.W&&G.screen==='race'&&!(GFX.v2&&GFX.v2.pending)){ B.run(S); } else setTimeout(wait,200); }; wait(); },   // V2 dressing loads async
     // take over the race frame: animate the world, pose the car, drive the camera, measure
@@ -60,7 +60,7 @@
       const G=window.GAME, R=G.race, P=R.P, car=R.player, cam=G.camera; const hud=document.getElementById('hud'); if(hud) hud.style.visibility='hidden';
       G.audio&&G.audio.setMusic&&G.audio.setMusic('menu');
       const plan=[]; S.shots.forEach(s=>plan.push({kind:'shot',s})); if(S.drive) plan.push({kind:'drive',s:S.drive});
-      const out={scene:B.scene, track:S.track, car:S.car, tier:GFX.settings.currentName(), pipeline:GFX.settings.pipeline, when:new Date().toISOString(), device:GFX.renderer.describe(), shots:[]};
+      const out={scene:B.scene, track:S.track, car:qs.get('car')||S.car, tier:GFX.settings.currentName(), pipeline:GFX.settings.pipeline, when:new Date().toISOString(), device:GFX.renderer.describe(), shots:[]};
       let step=0, f=0, t=0, cur=null; const origUpdate=R.update.bind(R);
       const pose=(i,lat)=>{ car.place(((i%P.N)+P.N)%P.N,lat); car.visual(1/60,t); };
       const aim=(i,lat,c)=>{ i=((Math.round(i)%P.N)+P.N)%P.N; const fx=P.tx[i], fz=P.tz[i], rx=P.rx[i], rz=P.rz[i]; const cx=car.x, cz=car.z, cy=car.y;
@@ -76,9 +76,10 @@
         R.W.update(dt,R.time); R.fx.sparks.update(dt); R.fx.dust.update(dt);
         if(f===S.warm) GFX.perf.reset();
         GFX.renderer.render(R.scene,G.camera,R.W.th.exposure,'bench');
-        if(f===S.warm+Math.floor(S.frames/2) && cur.kind==='shot'){ try{ B.shotsPng[s.id]=G.renderer.domElement.toDataURL('image/jpeg',0.86); }catch(e){} }
         f++;
-        if(f>=total){ const sum=GFX.perf.summary(); const inf=GFX.perf.lastInfo||{}; let mats=null; try{ mats=GFX.materials.stats(R.scene); }catch(e){}
+        // the screenshot is taken AFTER the measured frames: reading the canvas back costs 15-20 ms and used to
+        // land inside the measurement (the ~35 ms 'worst frame' of every static shot in the Phase 2 results)
+        if(f>=total){ const sum=GFX.perf.summary(); if(cur.kind==='shot'){ try{ B.shotsPng[s.id]=G.renderer.domElement.toDataURL('image/jpeg',0.86); }catch(e){} } const inf=GFX.perf.lastInfo||{}; let mats=null; try{ mats=GFX.materials.stats(R.scene); }catch(e){}
           const ps=GFX.post.stats, sh=GFX.renderer.shadow||{};
           out.shots.push({id:s.id, name:s.name, kind:cur.kind, perf:sum, draws:inf.calls, tris:inf.tris, geometries:inf.geometries, textures:inf.textures, programs:inf.programs, materials:mats,
             path:GFX.renderer.path, shadowDraws:sh.calls, shadowTris:sh.tris, sceneDraws:GFX.renderer.path==='post'?ps.sceneCalls-(sh.calls||0):(inf.calls||0)-(sh.calls||0), postPasses:GFX.renderer.path==='post'?ps.passes:0});
