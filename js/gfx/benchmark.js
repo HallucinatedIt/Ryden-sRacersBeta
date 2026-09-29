@@ -1,7 +1,7 @@
 // Ryden's Racers · Graphics V2 · Benchmark scene
 // -----------------------------------------------------------------------------------------------
-// A fixed, repeatable scene for judging graphics changes:  Pacifica Cliffs + the GT40.
-//   Open  index.html?bench=pacifica            (add &tier=low|medium|high|ultra, &gfx=legacy|v2, &gfxdebug=1)
+// Fixed, repeatable scenes for judging graphics changes:  Pacifica Cliffs + the GT40, Mojave Mesa Run + the GT40.
+//   Open  index.html?bench=pacifica  or  ?bench=mojave   (add &tier=low|medium|high|ultra, &gfx=legacy|v2, &gfxdebug=1)
 // The GT40 is posed at five hand-picked shots on the cliff/lighthouse stretch and the beach-festival
 // finish, plus one moving "lighthouse run". No physics or AI runs (practice mode, player car only), so
 // every run renders the same frames. For each shot: warm-up, then N measured frames (FPS, frame time
@@ -12,7 +12,7 @@
 // Shots are plain data (BENCH_SCENES): add a scene for another track the same way.
 (function(){
   const BENCH_SCENES={
-    pacifica:{ track:'coast', car:'gt44', warm:30, frames:180,
+    pacifica:{ track:'coast', car:'gt44', title:'Pacifica + GT40', warm:30, frames:180,
       // i = track sample (2 m each), lat = car lateral offset (m, + = right of travel).
       // cam: back/up/side are metres relative to the car (side + = right), ahead = look-at point ahead of the car.
       shots:[
@@ -28,6 +28,21 @@
           why:'architecture, gantry, crowd, palms, billboards, low sun (most draw calls)'},
       ],
       drive:{id:'lighthouse_run', name:'Lighthouse run (moving)', i0:280, i1:400, lat:-2.5, speed:36},
+    },
+    mojave:{ track:'mesa', car:'gt44', title:'Mojave Mesa Run + GT40', warm:30, frames:180,
+      shots:[
+        {id:'open_desert', name:'Open desert straight', i:60, lat:-2.5, cam:{back:7.2,up:2.9,side:0,ahead:5,fov:66},
+          why:'sun-bleached asphalt, faded yellow lines, sand shoulders, mesas and dust haze at distance'},
+        {id:'rock_arch', name:'Rock arch approach', i:112, lat:2, cam:{back:7.2,up:2.9,side:0,ahead:5,fov:66},
+          why:'rock/strata material close up, arch shadow, detail on the road edge'},
+        {id:'mesa_vista', name:'Mesa-top vista, elevated', i:470, lat:-2, cam:{back:16,up:10,side:-10,ahead:30,fov:58},
+          why:'large vista: terrain, mesas, the valley floor, haze and sky gradient'},
+        {id:'mine_camp', name:'Mine camp', i:612, lat:-2, cam:{back:8,up:3.2,side:0,ahead:22,fov:66},
+          why:'detailed area: mine head frame, sheds, equipment, abandoned vehicles'},
+        {id:'gas_diner', name:'Gas & diner stop', i:912, lat:2.5, cam:{back:11,up:4.2,side:-7,ahead:10,fov:66},
+          why:'dense roadside: the service station, diner, parked cars, signs (most draw calls)'},
+      ],
+      drive:{id:'arch_run', name:'Arch run (moving)', i0:20, i1:160, lat:-2.5, speed:36},
     },
   };
   const qs=(()=>{ try{ return new URLSearchParams(location.search); }catch(e){ return new URLSearchParams(''); } })();
@@ -85,7 +100,7 @@
     panel(out){ const prev=B.previous(out); const el=document.createElement('div'); el.id='gfxBench';
       el.style.cssText='position:fixed;right:10px;top:10px;z-index:100;max-height:92vh;overflow:auto;background:rgba(6,10,20,.9);color:#e6f6ff;font:12px/1.4 ui-monospace,Menlo,Consolas,monospace;border:1px solid rgba(120,220,255,.4);border-radius:8px;padding:10px 12px;max-width:min(560px,94vw)';
       const row=(a,b,c)=>`<tr><td style="padding:2px 8px 2px 0">${a}</td><td style="padding:2px 8px">${b}</td><td style="padding:2px 0;color:#9fb8c8">${c||''}</td></tr>`;
-      let h=`<b>BENCHMARK · Pacifica + GT40</b><br>${out.tier} · pipeline <b>${out.pipeline}</b> · ${out.device.backend} ${out.device.three} · ${out.device.drawingBuffer.join('×')} @${out.device.pixelRatio}x<br><span style="color:#9fb8c8">${String(out.device.gpu).slice(0,70)}</span><table style="margin-top:6px;border-collapse:collapse">`;
+      let h=`<b>BENCHMARK · ${(BENCH_SCENES[out.scene]&&BENCH_SCENES[out.scene].title)||'Pacifica + GT40'}</b><br>${out.tier} · pipeline <b>${out.pipeline}</b> · ${out.device.backend} ${out.device.three} · ${out.device.drawingBuffer.join('×')} @${out.device.pixelRatio}x<br><span style="color:#9fb8c8">${String(out.device.gpu).slice(0,70)}</span><table style="margin-top:6px;border-collapse:collapse">`;
       h+=row('shot','fps · p95 ms · draws · tris',prev?('vs '+prev.pipeline):'');
       out.shots.forEach(s=>{ const p=prev&&prev.shots.find(q=>q.id===s.id); h+=row(s.name, `${s.perf?s.perf.fps:'-'} · ${s.perf?s.perf.p95:'-'} · ${s.draws} · ${((s.tris||0)/1000).toFixed(0)}k`, p&&p.perf?`${p.perf.fps} · ${p.perf.p95} · ${p.draws} · ${((p.tris||0)/1000).toFixed(0)}k`:''); });
       h+='</table><div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">';

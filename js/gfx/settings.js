@@ -37,7 +37,7 @@
       textureMax:2048, anisotropy:8, localLights:4, decals:true,
       v2:{ pr:1, shadows:true, shadowSize:2048, shadowDistance:55, postFX:true, msaa:4, bloom:true, ssao:true, ssaoSamples:8, colorGrade:true,
            envLighting:true, decals:true, roadDetail:2, shadowCasters:'near', anisotropy:8, lodBias:0.85, dynamicRes:true, sharpen:0 },
-      v2mobile:{ msaa:2, ssao:false, shadowSize:1024, shadowDistance:45 },   // phones/tablets: no GTAO, lighter MSAA and shadows
+      v2mobile:{ msaa:2, ssao:false, shadowSize:1024, shadowDistance:45, vegDensity:0.55 },   // phones/tablets: no GTAO, lighter MSAA and shadows, ~2/3 of the plants
     },
     high:{
       pr:2, shadows:true, shadowSize:2048, terrainCell:5, density:1, fogMul:1.15,
@@ -48,7 +48,7 @@
       textureMax:4096, anisotropy:8, localLights:8, decals:true,
       v2:{ pr:1.5, shadows:true, shadowSize:2048, shadowDistance:70, postFX:true, msaa:4, bloom:true, ssao:true, ssaoSamples:12, colorGrade:true,
            envLighting:true, decals:true, roadDetail:2, shadowCasters:'near', anisotropy:16, lodBias:1, dynamicRes:false, sharpen:0 },
-      v2mobile:{ pr:1.25, msaa:2, ssaoSamples:8, dynamicRes:true },
+      v2mobile:{ pr:1.25, msaa:2, ssaoSamples:8, dynamicRes:true, vegDensity:0.75 },
     },
     ultra:{   // developer-only in Phase 1: identical to High for the legacy fields
       pr:2, shadows:true, shadowSize:2048, terrainCell:5, density:1, fogMul:1.15,
