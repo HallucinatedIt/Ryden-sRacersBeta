@@ -1,0 +1,82 @@
+{
+ "scene": "mojave",
+ "tier": "high",
+ "pipeline": "v2",
+ "commit": "5cebd51",
+ "note": "container (SwiftShader software GPU): counters are valid, frame times are NOT",
+ "device": {
+  "db": [
+   960,
+   540
+  ],
+  "mobileVariant": false
+ },
+ "shots": [
+  {
+   "id": "open_desert",
+   "draws": 167,
+   "scene": 103,
+   "shadow": 52,
+   "post": 12,
+   "tris": 490336,
+   "shTris": 136087,
+   "texMB": 137,
+   "programs": 97
+  },
+  {
+   "id": "rock_arch",
+   "draws": 123,
+   "scene": 79,
+   "shadow": 32,
+   "post": 12,
+   "tris": 469984,
+   "shTris": 142547,
+   "texMB": 137,
+   "programs": 97
+  },
+  {
+   "id": "mesa_vista",
+   "draws": 86,
+   "scene": 54,
+   "shadow": 20,
+   "post": 12,
+   "tris": 349849,
+   "shTris": 96430,
+   "texMB": 137,
+   "programs": 97
+  },
+  {
+   "id": "mine_camp",
+   "draws": 203,
+   "scene": 158,
+   "shadow": 33,
+   "post": 12,
+   "tris": 451992,
+   "shTris": 105011,
+   "texMB": 137,
+   "programs": 97
+  },
+  {
+   "id": "gas_diner",
+   "draws": 125,
+   "scene": 70,
+   "shadow": 43,
+   "post": 12,
+   "tris": 350689,
+   "shTris": 124455,
+   "texMB": 137,
+   "programs": 97
+  },
+  {
+   "id": "arch_run",
+   "draws": 118,
+   "scene": 73,
+   "shadow": 33,
+   "post": 12,
+   "tris": 455830,
+   "shTris": 139069,
+   "texMB": 137,
+   "programs": 97
+  }
+ ]
+}

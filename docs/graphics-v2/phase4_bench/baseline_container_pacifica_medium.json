@@ -1,0 +1,82 @@
+{
+ "scene": "pacifica",
+ "tier": "medium",
+ "pipeline": "v2",
+ "commit": "5cebd51",
+ "note": "container (SwiftShader software GPU): counters are valid, frame times are NOT",
+ "device": {
+  "db": [
+   960,
+   540
+  ],
+  "mobileVariant": false
+ },
+ "shots": [
+  {
+   "id": "cliff_lighthouse",
+   "draws": 92,
+   "scene": 59,
+   "shadow": 21,
+   "post": 12,
+   "tris": 346050,
+   "shTris": 82842,
+   "texMB": 74.6,
+   "programs": 97
+  },
+  {
+   "id": "lighthouse_wide",
+   "draws": 92,
+   "scene": 59,
+   "shadow": 21,
+   "post": 12,
+   "tris": 345282,
+   "shTris": 82842,
+   "texMB": 74.6,
+   "programs": 97
+  },
+  {
+   "id": "tunnel_mouth",
+   "draws": 110,
+   "scene": 80,
+   "shadow": 18,
+   "post": 12,
+   "tris": 375483,
+   "shTris": 91490,
+   "texMB": 74.6,
+   "programs": 97
+  },
+  {
+   "id": "ocean_low",
+   "draws": 107,
+   "scene": 62,
+   "shadow": 33,
+   "post": 12,
+   "tris": 380669,
+   "shTris": 114749,
+   "texMB": 74.6,
+   "programs": 97
+  },
+  {
+   "id": "festival_finish",
+   "draws": 220,
+   "scene": 158,
+   "shadow": 50,
+   "post": 12,
+   "tris": 484669,
+   "shTris": 142713,
+   "texMB": 74.6,
+   "programs": 97
+  },
+  {
+   "id": "lighthouse_run",
+   "draws": 90,
+   "scene": 53,
+   "shadow": 25,
+   "post": 12,
+   "tris": 360803,
+   "shTris": 89080,
+   "texMB": 74.6,
+   "programs": 97
+  }
+ ]
+}
