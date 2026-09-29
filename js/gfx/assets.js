@@ -20,7 +20,8 @@
     byCategory(c){ return AM.all().filter(a=>a.category===c); },
     // --- optimized browser variants (Graphics V2): KTX2/Basis textures + Meshopt geometry ---
     // Built by tools/optimize_env.sh; the originals stay untouched and are what ?gfx=legacy / r128 load.
-    VARIANTS:{ env_coast:{ v2:'models/env/env_coast.v2.glb?v=1', track:'coast', needs:['ktx2','meshopt'] } },
+    VARIANTS:{ env_coast:{ v2:'models/env/env_coast.v2.glb?v=1', track:'coast', needs:['ktx2','meshopt'] },
+               env_mesa:{ v2:'models/env/env_mesa.v2.glb?v=1', track:'mesa', needs:['ktx2','meshopt'] } },
     useVariant(id){ const v=AM.VARIANTS[id]; if(!v) return false; let q=''; try{ q=location.search; }catch(e){}
       return GFX.settings.pipeline==='v2' && GFX.compat.rev>=160 && !/[?&]origassets/.test(q) && !!(GFX.v2&&GFX.v2.LOOKS[v.track]); },
     src(id,url){ return AM.useVariant(id)?AM.VARIANTS[id].v2:url; },

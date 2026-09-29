@@ -6,7 +6,9 @@
 //   - macro variation: low-frequency colour/roughness drift in world space, so the road never tiles,
 //   - rubber: two darker, smoother tyre lanes that follow the AI racing line (A.line) through every corner,
 //   - edge wear: dust and grit towards the road edges, rougher and lighter,
-//   - worn paint on the lane lines.
+//   - worn paint on the lane lines,
+//   - per look (all off by default): sun bleach (oxidised, grey binder), wind-blown sand drifts from the
+//     edges and across the lanes, the edge-wear start, sun-faded line pigment (L.lines.fade / wear).
 // Everything is per-vertex data (lateral position, racing-line offset) plus a few texture taps, so the cost
 // is flat. A surface sampler (GFX.road.surface) lets decals sit exactly on the road mesh.
 (function(){
@@ -70,34 +72,42 @@
       if(Q.roadDetail>=1){ m.normalMap=nm; m.normalScale=new THREE.Vector2(R.normalScale||0.55,R.normalScale||0.55); m.roughnessMap=rm; }
       m.roughness=R.roughness||0.92; m.metalness=0; m.envMapIntensity=R.envMapIntensity!=null?R.envMapIntensity:0.9;
       if(m.map){ m.map.anisotropy=Math.min(16,GFX.renderer.maxAnisotropy()); }
-      const U={rdRubber:{value:R.rubber!=null?R.rubber:0.22},rdDust:{value:new THREE.Color(R.dust||0x9a8a72)},rdDustAmt:{value:R.dustAmt!=null?R.dustAmt:0.35},rdMacro:{value:R.macro!=null?R.macro:0.12}};
+      const U={rdRubber:{value:R.rubber!=null?R.rubber:0.22},rdDust:{value:new THREE.Color(R.dust||0x9a8a72)},rdDustAmt:{value:R.dustAmt!=null?R.dustAmt:0.35},rdMacro:{value:R.macro!=null?R.macro:0.12},
+        rdBleach:{value:R.bleach||0},rdBleachCol:{value:new THREE.Color(R.bleachColor||0x8e8a84)},rdDrift:{value:R.drift||0},rdEdge0:{value:R.edgeStart!=null?R.edgeStart:0.78},rdAlb:{value:R.albedo!=null?R.albedo:1.3}};
       m.onBeforeCompile=sh=>{ Object.assign(sh.uniforms,U);
         sh.vertexShader=sh.vertexShader.replace('#include <common>','#include <common>\nattribute vec3 aRoad; varying vec3 vRoad; varying vec3 vRW;')
           .replace('#include <project_vertex>','#include <project_vertex>\nvRoad=aRoad; vRW=(modelMatrix*vec4(transformed,1.0)).xyz;');
         sh.fragmentShader=sh.fragmentShader.replace('#include <common>',`#include <common>
-          varying vec3 vRoad; varying vec3 vRW; uniform float rdRubber,rdDustAmt,rdMacro; uniform vec3 rdDust;
+          varying vec3 vRoad; varying vec3 vRW; uniform float rdRubber,rdDustAmt,rdMacro,rdBleach,rdDrift,rdEdge0,rdAlb; uniform vec3 rdDust,rdBleachCol;
           float rdh(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
           float rdn(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(rdh(i),rdh(i+vec2(1,0)),f.x),mix(rdh(i+vec2(0,1)),rdh(i+vec2(1,1)),f.x),f.y);}
           float rdRub, rdEdge;`)
           .replace('#include <map_fragment>',`#include <map_fragment>
           { float lat=vRoad.x, line=vRoad.y, hw=max(vRoad.z,1.);
             float mac=rdn(vRW.xz*0.021)*0.6+rdn(vRW.xz*0.083)*0.4;                 // macro drift, 12 m and 50 m scales
-            diffuseColor.rgb*=(1.0+rdMacro*(mac-0.5)*2.0)*1.3;                    // albedo lift: the legacy asphalt texture was authored dark for the old lighting
+            diffuseColor.rgb*=(1.0+rdMacro*(mac-0.5)*2.0)*rdAlb;                  // albedo lift: the legacy asphalt texture was authored dark for the old lighting
+            if(rdBleach>0.){ float l=dot(diffuseColor.rgb,vec3(0.299,0.587,0.114));  // sun-bleached binder: greyer, lighter, oxidised; fresher (darker) in the shaded lanes
+              float fresh=rdn(vRW.xz*0.011+9.3); diffuseColor.rgb=mix(diffuseColor.rgb,rdBleachCol*(0.75+0.5*l/0.25),rdBleach*(0.65+0.35*fresh)); }
             diffuseColor.rgb*=mix(vec3(1.0),vec3(1.03,1.0,0.96),rdn(vRW.xz*0.006+3.7)); // warm/cool patches
             float dl=abs(lat-line); float lane=exp(-pow((dl-0.78)/0.42,2.0));          // two tyre lanes on the racing line
             float brk=0.6+0.4*rdn(vRW.xz*0.35); rdRub=lane*brk;
             diffuseColor.rgb*=1.0-rdRubber*rdRub;
-            float e=clamp(abs(lat)/hw,0.,1.2); rdEdge=smoothstep(0.78,1.02,e)*(0.55+0.45*rdn(vRW.xz*0.6));
+            float e=clamp(abs(lat)/hw,0.,1.2); rdEdge=smoothstep(rdEdge0,1.02,e)*(0.55+0.45*rdn(vRW.xz*0.6));
+            if(rdDrift>0.){                                                         // wind-blown sand: tongues from the edges, thin veils across the lanes
+              float tongue=rdn(vec2(vRW.x*0.09+vRW.z*0.05,vRW.z*0.09-vRW.x*0.05)); float reach=smoothstep(0.55,0.9,tongue);
+              float fromEdge=smoothstep(1.0-0.75*reach,1.02,e); float veil=smoothstep(0.62,0.92,rdn(vRW.xz*0.045+2.1))*smoothstep(0.35,0.75,rdn(vRW.xz*1.7));
+              rdEdge=max(rdEdge,rdDrift*max(fromEdge*(0.6+0.4*rdn(vRW.xz*2.3)),veil*0.28)); }
             diffuseColor.rgb=mix(diffuseColor.rgb,rdDust,rdDustAmt*rdEdge); }`)
           .replace('#include <roughnessmap_fragment>',`#include <roughnessmap_fragment>
           roughnessFactor=clamp(roughnessFactor*(1.0-0.28*rdRub)+0.08*rdEdge,0.25,1.0);`); };
       m.customProgramCacheKey=()=>'rr_asphalt_v2'; m.needsUpdate=true; return m; },
     // lane lines: worn paint, smoother than asphalt
-    upgradeLines(o,L){ const m=o.material.clone(); o.material=m; m.roughness=0.62; m.envMapIntensity=0.8;
+    upgradeLines(o,L){ const m=o.material.clone(); o.material=m; m.roughness=0.62; m.envMapIntensity=0.8; const LN=L.lines||{};
+      const wear=(LN.wear!=null?LN.wear:0.55).toFixed(3), fade=(LN.fade||0).toFixed(3);   // wear: road showing through; fade: sun-bleached pigment (towards chalky white)
       m.onBeforeCompile=sh=>{ sh.vertexShader=sh.vertexShader.replace('#include <common>','#include <common>\nvarying vec3 vRW;').replace('#include <project_vertex>','#include <project_vertex>\nvRW=(modelMatrix*vec4(transformed,1.0)).xyz;');
         sh.fragmentShader=sh.fragmentShader.replace('#include <common>','#include <common>\nvarying vec3 vRW; float lnh(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);} float lnn(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(lnh(i),lnh(i+vec2(1,0)),f.x),mix(lnh(i+vec2(0,1)),lnh(i+vec2(1,1)),f.x),f.y);}')
-          .replace('#include <map_fragment>','#include <map_fragment>\n{ float w=lnn(vRW.xz*0.9)*0.6+lnn(vRW.xz*4.1)*0.4; float worn=smoothstep(0.45,0.85,w); diffuseColor.rgb=mix(diffuseColor.rgb,vec3(0.085,0.085,0.09),worn*0.55); }'); };
-      m.customProgramCacheKey=()=>'rr_lines_v2'; m.needsUpdate=true; return m; },
+          .replace('#include <map_fragment>','#include <map_fragment>\n{ float w=lnn(vRW.xz*0.9)*0.6+lnn(vRW.xz*4.1)*0.4; float worn=smoothstep(0.45,0.85,w); diffuseColor.rgb=mix(diffuseColor.rgb,vec3(dot(diffuseColor.rgb,vec3(0.33)))*vec3(1.02,1.0,0.94),'+fade+'); diffuseColor.rgb=mix(diffuseColor.rgb,vec3(0.085,0.085,0.09),worn*'+wear+'); }'); };
+      m.customProgramCacheKey=()=>'rr_lines_v2_'+wear+'_'+fade; m.needsUpdate=true; return m; },
   };
   window.GFX=window.GFX||{}; window.GFX.road=RD;
 })();

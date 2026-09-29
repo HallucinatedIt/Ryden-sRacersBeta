@@ -18,8 +18,12 @@
 set -euo pipefail
 SRC="$1"; OUT="$2"; T=$(mktemp -d)
 GT="npx --yes @gltf-transform/cli@4"
-$GT uastc "$SRC" "$T/a.glb" --pattern "{signs,gantry_atlas,maximus_face,asphalt}" --level 2 --rdo --rdo-lambda 1.5 --zstd 20
-$GT etc1s "$T/a.glb" "$T/b.glb" --pattern "{coast_rock,ground,curb,wood,foam,concrete_coast,steel,tin,checker}" --quality 230
+# texture sets per track (override with UASTC=... ETC1S=... in the environment)
+#   Mojave: ETC1S="{rock,strata,ground,curb,wood,steel,tin,checker,concrete_hazard}"
+[ -n "${UASTC:-}" ] || UASTC='{signs,gantry_atlas,maximus_face,asphalt}'
+[ -n "${ETC1S:-}" ] || ETC1S='{coast_rock,ground,curb,wood,foam,concrete_coast,steel,tin,checker}'
+$GT uastc "$SRC" "$T/a.glb" --pattern "$UASTC" --level 2 --rdo --rdo-lambda 1.5 --zstd 20
+$GT etc1s "$T/a.glb" "$T/b.glb" --pattern "$ETC1S" --quality 230
 $GT meshopt "$T/b.glb" "$OUT" --level medium
 $GT inspect "$OUT" | sed -n '/TEXTURES/,$p' | head -30
 rm -rf "$T"

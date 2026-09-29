@@ -10,7 +10,9 @@
 // lanes, grit along both edges. Seeded per track, so every run looks the same.
 //
 // Atlas cells (4x4, 256 px): 0 crack · 1 crack network · 2 tar snake · 3 patch · 4 oil · 5 braking marks ·
-// 6 dirt smear · 7 gravel spill · 8 edge grit · 9 faded arrow. Add a kind = add a cell + a draw function.
+// 6 dirt smear · 7 gravel spill · 8 edge grit · 9 faded arrow · 10 sand drift · 11 faded repair patch ·
+// 12 sealed transverse crack. Add a kind = add a cell + a draw function. Per look (L.decals): spacing of each
+// kind, and tints (grit, dirt) multiplied through the vertex colour so one atlas serves every climate.
 (function(){
   let ATLAS=null;
   function atlas(){ if(ATLAS) return ATLAS; const S=1024, C=256; const cv=document.createElement('canvas'); cv.width=cv.height=S; const g=cv.getContext('2d');
@@ -31,6 +33,15 @@
       for(let k=0;k<2200;k++){ const x=Math.pow(r(),0.5)*256, y=r()*256, c=90+r()*90; g.fillStyle=`rgba(${c},${c*0.9|0},${c*0.78|0},${(x/256)*0.8*r()})`; g.fillRect(x,y,1+r()*2.5,1+r()*2.5); } });
     cell(9,()=>{ g.fillStyle='rgba(235,235,225,0.55)'; g.beginPath(); g.moveTo(128,20); g.lineTo(200,110); g.lineTo(152,110); g.lineTo(152,236); g.lineTo(104,236); g.lineTo(104,110); g.lineTo(56,110); g.closePath(); g.fill();
       g.globalCompositeOperation='destination-out'; for(let k=0;k<500;k++){ g.fillStyle=`rgba(0,0,0,${r()*0.8})`; g.fillRect(r()*256,r()*256,2+r()*6,2+r()*6); } g.globalCompositeOperation='source-over'; });
+    // 10 sand drift: dense at the outer edge (u=1), wind ripples, ragged tongue edge towards the lane
+    cell(10,()=>{ for(let y=0;y<256;y+=2){ const reach=150+70*Math.sin(y*0.045+r()*0.4)+30*Math.sin(y*0.13); for(let x=0;x<256;x+=2){ const d=(256-x)/reach; if(d>1.15) continue;
+        const a=Math.max(0,Math.min(1,1.15-d))*(0.55+0.3*Math.sin((x*0.35+y*0.9)+Math.sin(y*0.07)*3)); const c=200+r()*30; g.fillStyle=`rgba(${c},${c*0.86|0},${c*0.66|0},${a*0.8})`; g.fillRect(x,y,2,2); } } });
+    // 11 old repair patch, sun-faded: lighter than the road, crisp sawn edges
+    cell(11,()=>{ g.fillStyle='rgba(150,146,140,0.55)'; g.fillRect(16,16,224,224); for(let k=0;k<1400;k++){ const c=r()<0.5?90:190; g.fillStyle=`rgba(${c},${c},${c-6},${r()*0.22})`; g.fillRect(16+r()*222,16+r()*222,2,2); }
+      g.strokeStyle='rgba(20,20,20,0.7)'; g.lineWidth=3; g.strokeRect(16,16,224,224); });
+    // 12 transverse thermal crack, tar-sealed (u = across the road): a wavy band over the full width
+    cell(12,()=>{ g.strokeStyle='rgba(6,6,7,0.9)'; g.lineWidth=16; g.lineCap='round'; g.beginPath(); let y=128; g.moveTo(0,y); for(let x=0;x<=256;x+=8){ y+=(r()-0.5)*10; y=Math.max(100,Math.min(156,y)); g.lineTo(x,y); } g.stroke();
+      g.strokeStyle='rgba(2,2,2,0.95)'; g.lineWidth=3; g.stroke(); });
     const t=new THREE.CanvasTexture(cv); GFX.compat.srgb(t); t.anisotropy=Math.min(8,GFX.renderer.maxAnisotropy()); t.generateMipmaps=true; t.minFilter=THREE.LinearMipmapLinearFilter; ATLAS=t; return t; }
 
   const DC={
@@ -41,12 +52,13 @@
       const N=P.N, sp=P.spacing; const buf={matte:{p:[],uv:[],c:[],ix:[]},gloss:{p:[],uv:[],c:[],ix:[]}};
       const ok=i=>!P.gap[i]&&!(P.hidden&&P.hidden[i]);
       // one decal: from sample i0 for len metres, lateral centre lat (may follow a function of i), width w, atlas cell k
-      const put=(kind,i0,len,latF,w,k,alpha,fadeEnds)=>{ const B=buf[kind]; const seg=Math.max(2,Math.ceil(len/1.2)); const cu=(k%4)/4, cv=1-(Math.floor(k/4)+1)/4; const base=B.p.length/3;
+      const tint=(h)=>{ if(h==null) return [1,1,1]; const c=new THREE.Color(h); return [c.r,c.g,c.b]; }; const TG=tint(D.gritTint), TD=tint(D.dirtTint); let COL=[1,1,1];
+      const put=(kind,i0,len,latF,w,k,alpha,fadeEnds)=>{ const col=(k===8||k===10)?TG:(k===6||k===7)?TD:COL; const B=buf[kind]; const seg=Math.max(2,Math.ceil(len/1.2)); const cu=(k%4)/4, cv=1-(Math.floor(k/4)+1)/4; const base=B.p.length/3;
         for(let s=0;s<=seg;s++){ const f=i0+(len*s/seg)/sp; const i=Math.floor(f)%N, j=(i+1)%N, t=f-Math.floor(f); if(!ok(i)) return;
           const cx=P.x[i]+(P.x[j]-P.x[i])*t, cz=P.z[i]+(P.z[j]-P.z[i])*t, rx=P.rx[i]+(P.rx[j]-P.rx[i])*t, rz=P.rz[i]+(P.rz[j]-P.rz[i])*t; const lat=typeof latF==='function'?latF(i):latF;
           const a=Math.min(1,fadeEnds?Math.min(s,seg-s)/(seg*0.2+1e-3):1)*alpha;
           for(const e of [-0.5,0.5]){ const x=cx+rx*(lat+e*w), z=cz+rz*(lat+e*w); const y0=surf&&surf.at(x,z); const y=(y0!=null?y0:P.y[i])+0.015;
-            B.p.push(x,y,z); B.uv.push(cu+(e+0.5)*0.25*0.96+0.005,cv+(s/seg)*0.25*0.96+0.005); B.c.push(1,1,1,a); } }
+            B.p.push(x,y,z); B.uv.push(cu+(e+0.5)*0.25*0.96+0.005,cv+(s/seg)*0.25*0.96+0.005); B.c.push(col[0],col[1],col[2],a); } }
         for(let s=0;s<seg;s++){ const q=base+s*2; B.ix.push(q,q+1,q+2,q+1,q+3,q+2); } };
       // --- braking zones: where the racing line enters a tight corner
       const tight=[]; for(let i=0;i<N;i++){ const c=A.ca[i]; if(c>1/85 && A.ca[(i-6+N)%N]<c*0.8 && ok(i)) { if(!tight.length||i-tight[tight.length-1]>40) tight.push(i); } }
@@ -59,6 +71,10 @@
       every(D.patchEvery||170,i=>{ const lane=(rnd()<0.5?-1:1)*P.w[i]*rr(0.12,0.3); put('matte',i,rr(3,8),lane,rr(1.8,3.2),3,rr(0.12,0.2),false); });
       every(D.tarEvery||55,i=>put('gloss',i,rr(4,10),rr(-0.35,0.35)*P.w[i],rr(0.6,1.1),2,rr(0.6,0.9),true));
       every(D.crackEvery||40,i=>put('matte',i,rr(3,8),rr(-0.4,0.4)*P.w[i],rr(0.5,1.4),rnd()<0.3?1:0,rr(0.5,0.85),true));
+      // --- desert: sand drifts off the shoulders, sealed thermal cracks across the full width, faded repairs
+      if(D.driftEvery) every(D.driftEvery,i=>{ const sd2=rnd()<0.5?-1:1; const w=rr(2.2,4.2); put('matte',i,rr(5,14),j=>sd2*(P.w[j]/2+0.4-w/2),w*sd2,10,rr(0.55,0.9),true); });
+      if(D.thermalEvery) every(D.thermalEvery,i=>{ put('gloss',i,rr(0.5,0.8),0,P.w[i]+0.4,12,rr(0.7,0.95),false); });
+      if(D.fadedPatchEvery) every(D.fadedPatchEvery,i=>{ const lane=(rnd()<0.5?-1:1)*P.w[i]*rr(0.1,0.28); put('matte',i,rr(3,10),lane,rr(2,3.4),11,rr(0.45,0.75),false); });
       // --- edge grit, both sides, continuous (u runs road -> shoulder)
       for(const sd2 of [-1,1]){ let run=0, i0=0; const flush=(i1)=>{ const n=((i1-i0+N)%N); if(n>2) put('matte',i0,n*sp,i=>sd2*(P.w[i]/2+0.3),2.2*sd2,8,0.9,false); };
         for(let i=0;i<=N;i++){ const k=i%N; if(ok(k)&&i<N){ if(!run){ run=1; i0=k; } if(i-i0>80){ flush(k); i0=k; } } else if(run){ run=0; flush(k); } } }
