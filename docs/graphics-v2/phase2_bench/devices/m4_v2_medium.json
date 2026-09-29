@@ -1,0 +1,274 @@
+{
+ "scene": "pacifica",
+ "track": "coast",
+ "car": "gt44",
+ "tier": "medium",
+ "pipeline": "v2",
+ "when": "2026-09-29T01:48:41.174Z",
+ "device": {
+  "backend": "WebGL2",
+  "three": "r186",
+  "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
+  "vendor": "Google Inc. (Apple)",
+  "drawingBuffer": [
+   1280,
+   715
+  ],
+  "css": [
+   1280,
+   715
+  ],
+  "pixelRatio": 1,
+  "maxTexture": 16384,
+  "maxAniso": 16,
+  "precision": "highp",
+  "shadows": true,
+  "toneMapping": "post:neutral",
+  "path": "post",
+  "dynScale": 1,
+  "output": "srgb",
+  "colorManagement": true
+ },
+ "shots": [
+  {
+   "id": "cliff_lighthouse",
+   "name": "Cliff road → lighthouse",
+   "kind": "shot",
+   "perf": {
+    "frames": 179,
+    "fps": 59.6,
+    "ms": 16.77,
+    "p95": 18.4,
+    "worst": 36.8,
+    "low1": 52.1,
+    "cpuSubmitMs": 2.63
+   },
+   "draws": 101,
+   "tris": 305192,
+   "geometries": 181,
+   "textures": 50,
+   "programs": 43,
+   "materials": {
+    "materials": 103,
+    "byType": {
+     "ShaderMaterial": 6,
+     "MeshStandardMaterial": 70,
+     "MeshPhysicalMaterial": 7,
+     "MeshBasicMaterial": 19,
+     "SpriteMaterial": 1
+    },
+    "textures": 45,
+    "textureMB": 58.4,
+    "lights": 2,
+    "shadowLights": 1,
+    "shadowCasters": 115,
+    "meshes": 210
+   },
+   "path": "post",
+   "shadowDraws": 23,
+   "shadowTris": 82842,
+   "sceneDraws": 66,
+   "postPasses": 12
+  },
+  {
+   "id": "lighthouse_wide",
+   "name": "Lighthouse bend, elevated",
+   "kind": "shot",
+   "perf": {
+    "frames": 179,
+    "fps": 59.7,
+    "ms": 16.76,
+    "p95": 18.1,
+    "worst": 34.8,
+    "low1": 52.4,
+    "cpuSubmitMs": 2.96
+   },
+   "draws": 100,
+   "tris": 298616,
+   "geometries": 181,
+   "textures": 50,
+   "programs": 43,
+   "materials": {
+    "materials": 103,
+    "byType": {
+     "ShaderMaterial": 6,
+     "MeshStandardMaterial": 70,
+     "MeshPhysicalMaterial": 7,
+     "MeshBasicMaterial": 19,
+     "SpriteMaterial": 1
+    },
+    "textures": 45,
+    "textureMB": 58.4,
+    "lights": 2,
+    "shadowLights": 1,
+    "shadowCasters": 115,
+    "meshes": 210
+   },
+   "path": "post",
+   "shadowDraws": 23,
+   "shadowTris": 82842,
+   "sceneDraws": 65,
+   "postPasses": 12
+  },
+  {
+   "id": "tunnel_mouth",
+   "name": "Tunnel approach",
+   "kind": "shot",
+   "perf": {
+    "frames": 179,
+    "fps": 59.7,
+    "ms": 16.74,
+    "p95": 18.1,
+    "worst": 37.2,
+    "low1": 51,
+    "cpuSubmitMs": 3.15
+   },
+   "draws": 121,
+   "tris": 327062,
+   "geometries": 200,
+   "textures": 52,
+   "programs": 46,
+   "materials": {
+    "materials": 103,
+    "byType": {
+     "ShaderMaterial": 6,
+     "MeshStandardMaterial": 70,
+     "MeshPhysicalMaterial": 7,
+     "MeshBasicMaterial": 19,
+     "SpriteMaterial": 1
+    },
+    "textures": 45,
+    "textureMB": 58.4,
+    "lights": 2,
+    "shadowLights": 1,
+    "shadowCasters": 115,
+    "meshes": 214
+   },
+   "path": "post",
+   "shadowDraws": 19,
+   "shadowTris": 82810,
+   "sceneDraws": 90,
+   "postPasses": 12
+  },
+  {
+   "id": "ocean_low",
+   "name": "Ocean side, low",
+   "kind": "shot",
+   "perf": {
+    "frames": 179,
+    "fps": 59.7,
+    "ms": 16.76,
+    "p95": 18,
+    "worst": 35.6,
+    "low1": 53.2,
+    "cpuSubmitMs": 3.19
+   },
+   "draws": 108,
+   "tris": 317002,
+   "geometries": 208,
+   "textures": 55,
+   "programs": 46,
+   "materials": {
+    "materials": 103,
+    "byType": {
+     "ShaderMaterial": 6,
+     "MeshStandardMaterial": 70,
+     "MeshPhysicalMaterial": 7,
+     "MeshBasicMaterial": 19,
+     "SpriteMaterial": 1
+    },
+    "textures": 45,
+    "textureMB": 58.4,
+    "lights": 2,
+    "shadowLights": 1,
+    "shadowCasters": 115,
+    "meshes": 214
+   },
+   "path": "post",
+   "shadowDraws": 32,
+   "shadowTris": 97116,
+   "sceneDraws": 64,
+   "postPasses": 12
+  },
+  {
+   "id": "festival_finish",
+   "name": "Beach festival finish",
+   "kind": "shot",
+   "perf": {
+    "frames": 179,
+    "fps": 59.6,
+    "ms": 16.77,
+    "p95": 18.9,
+    "worst": 37.1,
+    "low1": 51,
+    "cpuSubmitMs": 3.33
+   },
+   "draws": 243,
+   "tris": 451886,
+   "geometries": 216,
+   "textures": 55,
+   "programs": 46,
+   "materials": {
+    "materials": 103,
+    "byType": {
+     "ShaderMaterial": 6,
+     "MeshStandardMaterial": 70,
+     "MeshPhysicalMaterial": 7,
+     "MeshBasicMaterial": 19,
+     "SpriteMaterial": 1
+    },
+    "textures": 45,
+    "textureMB": 58.4,
+    "lights": 2,
+    "shadowLights": 1,
+    "shadowCasters": 115,
+    "meshes": 207
+   },
+   "path": "post",
+   "shadowDraws": 59,
+   "shadowTris": 130336,
+   "sceneDraws": 172,
+   "postPasses": 12
+  },
+  {
+   "id": "lighthouse_run",
+   "name": "Lighthouse run (moving)",
+   "kind": "drive",
+   "perf": {
+    "frames": 179,
+    "fps": 60,
+    "ms": 16.66,
+    "p95": 18,
+    "worst": 19.5,
+    "low1": 52.6,
+    "cpuSubmitMs": 2.95
+   },
+   "draws": 97,
+   "tris": 301884,
+   "geometries": 217,
+   "textures": 55,
+   "programs": 46,
+   "materials": {
+    "materials": 103,
+    "byType": {
+     "ShaderMaterial": 6,
+     "MeshStandardMaterial": 70,
+     "MeshPhysicalMaterial": 7,
+     "MeshBasicMaterial": 19,
+     "SpriteMaterial": 1
+    },
+    "textures": 45,
+    "textureMB": 58.4,
+    "lights": 2,
+    "shadowLights": 1,
+    "shadowCasters": 115,
+    "meshes": 208
+   },
+   "path": "post",
+   "shadowDraws": 28,
+   "shadowTris": 85824,
+   "sceneDraws": 57,
+   "postPasses": 12
+  }
+ ]
+}
