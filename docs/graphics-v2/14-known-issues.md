@@ -5,15 +5,15 @@
    Links to run it yourself: 13 · Performance.
 2. **Legacy look on r186 is not pixel-identical everywhere.**
    - Pacifica: mean difference 1.5/255 (indistinguishable).
-   - Sweet Justice: 2.8/255, Revolution: 6.8/255 (animated flags, smoke, cannon fire and rain differ frame
+   - Sweet Justice: 2.8/255, Revolution: 6.4/255 (animated flags, smoke, cannon fire and rain differ frame
      to frame, so part of it is time, not rendering).
    - **Neon Foundry**: r128's PMREM gave the dark, emitter-lit wet-road environment much brighter rough
      reflections (the purple wet-road sheen). Found by isolating each light and the env map: with the env
      off, both versions match exactly. Restored with a measured, roughness-weighted compensation
-     (`GFX.compat.tagLegacyEnv(env,12)` / `applyLegacyEnv`): the mean difference drops from 15.2 to 6.3/255,
+     (`GFX.compat.tagLegacyEnv(env,12)` / `applyLegacyEnv`): the mean difference drops from 15.2 to 5.9/255,
      and the rest is the rain and animated LEDs. It is a calibrated match, not an exact one. Neon should get
      its own V2 look in Phase 3, which removes the compensation.
-   - **Showroom/menu**: 4.4/255 (compensation tested and rejected: it made it worse). The difference is
+   - **Showroom/menu**: 4.6/255 (compensation tested and rejected: it made it worse). The difference is
      small and mostly in the animated neon strips.
 3. **Races are not deterministic**, not even OLD vs OLD with a fixed random seed (the simulation
    takes wall-clock input). So gameplay parity was verified by a code diff instead: the only `game.js`
