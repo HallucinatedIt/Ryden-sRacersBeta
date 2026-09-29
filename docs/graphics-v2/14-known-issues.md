@@ -33,3 +33,32 @@
     `graphics-v2-phase1-rollback`, not a tag.
 11. **Old skid marks** (gameplay `Skids`) are unlit black quads. On the V2 road they read slightly flatter
     than the decal braking marks.
+
+## Status after Phase 3 and 4
+
+- 4 (GT40 mask): **fixed in Phase 3** (real Blender slots). 5 (showroom): **still legacy**, tested with slots
+  in Phase 4 and left opt-in (22 · Vehicles). 7 (Meshy plants): **fixed in Phase 3** (rebake path, 18).
+
+## Phase 4 known issues
+
+12. **Automatic slot classification misreads premium paints** (Hellcat metallic navy → chrome, black gloss on
+    Black Lightning / Concordance / BRCC → glass, White Lightning pearl → chrome). Compensated in the
+    per-car profiles so nothing looks wrong, but the slots themselves need a hand pass in Blender.
+13. **Showroom slot materials are opt-in** (`?showroomv2=1`): in the unmanaged showroom they read darker
+    with a pink cast. Needs the showroom on the V2 path.
+14. **Revolution was not measured on a real GPU** (account track; the benchmark pane was not signed in).
+    Container counters only.
+15. **High / Ultra / mobile presets were not measured on the M4** in Phase 4 (runs interrupted: blur-pause,
+    now fixed, and a hidden pane). No real phone measured.
+16. **Low preset loses part of the chapter identity on Revolution**: Low has no post chain, so the per-chapter
+    grade (Delaware's warm white balance, saturation) does not apply; sun, sky and fog colours still change
+    per chapter.
+17. **Merge by material coarsens frustum culling** on Alondra (350 m cells): triangles per frame went up
+    ~5 % (container: 570k → 606k at the commercial strip) while draws went down 20–30 %. On the M4, V2 Alondra with the merge submits frames ~17 % faster than legacy; on a phone GPU
+    with few draws to spare it should be re-checked (`?merge=0` to compare).
+18. **The quick container counters for Revolution depend on the course's 0.25 s cull timer**: very short
+    benchmark runs (`&frames=4`) can report tiles from the previous shot. Use ≥ 40 frames for counters.
+19. **The Meshy Revolution/Alondra batch** (fruit tree, colonial house, butcher stall, timber gate, pines,
+    birch, fir, fly agaric, mossy log) was not exported: the Mac bridge kept disconnecting.
+20. **No Alondra trees were upgraded**: the env's own low-poly trees remain (Meshy trees need hand-authored
+    cards, 18).

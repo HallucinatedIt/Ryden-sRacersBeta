@@ -262,6 +262,8 @@
         {re:/^m_(canvas|sandbag)$/, set:{roughness:0.95}},
         {re:/^m_(signs|paint)$/, set:{roughness:0.8}},
       ],
+      // (rv_palisade lines at Bunker Hill / Yorktown were tried: behind the course's own barriers and hay walls
+      //  they did not read from the road at any placement tested, so they are not placed. Asset kept for Phase 5)
       // no zones: the course culls its own vegetation / building tiles by the fog distance (course code), and the
       // troops cast shadows only in their near tier. The chapter fog below is therefore also the cull distance:
       // it keeps the legacy chapter distances (same tiles in view as before), the haze does the aerial perspective
@@ -269,7 +271,7 @@
       chapters:{
         // South Carolina swamp: a humid, low golden sun through green-grey mist
         swamp:{ fog:{near:360, far:600}, sun:{color:0xffb574, intensity:2.7}, sky:{zenith:0x4f6b86, horizon:0xdcc39a, warm:0xd9a674, ground:0x3c4a30, clouds:0.46, mie:1.3},
-          haze:{density:0.0034, falloff:0.02, color:0xa9b49c, sunColor:0xffc890}, exposure:1.02, ibl:0.72, grade:{saturation:1.0, contrast:1.05, wb:[1.01,1.0,0.95]} },
+          haze:{density:0.0034, falloff:0.02, color:0xa9b49c, sunColor:0xffc890}, exposure:1.12, ibl:0.8, grade:{saturation:1.0, contrast:1.05, wb:[1.01,1.0,0.95]} },
         // Lexington & Concord, April 1775: a crisp, clear spring morning
         lexington:{ fog:{near:810, far:1350}, sun:{color:0xfff0d8, intensity:3.7}, sky:{zenith:0x3f78c8, horizon:0xdce6ee, warm:0xe6d2b4, ground:0x5e6e40, clouds:0.3, mie:0.9},
           haze:{density:0.0008, falloff:0.012, color:0xd6dfe4, sunColor:0xfff0d8}, exposure:1.08, ibl:0.85, grade:{saturation:1.07, contrast:1.06, wb:[1.0,1.0,0.99]} },

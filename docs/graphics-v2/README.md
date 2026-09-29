@@ -11,6 +11,33 @@ Rollback point for Phase 1: branch `graphics-v2-phase1-rollback`.
 
 <img src="img/phase2/compare_medium.jpg" width="900">
 
+- **Phase 3**: Mojave Mesa Run V2, the vehicle material-slot pipeline (six cars), the Meshy → Blender
+  vegetation/prop pipeline, shader prewarm. Rollback point: commit `5cebd51` (Phase 3 + Ryden's Bus).
+- **Phase 4**: Alondra Blvd V2, Revolution V2 (seven chapter looks), all 14 GLB cars on material slots
+  (incl. Ryden's Bus V2), draw-call control for city blocks, KTX2 env variants, M4 benchmarks, the
+  Neon Foundry audit. Ryden's Bus itself was released to `main` separately (commit `fa7c1a8`, Bus only).
+
+## Phase 4 documents
+
+| Document | Contents |
+|---|---|
+| [19 · Alondra V2](19-alondra-v2.md) | Smoggy SoCal afternoon, the black-wall bug, city materials, wall art, street life (BPD lot, traffic stop), merge by material |
+| [20 · Phase 4 assets](20-phase4-assets.md) | New props, env variants, car variants, density per preset |
+| [21 · Revolution V2](21-revolution-v2.md) | Chapter looks on the course's chapter system, Delaware not blue, battlefield, troops, bench |
+| [22 · Vehicles (Phase 4)](22-vehicles-phase4.md) | Eight more cars on slots, per-car finishes, Bus V2, geometry parity, showroom test |
+| [23 · Neon Foundry audit](23-neon-foundry-audit.md) | What a Phase 5 night look needs (no changes made) |
+| [24 · Phase 4 performance](24-phase4-performance.md) | Phase 3 vs Phase 4 on the M4, Alondra legacy vs V2, what was not measured |
+| [25 · Phase 4 report and Phase 5 recommendation](25-phase4-report.md) | Deliverables, known issues, what next |
+| Benchmark data | `phase4_bench/` (`m4_runs.jsonl`: every M4 run; `baseline_*.json`: the 4A baseline) |
+
+## Phase 3 documents
+
+| Document | Contents |
+|---|---|
+| [16 · Mojave V2](16-mojave-v2.md) | High desert noon, terrain/rock, bleached road, storytelling dressing |
+| [17 · Vehicle pipeline](17-vehicle-pipeline.md) | Material slots from Blender, folding, parity |
+| [18 · Vegetation and props](18-vegetation-props.md) | Meshy → Blender prop pipeline, dressing vs scatter, asset table |
+
 ## Phase 2 documents
 
 | Document | Contents |
@@ -53,6 +80,12 @@ Rollback point for Phase 1: branch `graphics-v2-phase1-rollback`.
 | `?drs=1` / `?drs=0` | Force dynamic resolution on or off |
 | `?origassets` | Load the original environment GLB instead of the KTX2/Meshopt variant |
 | `?frames=N` | Shorter benchmark runs |
+| `?bench=mojave` / `alondra` / `revolution` | Phase 3/4 benchmark scenes (Revolution needs a signed-in account) |
+| `&car=<id>` | Benchmark with another car |
+| `?nodetail=1` | Switch the V2 detail shaders off (A/B) |
+| `?merge=0` | Switch off draw-call merging (flat-colour merge and merge by material) |
+| `?showroomv2=1` | Showroom cars with the track's slot materials (experimental, see 22) |
+| `?prewarm=0` | Skip the shader/texture prewarm before the race |
 
 ## Code map (Phase 2)
 

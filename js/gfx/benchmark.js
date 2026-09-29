@@ -84,6 +84,8 @@
       // account tracks (Revolution) are benchmarked only for a signed-in racer: wait for access, never bypass it
       const tdef=TRACK_DATA.find(t=>t.id===S.track); if(typeof trackLocked==='function'&&trackLocked(tdef)){ if(!B._lockNote){ B._lockNote=1; console.warn('[bench] '+id+' needs a signed-in account: sign in, the benchmark starts when access is granted'); } setTimeout(()=>B.start(id),500); return; }
       B.active=true; B.scene=id;
+      // a benchmark must not stop when the window loses focus (the game pauses on blur): measured frames would include the pause
+      if(!G.__benchPause){ const op=G.pause; G.pause=function(on){ if(B.active&&on) return; return op.call(this,on); }; G.__benchPause=1; }
       G.S.device=G.S.device||'pc'; G.mode='practice'; G.gp=null;
       G.sel.track=TRACK_DATA.findIndex(t=>t.id===S.track); G.sel.vehicle=Math.max(0,VEHICLES.findIndex(v=>v.id===(qs.get('car')||S.car)));   // &car=<id>: same shots with another car (developer)
       G.startRace();

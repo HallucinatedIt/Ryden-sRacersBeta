@@ -70,7 +70,8 @@
           // explicit placements (parked cars, fence runs, bins): points [{i,lat,ds,yaw,s}] and/or line {from,to,lat,every,yaw}
           // yaw is relative to the track direction; y comes from the first flat surface under the point (street, sidewalk, lot)
           const pts=(rule.points||[]).slice();
-          if(rule.line){ const Ln=rule.line, step=Math.max(1,Math.round((Ln.every||4)/P.spacing)); for(let i=Ln.from;i<=Ln.to;i+=step) pts.push({i,lat:Ln.lat,ds:0,yaw:Ln.yaw||0,s:Ln.s}); }
+          if(rule.line){ const Ln=rule.line, ev=Ln.every||4, i1=(Ln.from+1)%P.N, sp=Math.hypot(P.x[i1]-P.x[Ln.from%P.N],P.z[i1]-P.z[Ln.from%P.N])||P.spacing||ev, step=Math.max(1,Math.round(ev/sp));   // samples can be further apart than `every` (Revolution ~15 m): fill with offsets along the tangent
+            for(let i=Ln.from;i<=Ln.to;i+=step){ if(sp>ev*1.5){ for(let d=0;d<sp-0.01;d+=ev) pts.push({i,lat:Ln.lat,ds:d,yaw:Ln.yaw||0,s:Ln.s}); } else pts.push({i,lat:Ln.lat,ds:0,yaw:Ln.yaw||0,s:Ln.s}); } }
           if(pts.length){ if(!surf){ surf=[]; W.env.root.traverse(o=>{ if(o.isMesh&&!/foliage|trunk|crowd|fence|lamp|glass|signs|event|banner/.test((o.material&&o.material.name)||'')) surf.push(o); }); }
             for(const q of pts){ if(rule.thin&&rnd()>dens) continue; const i=((q.i%P.N)+P.N)%P.N; const x=P.x[i]+P.rx[i]*q.lat+P.tx[i]*(q.ds||0), z=P.z[i]+P.rz[i]*q.lat+P.tz[i]*(q.ds||0);
               ray.set(_p.set(x,(P.y[i]||0)+(rule.probe||5),z),new THREE.Vector3(0,-1,0)); const hits=ray.intersectObjects(surf,false); const h=hits.find(hh=>!hh.face||hh.face.normal.clone().transformDirection(hh.object.matrixWorld).y>0.7);
