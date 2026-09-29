@@ -21,9 +21,15 @@
     // --- optimized browser variants (Graphics V2): KTX2/Basis textures + Meshopt geometry ---
     // Built by tools/optimize_env.sh; the originals stay untouched and are what ?gfx=legacy / r128 load.
     VARIANTS:{ env_coast:{ v2:'models/env/env_coast.v2.glb?v=1', track:'coast', needs:['ktx2','meshopt'] },
-               env_mesa:{ v2:'models/env/env_mesa.v2.glb?v=1', track:'mesa', needs:['ktx2','meshopt'] } },
+               env_mesa:{ v2:'models/env/env_mesa.v2.glb?v=1', track:'mesa', needs:['ktx2','meshopt'] },
+               // Phase 3 cars with exported material slots (tools/blender/rr_car_slots.py); folded to one mesh per part on load
+               gt44:{ v2:'models/cars/gt40.v2.glb?v=1', car:true }, missile:{ v2:'models/cars/missile_commander.v2.glb?v=1', car:true },
+               trout:{ v2:'models/cars/trout_protocol.v2.glb?v=1', car:true }, duck:{ v2:'models/cars/duck_plasma.v2.glb?v=1', car:true },
+               bpd:{ v2:'models/cars/bpd_69.v2.glb?v=1', car:true }, donut:{ v2:'models/cars/donut_patrol.v2.glb?v=1', car:true } },
     useVariant(id){ const v=AM.VARIANTS[id]; if(!v) return false; let q=''; try{ q=location.search; }catch(e){}
-      return GFX.settings.pipeline==='v2' && GFX.compat.rev>=160 && !/[?&]origassets/.test(q) && !!(GFX.v2&&GFX.v2.LOOKS[v.track]); },
+      return GFX.settings.pipeline==='v2' && GFX.compat.rev>=160 && !/[?&]origassets/.test(q) && (v.car || !!(GFX.v2&&GFX.v2.LOOKS[v.track])); },
+    // after a GLB is parsed (game.js): slotted car variants are folded to the original structure
+    postLoad(id,scene){ const v=AM.VARIANTS[id]; if(v&&v.car&&AM.useVariant(id)&&GFX.vehicles&&GFX.vehicles.foldSlots) GFX.vehicles.foldSlots(scene); return scene; },
     src(id,url){ return AM.useVariant(id)?AM.VARIANTS[id].v2:url; },
     // give a GLTFLoader the KTX2 (Basis) and Meshopt decoders when this build has them
     configureLoader(L){ if(GFX.compat.rev<160) return L;

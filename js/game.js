@@ -750,7 +750,7 @@ function loadCarGLBs(done,progress,only){
   Promise.all(jobs).then(()=>{
     const L=GFX.assets.configureLoader(new THREE.GLTFLoader()); let left=ids.length, k=0;   // + KTX2/Meshopt decoders on r186
     const next=()=>{ if(k>=ids.length) return; const id=ids[k++];
-      const parse=buf=>L.parse(buf,'',g=>{ CAR_GLTF[id]=g.scene; fin(); },e=>{ GLB_ERROR=id+': '+(e&&e.message||e); console.warn('GLB failed',id,e); fin(); });
+      const parse=buf=>L.parse(buf,'',g=>{ CAR_GLTF[id]=GFX.assets.postLoad?GFX.assets.postLoad(id,g.scene):g.scene; fin(); },e=>{ GLB_ERROR=id+': '+(e&&e.message||e); console.warn('GLB failed',id,e); fin(); });
       const src=GFX.assets.src(id,data[id]);   // optimized V2 variant when available
       if(/\.glb(\?|$)/i.test(src)){ fetch(src).then(r=>{ if(!r.ok) throw new Error('HTTP '+r.status+' '+src); return r.arrayBuffer(); }).then(parse).catch(e=>{ GLB_ERROR=id+': '+e.message; fin(); }); return; }
       try{ const s=atob(src); const u=new Uint8Array(s.length); for(let i=0;i<s.length;i++) u[i]=s.charCodeAt(i); parse(u.buffer); }
