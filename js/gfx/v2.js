@@ -218,8 +218,9 @@
     const src=GFX.compat.uvMap;
     // desert kinds re-balance the whole albedo (texture x vertex colour), so they run after the vertex colours
     const desertKind=kind==='strata'||kind==='desertRock'||kind==='sand'||kind==='stucco'||kind==='storefront'||kind==='brick';   // these run after the vertex colours
-    m.onBeforeCompile=sh=>{ sh.vertexShader=sh.vertexShader.replace('#include <common>','#include <common>\nvarying vec3 vDW; varying vec3 vDN;').replace('#include <project_vertex>','#include <project_vertex>\nvDW=(modelMatrix*vec4(transformed,1.0)).xyz; vDN=normalize(mat3(modelMatrix)*objectNormal);');
-      sh.fragmentShader=sh.fragmentShader.replace('#include <common>','#include <common>\nvarying vec3 vDW; varying vec3 vDN; float sfGlass=0.; const float GR='+(m.userData.v2ground||0).toFixed(2)+'; float dth(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);} float dtn(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(dth(i),dth(i+vec2(1,0)),f.x),mix(dth(i+vec2(0,1)),dth(i+vec2(1,1)),f.x),f.y);}')
+    m.onBeforeCompile=sh=>{ sh.vertexShader=sh.vertexShader.replace('#include <common>','#include <common>\nvarying vec3 vDW; varying vec3 vDNv;').replace('#include <project_vertex>','#include <project_vertex>\nvDW=(modelMatrix*vec4(transformed,1.0)).xyz; vec3 dnW=mat3(modelMatrix)*objectNormal; vDNv=dot(dnW,dnW)>1e-8?normalize(dnW):vec3(0.);');
+      // the Alondra env has no vertex normals (flat shaded): fall back to the face normal from derivatives
+      sh.fragmentShader=sh.fragmentShader.replace('void main() {','void main() {\nvDN=dot(vDNv,vDNv)>0.25?normalize(vDNv):normalize(cross(dFdx(vDW),dFdy(vDW)));').replace('#include <common>','#include <common>\nvarying vec3 vDW; varying vec3 vDNv; vec3 vDN; float sfGlass=0.; const float GR='+(m.userData.v2ground||0).toFixed(2)+'; float dth(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);} float dtn(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(dth(i),dth(i+vec2(1,0)),f.x),mix(dth(i+vec2(0,1)),dth(i+vec2(1,1)),f.x),f.y);}')
         .replace(desertKind?'#include <color_fragment>':'#include <map_fragment>',(desertKind?'#include <color_fragment>':'#include <map_fragment>')+'\n'+(
           kind==='rock'? '{ vec2 q=vDW.xz+vDW.y*vec2(0.7,-0.4); float mac=dtn(q*0.018)*0.6+dtn(q*0.07)*0.4; float strata=0.5+0.5*sin(vDW.y*1.9+dtn(vDW.xz*0.05)*5.); float up=clamp(vDN.y,0.,1.);'
              +' diffuseColor.rgb*=0.74+0.46*mac; diffuseColor.rgb*=mix(vec3(0.9,0.93,0.98),vec3(1.08,1.0,0.9),strata*0.8); diffuseColor.rgb=mix(diffuseColor.rgb,diffuseColor.rgb*vec3(0.86,0.92,0.72),smoothstep(0.7,0.95,up)*0.35); }'
@@ -241,7 +242,7 @@
           : '{ float mac=dtn(vDW.xz*0.05+vDW.y*0.1)*0.6+dtn(vDW.xz*0.23)*0.4; diffuseColor.rgb*=0.9+0.18*mac; }'));
       if(kind==='storefront') sh.fragmentShader=sh.fragmentShader.replace('#include <roughnessmap_fragment>','#include <roughnessmap_fragment>\nroughnessFactor=mix(roughnessFactor,0.06,sfGlass);').replace('#include <metalnessmap_fragment>','#include <metalnessmap_fragment>\nmetalnessFactor=mix(metalnessFactor,0.1,sfGlass);');
     };
-    m.customProgramCacheKey=()=>'rr_detail_'+kind+'_'+(m.userData.v2ground||0); m.needsUpdate=true; }
+    m.customProgramCacheKey=()=>'rr_detail2_'+kind+'_'+(m.userData.v2ground||0); m.needsUpdate=true; }
 
   const V2={
     LOOKS, active:false, look:null, race:null,
@@ -281,7 +282,7 @@
             if(rule.set) Object.assign(m,rule.set);
             if(rule.color&&m.color) m.color.multiply(new THREE.Color(...rule.color));
             if(rule.ground!=null) m.userData.v2ground=rule.ground;   // street level for base grime (city kinds)
-            if(rule.detail && Q.roadDetail>=1) detailMaterial(m,rule.detail);
+            if(rule.detail && Q.roadDetail>=1 && !qs.get('nodetail')) detailMaterial(m,rule.detail);   // ?nodetail=1: A/B the detail shaders
             if(rule.physical){ const pm=new THREE.MeshPhysicalMaterial(); ['name','color','map','roughness','metalness','roughnessMap','metalnessMap','normalMap','normalScale','emissive','emissiveMap','emissiveIntensity','side','vertexColors','envMapIntensity','aoMap','alphaTest','transparent','opacity','flatShading'].forEach(k=>{ const v=m[k]; if(v!==undefined) pm[k]=(v&&v.clone&&!v.isTexture)?v.clone():v; }); Object.assign(pm,rule.physical); env.traverse(q=>{ if(q.material===m) q.material=pm; }); }
             m.needsUpdate=true; break; } }); }
       rep.materials=nm; if(env){ let ct=0,tt=0; const seenT=new Set(); env.traverse(o=>{ const m=o.material; if(m&&m.map&&!seenT.has(m.map)){ seenT.add(m.map); tt++; if(m.map.isCompressedTexture) ct++; } }); rep.textures={total:tt,ktx2:ct}; }
