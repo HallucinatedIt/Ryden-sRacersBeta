@@ -54,6 +54,14 @@ Not measured on real hardware: Revolution (account), High / Ultra / mobile prese
 `car_slots_*.png` (slot check renders), `showroom_old_vs_slots.jpg`;
 `img/phase3/`: `mojave_old_vs_v2.jpg`, `cars_old_vs_v2.jpg`, `car_slots_*.png` (backfilled).
 
+## Final verification (container, commit `a608d63`)
+
+All seven tracks start a practice race on both pipelines with **no console errors and no failed requests**.
+Legacy (`?gfx=legacy`) draws and triangles are identical to the Phase 3 check on every track (legacy look
+unchanged). V2: Pacifica, Mojave, Alondra and Revolution use their looks; Neon, Country and Sweet still
+render the legacy look on r186. Full 8-car races finish on Revolution V2 (with the Bus) and Alondra V2.
+All 14 GLB cars: identical dimensions, wheel positions and bounding boxes on both pipelines.
+
 ## 13 · Phase 5 recommendation
 
 In order:
