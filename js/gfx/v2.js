@@ -50,6 +50,27 @@
         // festival paddock behind the start: a classic on display for the crowd
         {asset:'pc_corvette_gs', i:878, lat:-19.5, yaw:-1.0, lod1:55, far:600},
         {asset:'pc_trash_can', i:872, lat:-14.5, yaw:0.4},
+        // Phase 3: the ice-cream trike that works the overlook on race day, its cold box beside it
+        {asset:'mz_panel_truck', i:162, lat:14.5, yaw:0.35, lods:[0,50,120], far:700},
+        {asset:'mz_ice_freezer', i:166, lat:16.2, yaw:-1.9, s:0.8, far:320},
+        // festival services: the generator behind the stands, ice for the crowd, the big bin
+        {asset:'mz_generator', i:866, lat:-26, yaw:0.6, far:320},
+        {asset:'mz_ice_freezer', i:884, lat:-15.5, yaw:1.4, far:320},
+        {asset:'mz_dumpster', i:860, lat:-22, yaw:-0.3, far:360},
+      ],
+      // painted rail fence along the cliff edge of the overlook lay-by
+      roadside:[
+        {kind:'rail', from:136, to:170, lat:21, every:2.6, h:1.1, color:0xe9e4d8},
+      ],
+      // coastal planting, instanced (hero near, impostor cards far): heath on the landward slopes, kniphofia
+      // in the lay-by and festival gardens, ferns in the tunnel shade, a tropical bed at the beach festival
+      scatter:[
+        {asset:'pc_heather', count:900, band:[3,48], cluster:6, clusterRadius:4, scale:[0.8,1.5], minUp:0.72, minY:-4},
+        {asset:'pc_redhot', count:70, band:[4,20], section:[128,180], cluster:5, clusterRadius:3, scale:[0.8,1.15], minY:-4},
+        {asset:'pc_redhot', count:60, band:[6,26], section:[840,925], cluster:5, clusterRadius:3, scale:[0.8,1.15], minY:-4},
+        {asset:'pc_fern', count:70, band:[2,14], section:[188,240], cluster:4, clusterRadius:3, scale:[0.9,1.4], minUp:0.6},
+        {asset:'pc_banana', count:14, band:[9,28], section:[850,905], cluster:2, clusterRadius:4, scale:[0.8,1.1], shadowLevels:2, minY:-4},
+        {asset:'pc_palm', count:6, band:[16,34], section:[855,905], scale:[0.85,1.1], shadowLevels:2, far:1400, minY:-4},
       ],
       zones:[
         {re:/^pc_(grass)$/, zone:'near', cell:320, far:460},
@@ -98,22 +119,22 @@
         // Route 99 trading post & rest area on the open straight: adobe post, picnic tables, a bin, its generator
         {asset:'mz_adobe_pueblo', i:66, lat:-33, yaw:1.62, lods:[0,90,220], far:1600, big:true},
         {asset:'pc_picnic_table', i:57, lat:-17.5, yaw:0.3}, {asset:'pc_picnic_table', i:60, lat:-18.2, yaw:-0.2},
-        {asset:'pc_trash_can', i:62, lat:-15.6, yaw:0.0},
-        {asset:'mz_generator', i:74, lat:-24.5, yaw:0.9},
+        {asset:'pc_trash_can', i:62, lat:-15.6, yaw:0.0, far:260},
+        {asset:'mz_generator', i:74, lat:-24.5, yaw:0.9, far:320},
         // the ibex on the rocks by the arch: someone to watch you go by
         {asset:'mz_ibex', i:121, lat:17.5, yaw:-2.2, onRock:true, far:500},
         // abandoned by the fence: the muscle car that never made it out, a burnt stump, sand in the wheel wells
-        {asset:'mz_muscle_sedan', i:186, lat:15.5, yaw:0.55, dy:-0.12, lods:[0,45,110], far:900},
-        {asset:'mz_charred_stump', i:193, lat:19, yaw:1.1},
+        {asset:'mz_muscle_sedan', i:186, lat:15.5, yaw:0.55, dy:-0.12, lods:[0,45,110], far:650},
+        {asset:'mz_charred_stump', i:193, lat:19, yaw:1.1, far:320},
         // mine camp: the rat rod the miners drive, their compressor, an ore bin
-        {asset:'mz_rat_rod', i:620, lat:-19.5, yaw:-2.6, lods:[0,40,100], far:800},
-        {asset:'mz_generator', i:626, lat:-33, yaw:0.4},
-        {asset:'mz_dumpster', i:640, lat:-24, yaw:1.4},
+        {asset:'mz_rat_rod', i:620, lat:-19.5, yaw:-2.6, lods:[0,40,100], far:520},
+        {asset:'mz_generator', i:626, lat:-33, yaw:0.4, far:320},
+        {asset:'mz_dumpster', i:640, lat:-24, yaw:1.4, far:360},
         // service station: ice at the front, the compressor by the side, the delivery truck parked up, the palms someone waters
-        {asset:'mz_ice_freezer', i:915, lat:19.5, yaw:-1.57},
-        {asset:'mz_generator', i:930, lat:21.5, yaw:2.2},
+        {asset:'mz_ice_freezer', i:915, lat:19.5, yaw:-1.57, far:360},
+        {asset:'mz_generator', i:930, lat:21.5, yaw:2.2, far:320},
         {asset:'mz_panel_truck', i:906, lat:21.5, yaw:0.2, lods:[0,50,120], far:900},
-        {asset:'mz_dumpster', i:934, lat:30, yaw:-1.2},
+        {asset:'mz_dumpster', i:934, lat:30, yaw:-1.2, far:360},
         {asset:'pc_palm', i:911, lat:15.5, yaw:0.3, lods:[0,60,140], far:1400}, {asset:'pc_palm', i:927, lat:16, yaw:2.1, s:0.85, lods:[0,60,140], far:1400},
       ],
       // utility line along the old road (poles + sagging wires, one draw) and the fence the car ended up against
@@ -126,11 +147,12 @@
         {asset:'pc_redhot', count:260, band:[4,55], cluster:4, clusterRadius:5, scale:[0.7,1.2], minUp:0.85},   // desert bloom
         {asset:'mz_charred_stump', count:28, band:[8,70], scale:[0.6,1.1], far:300, shadowLevels:1, dense:true},
       ],
+      // open desert: nearly every chunk is in view at once, so cells are large (a few chunks, not dozens):
+      // the win is shadow-box and far culling, not frustum culling
       zones:[
-        {re:/^mz_scrub/, zone:'near', cell:260, far:620},
-        {re:/^mz_rocks/, zone:'near', cell:300, far:1000},
-        {re:/^mz_joshua/, zone:'mid', cell:260, far:1500},
-        {re:/^(guardrail|mz_trackside|mz_support)/, zone:'mid', cell:400, far:1300},
+        {re:/^mz_scrub/, zone:'near', cell:650, far:700, shadowFar:260},
+        {re:/^mz_rocks/, zone:'near', cell:700, far:1100, shadowFar:300},
+        {re:/^mz_joshua/, zone:'mid', cell:750, far:1500, shadowFar:350},
       ],
     },
   };
@@ -218,6 +240,8 @@
       road.forEach(o=>GFX.road.upgradeAsphalt(o,W,P,A,L,Q)); lines.forEach(o=>GFX.road.upgradeLines(o,L)); rep.road=road.length;
       // --- decals on the real road surface
       if(Q.decals && road.length){ const surf=GFX.road.surface(road); const dg=GFX.decals.build(W,P,A,surf,L,R.def.id); W.group.add(dg); rep.decals=dg.userData.stats; }
+      // --- draw-call control: flat-colour material slots of one object -> one draw (?merge=0 to compare)
+      if(env&&qs.get('merge')!=='0') rep.mergeFlat=GFX.lod.mergeFlat(env);
       // --- scenery zones: chunk merged meshes, distance culling, far shadows off
       if(env){ const lod=GFX.lod.manager(Q); rep.zones=lod.zoneEnvironment(env,L.zones); V2.lod=lod; W.updaters.push(()=>{ if(R.game&&R.game.camera) lod.update(R.game.camera); }); }
       // --- MSAA-friendly foliage edges
@@ -233,7 +257,9 @@
       V2.report=rep; const jobs=[];
       if(env&&L.dressing&&Q.propDensity>0) jobs.push(V2.dress(R,L,Q));
       if(env&&L.scatter&&(Q.vegDensity||0)>0) jobs.push(GFX.scatter.build(R,L,Q,L.scatter).then(S=>{ if(V2.race!==R) return; V2.scatter=S; rep.scatter=S.stats; W.updaters.push(()=>{ if(R.game&&R.game.camera) GFX.scatter.update(S,R.game.camera); }); }));
-      V2.pending=jobs.length?Promise.all(jobs).then(()=>{ if(V2.race===R) V2.pending=null; }):null;
+      // everything async (props, plants) loaded -> compile every program / upload every texture before the lights go green
+      V2.pending=Promise.all(jobs).then(()=>{ if(V2.race!==R) return; return GFX.renderer.prewarm(R.scene,R.game.camera,W.th&&W.th.exposure,{canBlock:()=>!R.state||R.state==='intro'||R.state==='countdown'||(GFX.bench&&GFX.bench.active)}).then(st=>{ if(st) rep.prewarm=st; }); })
+        .catch(e=>console.warn('[gfx v2] prewarm',e)).then(()=>{ if(V2.race===R) V2.pending=null; });
       rep.ms=Math.round(performance.now()-t0); V2.report=rep; if(qs.get('gfxdebug')) console.log('[gfx v2] look applied: '+L.name,JSON.stringify(rep));
     },
     dress(R,L,Q){ const W=R.W, P=R.P; const ray=new THREE.Raycaster(); const targets=[], rockT=[];

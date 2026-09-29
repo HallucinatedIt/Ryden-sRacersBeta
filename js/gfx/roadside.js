@@ -5,6 +5,7 @@
 // draw) and is registered with the LOD manager for distance culling.
 //   poles   a utility line: weathered timber poles with a cross-arm and insulators, three sagging wires
 //   fence   a ranch fence: leaning posts and three strands of wire
+//   rail    a painted post-and-rail timber fence (lay-bys, overlooks); color = paint
 // Rule: {kind, from, to, lat, every, h}   from/to = track samples, lat = metres right (+) / left (-) of the
 // centre line, every = spacing in metres, h = pole height. Wire sag and post lean are seeded per run.
 (function(){
@@ -40,12 +41,19 @@
         [-1.1,0,1.1].forEach(ox=>{ for(let k=0;k<posts.length-1;k++){ const a=posts[k], b=posts[k+1]; const pa=new THREE.Vector3(ox,H/2-0.62,0).applyEuler(e.set(a.lean,a.yaw,a.lean2)).add(new THREE.Vector3(a.x,a.y+H/2-0.4,a.z));
             const pb=new THREE.Vector3(ox,H/2-0.62,0).applyEuler(e.set(b.lean,b.yaw,b.lean2)).add(new THREE.Vector3(b.x,b.y+H/2-0.4,b.z)); const span=pa.distanceTo(pb), sag=span*0.028; const pts=[];
             for(let t=0;t<=8;t++){ const u=t/8; pts.push(new THREE.Vector3().lerpVectors(pa,pb,u).add(new THREE.Vector3(0,-sag*4*u*(1-u),0))); } XG.push(strand(pts,0.022)); } }); }
+      else if(r.kind==='rail'){ // painted post-and-rail timber fence (coast lay-bys): square posts, two rails
+        const H=r.h||1.1;
+        posts.forEach(p=>{ q.setFromEuler(e.set(p.lean*0.3,p.yaw,p.lean2*0.3)); m.compose(new THREE.Vector3(p.x,p.y+H/2-0.05,p.z),q,new THREE.Vector3(1,1,1)); push(WG,new THREE.BoxGeometry(0.13,H,0.13),m); });
+        for(let k=0;k<posts.length-1;k++){ const a=posts[k], b=posts[k+1]; const dx=b.x-a.x, dz=b.z-a.z, len=Math.hypot(dx,dz); const yaw=Math.atan2(dx,dz);
+          [0.45,0.9].forEach(h=>{ const mid=new THREE.Vector3((a.x+b.x)/2,(a.y+b.y)/2+h*(H/1.1),(a.z+b.z)/2); const pitch=Math.atan2(b.y-a.y,len);
+            q.setFromEuler(e.set(-pitch,yaw,0,'YXZ')); m.compose(mid,q,new THREE.Vector3(1,1,1)); push(WG,new THREE.BoxGeometry(0.07,0.14,len+0.1),m); }); } }
       else { // fence
         posts.forEach(p=>{ q.setFromEuler(e.set(p.lean,p.yaw+rnd()*0.4,p.lean2*2)); m.compose(new THREE.Vector3(p.x,p.y+0.6,p.z),q,new THREE.Vector3(1,1,1)); push(WG,new THREE.CylinderGeometry(0.06,0.075,1.35,5,1),m); });
         [0.35,0.72,1.08].forEach(h=>{ for(let k=0;k<posts.length-1;k++){ const a=posts[k], b=posts[k+1]; if(rnd()<0.12) continue;   // a few strands down
             const pa=new THREE.Vector3(a.x,a.y+h,a.z), pb=new THREE.Vector3(b.x,b.y+h*(0.9+rnd()*0.1),b.z); const pts=[]; for(let t=0;t<=4;t++){ const u=t/4; pts.push(new THREE.Vector3().lerpVectors(pa,pb,u).add(new THREE.Vector3(0,-0.06*4*u*(1-u),0))); }
             XG.push(strand(pts,0.012)); } }); }
-      [[WG,wood()],[XG,wire()]].forEach(([L2,mat])=>{ const g=merge(L2); if(!g) return; const mesh=new THREE.Mesh(g,mat); mesh.castShadow=true; mesh.receiveShadow=true; mesh.name='rs_'+r.kind+'_'+ri+'_'+mat.name; out.add(mesh); stats.tris+=g.attributes.position.count/3; });
+      const wm=wood(); if(r.color!=null){ wm.color.setHex(r.color); wm.roughness=0.7; }
+      [[WG,wm],[XG,wire()]].forEach(([L2,mat])=>{ const g=merge(L2); if(!g) return; const mesh=new THREE.Mesh(g,mat); mesh.castShadow=true; mesh.receiveShadow=true; mesh.name='rs_'+r.kind+'_'+ri+'_'+mat.name; out.add(mesh); stats.tris+=g.attributes.position.count/3; });
       stats.runs++; });
     stats.tris=Math.round(stats.tris); out.userData.stats=stats; return out.children.length?out:null; }
 

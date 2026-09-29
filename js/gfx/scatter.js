@@ -61,7 +61,7 @@
             const lat0=side*(P.w[i]/2+rr(band[0],band[1])); const cx=P.x[i]+P.rx[i]*lat0, cz=P.z[i]+P.rz[i]*lat0;
             for(let c=0;c<clusterN&&inst.length<want;c++){ const ang=rnd()*6.283, rad=c?Math.sqrt(rnd())*(rule.clusterRadius||6):0; const x=cx+Math.cos(ang)*rad, z=cz+Math.sin(ang)*rad;
               if(!clearOfRoad(x,z,band[0])) continue;
-              ray.set(_p.set(x,(P.y[i]||0)+200,z),new THREE.Vector3(0,-1,0)); const hit=targets.length?ray.intersectObjects(targets,false)[0]:null; if(!hit) continue;
+              ray.set(_p.set(x,(P.y[i]||0)+200,z),new THREE.Vector3(0,-1,0)); const hit=targets.length?ray.intersectObjects(targets,false)[0]:null; if(!hit) continue; if(rule.minY!=null&&hit.point.y<rule.minY) continue;
               const n=hit.face?hit.face.normal.clone().transformDirection(hit.object.matrixWorld):_up; if(n.y<(rule.minUp!=null?rule.minUp:0.8)) continue;
               const s=rr(...(rule.scale||[0.8,1.2])); inst.push({x, y:hit.point.y-(rule.sink||0.05)*s, z, s, yaw:rnd()*6.283, tilt:rule.tilt?n:null}); } }
           if(!inst.length) return;
