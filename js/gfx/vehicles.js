@@ -68,6 +68,8 @@
           const wheel=!!(o.parent&&o.parent.parent&&car.model.wheels&&car.model.wheels.includes(o.parent));
           const key=src.uuid+(wheel?'w':'b'); if(!cache.has(key)) cache.set(key,carMaterial(src,prof,wheel,env)); o.material=cache.get(key); n++; }
         else if(src.isMeshStandardMaterial){ src.envMap=env; src.envMapIntensity=(prof.env||1); src.needsUpdate=true; } });
+      // tail-light glow sprites: authored for the old pipeline; with bloom and physical light they read as pink blobs
+      if(car.model.tailMat&&!car.model.tailMat.userData.v2){ car.model.tailMat.userData.v2=1; car.model.tailMat.color.multiplyScalar(0.4); }
       return n; },
   };
   window.GFX=window.GFX||{}; window.GFX.vehicles=VM;

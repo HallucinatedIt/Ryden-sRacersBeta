@@ -974,7 +974,7 @@ function puddleTex(){ return canvasTex(256,256,(g,w,h)=>{ g.fillStyle='#969696';
   for(let k=0;k<2;k++){ g.fillStyle='rgba(80,80,80,0.3)'; g.fillRect(w*(0.3+k*0.35),0,w*0.07,h); } },{srgb:false,repeat:true}); }
 function neonMaterials(W,root,Q){
   const U={t:{value:0}}; W.updaters.push((dt,t)=>{ U.t.value=t; });
-  const env=neonEnvMap(GAME.renderer); W.neonEnv=env; const cache={}; const low=Q.density<0.6;
+  const env=GFX.compat.tagLegacyEnv(neonEnvMap(GAME.renderer),12); W.neonEnv=env; const cache={}; const low=Q.density<0.6;
   const basic=(c,o)=>new THREE.MeshBasicMaterial(Object.assign({color:c,toneMapped:false},o||{}));
   const glowTexA=canvasTex(128,128,(g,w,h)=>{ const gr=g.createRadialGradient(64,64,0,64,64,64); gr.addColorStop(0,'rgba(255,255,255,0.9)'); gr.addColorStop(0.5,'rgba(255,255,255,0.35)'); gr.addColorStop(1,'rgba(255,255,255,0)'); g.fillStyle=gr; g.fillRect(0,0,w,h); },{srgb:false});
   const bandTex=canvasTex(8,64,(g,w,h)=>{ const gr=g.createLinearGradient(0,0,0,h); gr.addColorStop(0,'rgba(255,255,255,0)'); gr.addColorStop(0.5,'rgba(255,255,255,1)'); gr.addColorStop(1,'rgba(255,255,255,0)'); g.fillStyle=gr; g.fillRect(0,0,w,h); },{srgb:false});

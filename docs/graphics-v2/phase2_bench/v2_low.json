@@ -1,0 +1,302 @@
+{
+ "r": {
+  "scene": "pacifica",
+  "track": "coast",
+  "car": "gt44",
+  "tier": "low",
+  "pipeline": "v2",
+  "when": "2026-09-29T00:10:05.741Z",
+  "device": {
+   "backend": "WebGL2",
+   "three": "r186",
+   "gpu": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "vendor": "Google Inc. (Google)",
+   "drawingBuffer": [
+    720,
+    405
+   ],
+   "css": [
+    960,
+    540
+   ],
+   "pixelRatio": 0.75,
+   "maxTexture": 8192,
+   "maxAniso": 16,
+   "precision": "highp",
+   "shadows": true,
+   "toneMapping": "neutral",
+   "path": "direct",
+   "dynScale": 1,
+   "output": "srgb",
+   "colorManagement": true
+  },
+  "shots": [
+   {
+    "id": "cliff_lighthouse",
+    "name": "Cliff road → lighthouse",
+    "kind": "shot",
+    "perf": {
+     "frames": 25,
+     "fps": 6.5,
+     "ms": 155.03,
+     "p95": 863,
+     "worst": 865.5,
+     "low1": 1.2,
+     "cpuSubmitMs": 2.84
+    },
+    "draws": 83,
+    "tris": 301028,
+    "geometries": 165,
+    "textures": 30,
+    "programs": 37,
+    "materials": {
+     "materials": 103,
+     "byType": {
+      "ShaderMaterial": 6,
+      "MeshStandardMaterial": 70,
+      "MeshPhysicalMaterial": 7,
+      "MeshBasicMaterial": 19,
+      "SpriteMaterial": 1
+     },
+     "textures": 45,
+     "textureMB": 63.3,
+     "lights": 2,
+     "shadowLights": 1,
+     "shadowCasters": 115,
+     "meshes": 201
+    },
+    "path": "direct",
+    "shadowDraws": 19,
+    "shadowTris": 82810,
+    "sceneDraws": 64,
+    "postPasses": 0
+   },
+   {
+    "id": "lighthouse_wide",
+    "name": "Lighthouse bend, elevated",
+    "kind": "shot",
+    "perf": {
+     "frames": 14,
+     "fps": 23.9,
+     "ms": 41.88,
+     "p95": 168.6,
+     "worst": 168.6,
+     "low1": 5.9,
+     "cpuSubmitMs": 11.16
+    },
+    "draws": 82,
+    "tris": 294452,
+    "geometries": 165,
+    "textures": 30,
+    "programs": 37,
+    "materials": {
+     "materials": 103,
+     "byType": {
+      "ShaderMaterial": 6,
+      "MeshStandardMaterial": 70,
+      "MeshPhysicalMaterial": 7,
+      "MeshBasicMaterial": 19,
+      "SpriteMaterial": 1
+     },
+     "textures": 45,
+     "textureMB": 63.3,
+     "lights": 2,
+     "shadowLights": 1,
+     "shadowCasters": 115,
+     "meshes": 201
+    },
+    "path": "direct",
+    "shadowDraws": 19,
+    "shadowTris": 82810,
+    "sceneDraws": 63,
+    "postPasses": 0
+   },
+   {
+    "id": "tunnel_mouth",
+    "name": "Tunnel approach",
+    "kind": "shot",
+    "perf": {
+     "frames": 16,
+     "fps": 9,
+     "ms": 111.02,
+     "p95": 624.6,
+     "worst": 624.6,
+     "low1": 1.6,
+     "cpuSubmitMs": 10.62
+    },
+    "draws": 105,
+    "tris": 322438,
+    "geometries": 183,
+    "textures": 32,
+    "programs": 40,
+    "materials": {
+     "materials": 103,
+     "byType": {
+      "ShaderMaterial": 6,
+      "MeshStandardMaterial": 70,
+      "MeshPhysicalMaterial": 7,
+      "MeshBasicMaterial": 19,
+      "SpriteMaterial": 1
+     },
+     "textures": 45,
+     "textureMB": 63.3,
+     "lights": 2,
+     "shadowLights": 1,
+     "shadowCasters": 115,
+     "meshes": 207
+    },
+    "path": "direct",
+    "shadowDraws": 19,
+    "shadowTris": 82810,
+    "sceneDraws": 86,
+    "postPasses": 0
+   },
+   {
+    "id": "ocean_low",
+    "name": "Ocean side, low",
+    "kind": "shot",
+    "perf": {
+     "frames": 20,
+     "fps": 4.2,
+     "ms": 237.44,
+     "p95": 941.6,
+     "worst": 941.6,
+     "low1": 1.1,
+     "cpuSubmitMs": 2.16
+    },
+    "draws": 96,
+    "tris": 311106,
+    "geometries": 193,
+    "textures": 38,
+    "programs": 41,
+    "materials": {
+     "materials": 103,
+     "byType": {
+      "ShaderMaterial": 6,
+      "MeshStandardMaterial": 70,
+      "MeshPhysicalMaterial": 7,
+      "MeshBasicMaterial": 19,
+      "SpriteMaterial": 1
+     },
+     "textures": 45,
+     "textureMB": 63.3,
+     "lights": 2,
+     "shadowLights": 1,
+     "shadowCasters": 115,
+     "meshes": 203
+    },
+    "path": "direct",
+    "shadowDraws": 32,
+    "shadowTris": 94874,
+    "sceneDraws": 64,
+    "postPasses": 0
+   },
+   {
+    "id": "festival_finish",
+    "name": "Beach festival finish",
+    "kind": "shot",
+    "perf": {
+     "frames": 22,
+     "fps": 3.4,
+     "ms": 291.78,
+     "p95": 708.5,
+     "worst": 904.1,
+     "low1": 1.1,
+     "cpuSubmitMs": 2.98
+    },
+    "draws": 223,
+    "tris": 435409,
+    "geometries": 209,
+    "textures": 41,
+    "programs": 41,
+    "materials": {
+     "materials": 103,
+     "byType": {
+      "ShaderMaterial": 6,
+      "MeshStandardMaterial": 70,
+      "MeshPhysicalMaterial": 7,
+      "MeshBasicMaterial": 19,
+      "SpriteMaterial": 1
+     },
+     "textures": 45,
+     "textureMB": 63.3,
+     "lights": 2,
+     "shadowLights": 1,
+     "shadowCasters": 115,
+     "meshes": 204
+    },
+    "path": "direct",
+    "shadowDraws": 58,
+    "shadowTris": 130326,
+    "sceneDraws": 165,
+    "postPasses": 0
+   },
+   {
+    "id": "lighthouse_run",
+    "name": "Lighthouse run (moving)",
+    "kind": "drive",
+    "perf": {
+     "frames": 2,
+     "fps": 9.2,
+     "ms": 109.2,
+     "p95": 114.8,
+     "worst": 114.8,
+     "low1": 8.7,
+     "cpuSubmitMs": 2.1
+    },
+    "draws": 84,
+    "tris": 302514,
+    "geometries": 210,
+    "textures": 41,
+    "programs": 41,
+    "materials": {
+     "materials": 103,
+     "byType": {
+      "ShaderMaterial": 6,
+      "MeshStandardMaterial": 70,
+      "MeshPhysicalMaterial": 7,
+      "MeshBasicMaterial": 19,
+      "SpriteMaterial": 1
+     },
+     "textures": 45,
+     "textureMB": 63.3,
+     "lights": 2,
+     "shadowLights": 1,
+     "shadowCasters": 115,
+     "meshes": 202
+    },
+    "path": "direct",
+    "shadowDraws": 28,
+    "shadowTris": 85824,
+    "sceneDraws": 56,
+    "postPasses": 0
+   }
+  ]
+ },
+ "rep": {
+  "ocean": true,
+  "materials": 31,
+  "textures": {
+   "total": 13,
+   "ktx2": 13
+  },
+  "road": 1,
+  "decals": {
+   "tris": 7366,
+   "braking": 9
+  },
+  "zones": {
+   "hidden": 25,
+   "shadowOff": 0,
+   "chunks": 40,
+   "sourceMeshes": 4
+  },
+  "carMaterials": 5,
+  "ms": 658,
+  "dressing": {
+   "placed": 6,
+   "lod0Tris": 39256
+  }
+ },
+ "errs": []
+}

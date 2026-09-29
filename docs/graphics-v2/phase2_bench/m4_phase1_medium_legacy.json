@@ -1,0 +1,10 @@
+{"scene":"pacifica","track":"coast","car":"gt44","tier":"medium","pipeline":"legacy","build":"graphics-v2-phase1-rollback (r128)","when":"2026-09-28T22:49:33.938Z",
+ "device":{"backend":"WebGL2","three":"r128","gpu":"ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)","drawingBuffer":[982,671],"css":[982,671],"pixelRatio":1,"maxTexture":16384,"maxAniso":16,"shadows":true,"toneMapping":"ACESFilmic"},
+ "shots":[
+  {"id":"cliff_lighthouse","perf":{"frames":179,"fps":60,"ms":16.67,"p95":18.2,"worst":21.9,"low1":53.2,"cpuSubmitMs":1.65},"draws":54,"tris":268204,"geometries":142,"textures":25,"programs":28,"textureMB":83.8},
+  {"id":"lighthouse_wide","perf":{"frames":179,"fps":60,"ms":16.67,"p95":18.5,"worst":19,"low1":52.6,"cpuSubmitMs":1.78},"draws":54,"tris":268204,"geometries":142,"textures":25,"programs":28,"textureMB":83.8},
+  {"id":"tunnel_mouth","perf":{"frames":179,"fps":60,"ms":16.66,"p95":18.7,"worst":21.6,"low1":52.6,"cpuSubmitMs":1.88},"draws":73,"tris":269696,"geometries":152,"textures":27,"programs":29,"textureMB":83.8},
+  {"id":"ocean_low","perf":{"frames":179,"fps":60,"ms":16.68,"p95":18.5,"worst":22.7,"low1":52.6,"cpuSubmitMs":1.79},"draws":57,"tris":265500,"geometries":160,"textures":27,"programs":29,"textureMB":83.8},
+  {"id":"festival_finish","perf":{"frames":179,"fps":60,"ms":16.67,"p95":18.3,"worst":23.6,"low1":51.8,"cpuSubmitMs":2.48},"draws":146,"tris":300012,"geometries":178,"textures":27,"programs":29,"textureMB":83.8},
+  {"id":"lighthouse_run","perf":{"frames":179,"fps":60,"ms":16.66,"p95":18.4,"worst":18.7,"low1":53.5,"cpuSubmitMs":1.9},"draws":42,"tris":264912,"geometries":178,"textures":27,"programs":29,"textureMB":83.8}],
+ "note":"Phase 1 build counts scene-pass draws only. Vsync-locked at 60 Hz."}

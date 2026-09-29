@@ -16,7 +16,7 @@
       colorManaged:true, toneMapping:'neutral', exposure:1.3,
       sunDir:[-0.78,0.46,0.22],
       sun:{ color:0xffe2bd, intensity:3.7, shadowBias:-0.00025, normalBias:0.025, radius:2.2 },
-      sky:{ zenith:0x2f64b8, horizon:0xcfdce6, warm:0xc8783c, ground:0x5a5046, mie:0.9, disk:30, sunRadiance:1.0, clouds:0.34, horizonPow:0.32, brightness:1.0 },
+      sky:{ zenith:0x2f64b8, horizon:0xcfdce6, warm:0xd89a4c, ground:0x5a5046, mie:0.9, disk:30, sunRadiance:1.0, clouds:0.34, horizonPow:0.32, brightness:1.0 },
       ibl:{ skyScale:1.0, intensity:0.7 },
       hemi:0.0,
       haze:{ density:0.00045, falloff:0.011, start:25, base:-9, color:0xd6cfc4, sunColor:0xffc68c },
@@ -84,7 +84,7 @@
     begin(def,game){ V2.end(); const L=V2.enabled()?V2.lookFor(def):null; if(!L) return false;
       V2.active=true; V2.look=Object.assign({},L); V2.look.sunDir=new THREE.Vector3(...L.sunDir).normalize();
       GFX.compat.colorManagement(!!L.colorManaged); if(game) game.applyQuality(); return true; },
-    finish(R){ GFX.compat.singlePassTransparency(R.scene); if(!V2.active) return; const L=V2.look, W=R.W, P=R.P, A=R.A, Q=R.game.Q, r=R.game.renderer; V2.race=R; const t0=performance.now(); const rep={};
+    finish(R){ GFX.compat.singlePassTransparency(R.scene); if(!V2.active){ GFX.compat.legacyUVTransforms(R.scene); GFX.compat.applyLegacyEnv(R.scene); return; } const L=V2.look, W=R.W, P=R.P, A=R.A, Q=R.game.Q, r=R.game.renderer; V2.race=R; const t0=performance.now(); const rep={};
       L.hazeC={color:new THREE.Color(L.haze.color), sunColor:new THREE.Color(L.haze.sunColor)};
       // --- sun + shadows
       const sun=W.sun; W.sunDir.copy(L.sunDir); sun.color.setHex(L.sun.color); sun.intensity=L.sun.intensity;
@@ -125,6 +125,7 @@
       R.cars.forEach(c=>c.model.root.traverse(o=>{ if(o.isMesh&&o.material&&o.material.map&&o.material.transparent&&/shadow/i.test(o.name||'')) o.material.opacity=0.6; }));
       // --- post look
       GFX.post.enable(Object.assign({},L,{haze:Object.assign({},L.haze,L.hazeC),sunDir:L.sunDir}));
+      if(L.grade&&typeof L.grade.lut==='string'&&Q.colorGrade) GFX.post.loadLUT(L.grade.lut).catch(e=>console.warn('[gfx v2] LUT failed',e));   // optional .cube grade per look
       // --- intentional dressing (Meshy props processed in Blender: real scale, LOD0/LOD1, KTX2 + Meshopt)
       V2.report=rep; if(env&&L.dressing&&Q.propDensity>0) V2.dress(R,L,Q); else V2.pending=null;
       rep.ms=Math.round(performance.now()-t0); V2.report=rep; if(qs.get('gfxdebug')) console.log('[gfx v2] Pacifica look applied',JSON.stringify(rep));

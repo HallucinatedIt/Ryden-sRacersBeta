@@ -72,7 +72,9 @@
     // called by GFX.v2 when a V2 look starts / ends
     enable(look){ PP.look=look; PP.enabled=!!look; },
     disable(){ PP.enabled=false; PP.look=null; },
-    wants(Q){ return PP.enabled && Q && Q.postFX && GFX.compat.rev>=160 && PP.debugView!=='off'; },
+    // HDR targets need a renderable half-float colour buffer; without it (some older mobile GPUs) V2 falls back to the direct path
+    hdrOK(){ if(PP._hdr==null){ const r=GFX.renderer.r; const e=r&&r.extensions; PP._hdr=!!(e&&(e.has('EXT_color_buffer_half_float')||e.has('EXT_color_buffer_float'))); } return PP._hdr; },
+    wants(Q){ return PP.enabled && Q && Q.postFX && GFX.compat.rev>=160 && PP.debugView!=='off' && PP.hdrOK(); },
     _mat(fs,uniforms,blend){ return new THREE.ShaderMaterial({vertexShader:VS,fragmentShader:fs,uniforms,depthTest:false,depthWrite:false,
       blending:blend||THREE.NoBlending,toneMapped:false}); },
     _init(){ if(PP.quad) return;

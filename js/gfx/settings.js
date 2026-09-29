@@ -37,6 +37,7 @@
       textureMax:2048, anisotropy:8, localLights:4, decals:true,
       v2:{ pr:1, shadows:true, shadowSize:2048, shadowDistance:55, postFX:true, msaa:4, bloom:true, ssao:true, ssaoSamples:8, colorGrade:true,
            envLighting:true, decals:true, roadDetail:2, shadowCasters:'near', anisotropy:8, lodBias:0.85, dynamicRes:true, sharpen:0 },
+      v2mobile:{ msaa:2, ssao:false, shadowSize:1024, shadowDistance:45 },   // phones/tablets: no GTAO, lighter MSAA and shadows
     },
     high:{
       pr:2, shadows:true, shadowSize:2048, terrainCell:5, density:1, fogMul:1.15,
@@ -47,6 +48,7 @@
       textureMax:4096, anisotropy:8, localLights:8, decals:true,
       v2:{ pr:1.5, shadows:true, shadowSize:2048, shadowDistance:70, postFX:true, msaa:4, bloom:true, ssao:true, ssaoSamples:12, colorGrade:true,
            envLighting:true, decals:true, roadDetail:2, shadowCasters:'near', anisotropy:16, lodBias:1, dynamicRes:false, sharpen:0 },
+      v2mobile:{ pr:1.25, msaa:2, ssaoSamples:8, dynamicRes:true },
     },
     ultra:{   // developer-only in Phase 1: identical to High for the legacy fields
       pr:2, shadows:true, shadowSize:2048, terrainCell:5, density:1, fogMul:1.15,
@@ -57,6 +59,7 @@
       textureMax:4096, anisotropy:16, localLights:16, decals:true,
       v2:{ pr:2, shadows:true, shadowSize:4096, shadowDistance:90, postFX:true, msaa:4, bloom:true, ssao:true, ssaoSamples:16, colorGrade:true,
            envLighting:true, decals:true, roadDetail:2, shadowCasters:'all', anisotropy:16, lodBias:1.4, dynamicRes:false, sharpen:0 },
+      v2mobile:{ pr:1.5, msaa:4, ssaoSamples:12, dynamicRes:true },
     },
   };
   const LEGACY_KEYS=['pr','shadows','shadowSize','terrainCell','density','fogMul'];
@@ -75,9 +78,11 @@
     // The tier object the game should use right now: the tier itself, or the tier merged with its V2 overrides while a
     // Graphics V2 look is active (GFX.v2.active). Cached per (tier, v2) so game code can compare objects cheaply.
     effective(saved){ const n=GS.resolve(saved); const on=!!(window.GFX&&GFX.v2&&GFX.v2.active); const k=n+(on?'_v2':'');
-      if(!GS._cache[k]) GS._cache[k]=on?Object.assign({},TIERS[n],TIERS[n].v2||{},{name:n,v2:TIERS[n].v2,isV2:true}):Object.assign(TIERS[n],{name:n});
+      if(!GS._cache[k]) GS._cache[k]=on?Object.assign({},TIERS[n],TIERS[n].v2||{},GS.mobile()?(TIERS[n].v2mobile||{}):{},{name:n,v2:TIERS[n].v2,isV2:true,mobile:GS.mobile()}):Object.assign(TIERS[n],{name:n});
       return GS._cache[k]; },
     _cache:{},
+    // touch-first device (phone/tablet): Graphics V2 tiers use their lighter v2mobile variant
+    mobile(){ if(GS._mob==null){ let q=''; try{ q=location.search; }catch(e){} GS._mob=/[?&]mobile=1/.test(q)||(!/[?&]mobile=0/.test(q)&&typeof matchMedia==='function'&&matchMedia('(pointer:coarse)').matches); } return GS._mob; },
     current(){ const g=window.GAME; return GS.effective(g&&g.S&&g.S.quality); },
     currentName(){ const g=window.GAME; return GS.resolve(g&&g.S&&g.S.quality); },
     // A device-based suggestion for Phase 2 (NOT applied automatically: first-run mobile players keep the

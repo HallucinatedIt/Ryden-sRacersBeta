@@ -1,35 +1,71 @@
-# Graphics V2 · Phase 1
+# Graphics V2
 
-Branch **`graphics-v2`**. `main` (the live GitHub Pages game) is untouched. Phase 1 builds the
-foundation and **changes nothing on screen**: the same draw calls and triangles on every track tested,
-and a pixel-identical frame on Pacifica, compared with `main`.
+Branch **`graphics-v2`**. `main` (the live GitHub Pages game) is untouched and nothing here is merged.
+Rollback point for Phase 1: branch `graphics-v2-phase1-rollback`.
+
+- **Phase 1**: foundation, audit, benchmark (changes nothing on screen).
+- **Phase 2**: modern three.js (r186) with the legacy look preserved on every track, plus the first
+  Graphics V2 look on **Pacifica Cliffs + GT40**: physically based lighting from a real sky, HDR post
+  (MSAA, GTAO, bloom, haze, Neutral tone mapping, grade), a layered road with decals, GT40 materials,
+  optimised assets and intentional dressing.
+
+<img src="img/phase2/compare_medium.jpg" width="900">
+
+## Phase 2 documents
 
 | Document | Contents |
 |---|---|
-| [01 · Asset inventory](01-asset-inventory.md) | Every GLB in the game plus the 32 new Meshy models, classified by category and track (data: [`models/catalog.json`](../../models/catalog.json)) |
-| [02 · Rendering audit](02-rendering-audit.md) | What renders the game today, the visual bottlenecks ranked, performance bottlenecks, technical debt |
-| [03 · Architecture](03-architecture.md) | The new `js/gfx/*` modules and the rules for Phase 2 code |
-| [04 · Benchmark](04-benchmark.md) | Pacifica + GT40 benchmark: shots, metrics, how to compare OLD vs V2 |
-| [05 · three.js migration plan](05-threejs-migration-plan.md) | r128 → modern three.js: what changes and in what order |
-| [06 · Phase 2 recommendations](06-phase2-recommendations.md) | The next graphics changes, in order |
+| [07 · three.js migration report](07-phase2-threejs-migration-report.md) | r128 → r186: API changes, compat layer, shader changes, parity results, remaining debt |
+| [09 · Pacifica V2](09-pacifica-v2.md) | What changed visually on the benchmark track |
+| [10 · GT40 materials](10-gt40-materials.md) | Paint, clear coat, glass, tyres, metal, reflections; the reusable vehicle material system |
+| [11 · Road upgrade](11-road-upgrade.md) | Asphalt layers, rubber line, edge wear, paint, decals, shoulder transition |
+| [12 · Post-processing](12-post-processing.md) | Effects, tier switches, cost |
+| [13 · Performance](13-performance.md) | BEFORE vs AFTER workload, tier workloads, real-device numbers and how to get more |
+| [08 · Asset optimization](08-asset-optimization.md) | KTX2/Meshopt, the Meshy → Blender → game pipeline, what every Meshy asset still needs |
+| [14 · Known issues](14-known-issues.md) | Everything that is not right yet |
+| [15 · Phase 3 recommendation](15-phase3-recommendations.md) | What to do next, in order |
+| Screenshots | `img/phase2/`: OLD vs V2 (`compare_medium.jpg`, `old_*.jpg` / `v2_*.jpg`), tiers (`tiers.jpg`), r128 vs r186 parity (`parity_r128_r186.jpg`) |
+| Benchmark data | `phase2_bench/*.json` |
+
+## Phase 1 documents
+
+| Document | Contents |
+|---|---|
+| [01 · Asset inventory](01-asset-inventory.md) | Every GLB in the game plus the 32 Meshy models ([`models/catalog.json`](../../models/catalog.json)) |
+| [02 · Rendering audit](02-rendering-audit.md) | The renderer as it was, bottlenecks, technical debt |
+| [03 · Architecture](03-architecture.md) | The `js/gfx/*` modules and the rules for graphics code |
+| [04 · Benchmark](04-benchmark.md) | Pacifica + GT40 benchmark: shots, metrics, Phase 1 baseline |
+| [05 · three.js migration plan](05-threejs-migration-plan.md) | The plan Phase 2 followed |
+| [06 · Phase 2 recommendations](06-phase2-recommendations.md) | The plan for Phase 2 |
 
 ## Developer switches (nothing is visible to players)
 
 | Switch | Effect |
 |---|---|
-| `?gfxdebug=1`, or press **`` ` ``** (backquote/tilde) | Performance overlay: FPS, frame time, p95, 1% low, CPU submit time, draw calls, triangles, geometries, textures, programs, materials and texture memory, backend, three.js revision, GPU, resolution, pixel ratio, tier, pipeline, track. Remembered on the device. `GFX.perf.toggle()` in the console |
-| `?bench=pacifica` | Runs the benchmark (see 04) |
-| `?tier=low|medium|high|ultra` | Forces a tier for this visit (`ultra` is developer-only) |
-| `?gfx=legacy|v2` | Pipeline flag for OLD vs V2 comparisons (identical in Phase 1) |
+| `?gfxdebug=1`, or press **`` ` ``** | Performance overlay: FPS, frame time, p95, 1 % low, CPU submit, draws, triangles, textures, programs, materials, texture memory, lights, shadow casters, V2 look / post stages / culling, backend, three.js revision, GPU, resolution, pixel ratio, tier |
+| **`\`** (with the overlay open) | Reload with the other pipeline (OLD ↔ GRAPHICS V2), keeping the other switches |
+| `?bench=pacifica` | The benchmark. The results panel shows OLD and V2 side by side once both have run on the device |
+| `?gfx=legacy` / `?gfx=v2` | OLD (Phase 1 look on r186) / Graphics V2 (default on this branch) |
+| `?three=r128` | The original three.js r128 renderer (also used automatically on devices without WebGL2) |
+| `?tier=low\|medium\|high\|ultra` | Force a tier (Ultra is also in the Settings menu now) |
+| `?post=off\|noao\|nobloom\|nohaze\|nograde` | Switch off one post stage to A/B it |
+| `?mobile=1` / `?mobile=0` | Force the phone variant of the V2 tiers on or off |
+| `?drs=1` / `?drs=0` | Force dynamic resolution on or off |
+| `?origassets` | Load the original environment GLB instead of the KTX2/Meshopt variant |
+| `?frames=N` | Shorter benchmark runs |
 
-## What changed in the code
+## Code map (Phase 2)
 
-- `js/vendor/GLTFLoader.r128.js`: the glTF loader, moved verbatim out of `game.js` (which drops from
-  7,368 to about 3,700 lines of actual game code).
-- `js/gfx/settings.js`, `renderer.js`, `lighting.js`, `environment.js`, `materials.js`, `assets.js`,
-  `perf.js`, `benchmark.js`: see [03](03-architecture.md).
-- `js/game.js`: the renderer, quality table, lights, sky, fog, render calls and sun follow now go through
-  `GFX.*`. No gameplay code changed (physics, AI, laps, items, UI, audio, online, unlocks).
-- `models/catalog.json` + `tools/`: asset inventory and the scripts that build it.
-- `models/env/env_revolution.glb`: now the correct new Revolution environment (it had been uploaded to
-  `models 2/env/` on `main`).
+| File | What it does |
+|---|---|
+| `js/vendor/three.r186.min.js` | three.js r186 + addons (GLTF, KTX2, Meshopt, GTAO, LUT…), built from `tools/three-bundle-entry.js` |
+| `js/gfx/compat.js` | Every r128 ↔ r186 difference (colour spaces, light units, shadows, UV varyings, legacy PMREM/UV parity) |
+| `js/gfx/settings.js` | Tiers Low/Medium/High/Ultra with V2 and phone variants |
+| `js/gfx/renderer.js` | The one render entry point: direct or post path, per-pass counters, dynamic resolution |
+| `js/gfx/post.js` | HDR post pipeline |
+| `js/gfx/sky.js` | Sky, IBL and ocean (one shared sky function) |
+| `js/gfx/v2.js` | Track looks (Pacifica) and the V2 lifecycle (begin / finish / end), dressing |
+| `js/gfx/road.js`, `decals.js` | Road layers and decals |
+| `js/gfx/vehicles.js` | Vehicle material profiles |
+| `js/gfx/lod.js` | Chunking, zones, distance culling, LOD |
+| `tools/optimize_env.sh`, `prop_lod.mjs`, `car_matid.py` | Asset pipeline |

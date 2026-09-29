@@ -33,6 +33,24 @@
     // pass (same draw calls and look as r128).
     singlePassTransparency(scene){ if(!modern||!scene) return; scene.traverse(o=>{ const ms=o.material?(Array.isArray(o.material)?o.material:[o.material]):[];
       for(const m of ms) if(m&&m.transparent&&m.side===THREE.DoubleSide) m.forceSinglePass=true; }); },
+    // r128 sampled every secondary map (normal, roughness, metalness, emissive, alpha...) with the UV transform
+    // of `map` when there was one; r151+ gives each map its own transform. The game set a few secondary maps
+    // with their own repeat (e.g. the Neon Foundry wet-road puddle roughness), tuned under the old rule: keep it.
+    legacyUVTransforms(scene){ if(!(C.rev>=151)||!scene) return 0; let n=0; const keys=['normalMap','bumpMap','roughnessMap','metalnessMap','alphaMap','emissiveMap','specularMap','displacementMap'];
+      const same=(a,b)=>a.offset.equals(b.offset)&&a.repeat.equals(b.repeat)&&a.rotation===b.rotation&&a.center.equals(b.center);
+      scene.traverse(o=>{ const ms=o.material?(Array.isArray(o.material)?o.material:[o.material]):[];
+        for(const m of ms){ if(!m||!m.map||m.userData.rrLegacyUV) continue; m.userData.rrLegacyUV=1;
+          for(const k of keys){ const t=m[k]; if(!t||same(t,m.map)) continue; const c=t.clone(); c.offset.copy(m.map.offset); c.repeat.copy(m.map.repeat); c.rotation=m.map.rotation; c.center.copy(m.map.center); c.needsUpdate=true; m[k]=c; n++; } } });
+      return n; },
+    // r128's PMREM made the rough mips of dark environments with small bright emitters (the Neon Foundry wet-road env,
+    // the showroom softbox env) far brighter than r186 does (measured: ~10x more light on a rough road), and those
+    // two looks were tuned on it. Such env maps are tagged with the factor that restores the legacy look
+    // (tagLegacyEnv); applyLegacyEnv() scales envMapIntensity of every material using them, once. Theme sky envs
+    // (smooth gradients) match without it. Legacy looks only; never on r128.
+    tagLegacyEnv(tex,f){ if(tex&&C.rev>=152){ let q=''; try{ q=location.search; }catch(e){} const m=/[?&]envboost=([0-9.]+)/.exec(q); tex.userData.rrLegacyBoost=m?+m[1]:f; } return tex; },
+    applyLegacyEnv(scene){ if(!(C.rev>=152)||!scene) return 0; let n=0; scene.traverse(o=>{ const ms=o.material?(Array.isArray(o.material)?o.material:[o.material]):[];
+      for(const m of ms){ const e=m&&m.envMap; if(!e||!e.userData||!e.userData.rrLegacyBoost||m.userData.rrEnvBoost===e) continue; const F=e.userData.rrLegacyBoost, r=m.roughness!=null?m.roughness:1, f=1+(F-1)*Math.max(0,Math.min(1,(r-0.15)/0.45));   // rough mips only: glossy chrome already matches
+        m.envMapIntensity=(m.envMapIntensity!=null?m.envMapIntensity:1)*f; m.userData.rrEnvBoost=e; n++; } }); return n; },
     colorManagement(on){ if(modern&&THREE.ColorManagement) THREE.ColorManagement.enabled=!!on; },
     colorManaged(){ return !!(modern&&THREE.ColorManagement&&THREE.ColorManagement.enabled); },
   };

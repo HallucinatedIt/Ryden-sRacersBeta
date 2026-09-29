@@ -42,13 +42,24 @@ r186 and r128.
 | `examples/js` loaders removed (r148) | The inlined r128 GLTFLoader | The r186 jsm loader in the bundle; the r128 copy stays in `js/vendor/` only for the fallback |
 | Normalised attributes are denormalised by `getX()` (r139+) | Revolution height grid and culling bounds read quantised positions | No change needed: that code reads the raw arrays and applies its own factors, so it gives the same result on both versions |
 | Default shader precision / GLSL 3 | All 10 custom `ShaderMaterial`s (sky, ocean, neon ×n, Revolution water and portal) | No change needed: they only use `fog_*`, `common`, `begin_vertex` and `project_vertex`, which still exist, and three's GLSL3 shims keep `gl_FragColor`/`texture2D` working |
+| Each texture map has its own UV transform (r151); r128 used `map`'s transform for every map | Neon Foundry's puddle roughness map (its own repeat) | `GFX.compat.legacyUVTransforms(scene)` on legacy looks |
+| PMREM rough mips are much darker for dark environments with small bright emitters (measured ≈10× on the Neon wet road) | Neon Foundry wet-road sheen | `GFX.compat.tagLegacyEnv(env,12)` + `applyLegacyEnv`: roughness-weighted envMapIntensity compensation on legacy looks (Neon diff 15.2 → 6.3/255) |
 | `renderer.info` counting | Per-frame stats | `info.autoReset=false`, reset once per frame, so post passes are counted too; the shadow pass is counted separately |
 
 ## Parity result (legacy look on r186 vs `main` on r128)
 
-Same camera, same frame, `parity.js` (software GPU, 480×270): **Pacifica mean pixel difference 1.5/255**.
-The frames are indistinguishable. Neon, Revolution and Sweet Justice launch and render with no console
-errors. After the single-pass fix, the draw calls match r128 again.
+Same camera, same frame, `parity.js` (software GPU, 480×270), mean absolute pixel difference:
+
+| scene | difference | note |
+|---|---|---|
+| Pacifica | **1.5 / 255** | indistinguishable |
+| Sweet Justice | 2.8 / 255 | |
+| Menu / showroom | 4.4 / 255 | animated neon strips |
+| Revolution | 6.8 / 255 | flags, smoke and cannon fire are time-based |
+| Neon Foundry | 6.3 / 255 (15.2 before the PMREM compensation) | rain and LEDs are animated |
+
+All tracks launch and render with no console errors. Scene-pass draw calls on Pacifica match r128
+exactly in every benchmark shot (54 / 54 / 73 / 57 / 147 / 45).
 
 ## Deprecated systems replaced
 

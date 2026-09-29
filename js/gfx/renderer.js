@@ -38,6 +38,7 @@
         r.setRenderTarget(null); r.render(scene,camera); r.toneMapping=tm; }
       const cpu=performance.now()-t0;
       if(tag==='race') RM._drs(Q);
+      else if(tag==='garage'&&RM.frameCount%30===0) GFX.compat.applyLegacyEnv(scene);   // showroom env (cars arrive after the room)
       RM.frameCount++; RM.lastTag=tag||'';
       for(const f of RM.hooks.after) f(scene,camera,tag,cpu);
     },

@@ -56,7 +56,7 @@
         const out=P.curv[apex]>0?-1:1, ex=(apex+Math.round(rr(18,30)/sp))%N; put('matte',ex,rr(8,14),i=>out*(P.w[i]/2-rr(0.8,1.6)),rr(2,3.2),6,rr(0.5,0.85),true); });
       // --- patches, sealed cracks, cracks, arrows spread through the lap (lanes, not edges)
       const every=(m,fn)=>{ for(let s=rr(0,m);s<N*sp;s+=m*rr(0.6,1.4)){ const i=Math.floor(s/sp)%N; if(ok(i)) fn(i); } };
-      every(D.patchEvery||170,i=>{ const lane=(rnd()<0.5?-1:1)*P.w[i]*rr(0.12,0.3); put('matte',i,rr(3,8),lane,rr(1.8,3.2),3,rr(0.2,0.32),false); });
+      every(D.patchEvery||170,i=>{ const lane=(rnd()<0.5?-1:1)*P.w[i]*rr(0.12,0.3); put('matte',i,rr(3,8),lane,rr(1.8,3.2),3,rr(0.12,0.2),false); });
       every(D.tarEvery||55,i=>put('gloss',i,rr(4,10),rr(-0.35,0.35)*P.w[i],rr(0.6,1.1),2,rr(0.6,0.9),true));
       every(D.crackEvery||40,i=>put('matte',i,rr(3,8),rr(-0.4,0.4)*P.w[i],rr(0.5,1.4),rnd()<0.3?1:0,rr(0.5,0.85),true));
       // --- edge grit, both sides, continuous (u runs road -> shoulder)
