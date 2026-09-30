@@ -42,6 +42,26 @@ Per shot, mobile Medium (container, `frames=4`: counts only, the course's 0.25 s
 shot, see 14 · Known issues #18): swamp 232 → 203, Lexington 158 → 122, Bunker Hill 131 → 115,
 Delaware 176 → 153, Saratoga 212 → 152, Yorktown wide 409 → 323.
 
+Desktop Medium, all shots (container, 40 measured frames so the tile cull has settled; Phase 4 = commit
+`a608d63`, Phase 5 = after the merges **and** with the Phase 5 props added):
+
+| shot | Phase 4 draws · tris | Phase 5 draws · tris |
+|---|---|---|
+| swamp | 232 · 624k | **193** · 669k |
+| lexington | 161 · 637k | **143** · 668k |
+| bunker | 141 · 655k | **118** · 665k |
+| delaware | 179 · 606k | **158** · 638k |
+| trenton | 186 · 539k | **174** · 600k |
+| saratoga | 215 · 849k | **185** · 879k |
+| yorktown | 172 · 978k | **157** · 1.00M |
+| yorktown_wide | 412 · 1.03M | **328** · 1.07M |
+| chapter_blend_run (moving) | 176 · 535k | **157** · 574k |
+
+Mobile Medium, Phase 5, 40 frames: swamp 189, Lexington 140, Bunker Hill 115, Delaware 155, Trenton 171,
+Saratoga 181, Yorktown 150, **Yorktown wide 327**, moving blend 151 (1.07M triangles at Yorktown wide).
+The phone profile saves GPU fill (no GTAO, MSAA ×2, smaller shadow map), not draws; draws come down only
+through the merges above.
+
 ## Not changed, and why
 
 - **Cannonball pool (32 draws when all balls fly)**: dynamic objects owned by the course's artillery code.

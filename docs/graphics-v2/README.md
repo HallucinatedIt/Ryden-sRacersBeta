@@ -17,6 +17,21 @@ Rollback point for Phase 1: branch `graphics-v2-phase1-rollback`.
   (incl. Ryden's Bus V2), draw-call control for city blocks, KTX2 env variants, M4 benchmarks, the
   Neon Foundry audit. Ryden's Bus itself was released to `main` separately (commit `fa7c1a8`, Bus only).
 
+- **Phase 5**: Neon Foundry V2 (wet midnight, HDR LEDs, night IBL, wet road, furnace glow, steam), Revolution
+  Yorktown/mobile draw-call cleanup, the showroom on V2 (studio rig + slot materials), source slot fixes for six
+  cars, the Phase 5 Meshy set. Rollback point: branch `graphics-v2-phase5-rollback`.
+
+## Phase 5 documents
+
+| Document | Contents |
+|---|---|
+| [26 · Neon Foundry V2](26-neon-v2.md) | Night look, lighting without lights, wet road, steam, rain decision, readability, bench |
+| [27 · Vehicle fixes](27-vehicle-fixes.md) | Rotated cars, baked-in wheels, slot recipes, results per car |
+| [28 · Showroom V2](28-showroom-v2.md) | Studio env, neutral rig, slot materials by default, platform sizing |
+| [29 · Revolution performance](29-revolution-perf.md) | Yorktown draw breakdown, merges, before/after |
+| [30 · Benchmarks: status and kit](30-phase5-benchmarks.md) | What was (not) measured on hardware, the URLs to run |
+| [31 · Phase 5 report](31-phase5-report.md) | Deliverables, known issues, Phase 6 recommendation |
+
 ## Phase 4 documents
 
 | Document | Contents |
@@ -80,11 +95,11 @@ Rollback point for Phase 1: branch `graphics-v2-phase1-rollback`.
 | `?drs=1` / `?drs=0` | Force dynamic resolution on or off |
 | `?origassets` | Load the original environment GLB instead of the KTX2/Meshopt variant |
 | `?frames=N` | Shorter benchmark runs |
-| `?bench=mojave` / `alondra` / `revolution` | Phase 3/4 benchmark scenes (Revolution needs a signed-in account) |
+| `?bench=mojave` / `alondra` / `revolution` / `neon` | Phase 3–5 benchmark scenes (Revolution needs a signed-in account) |
 | `&car=<id>` | Benchmark with another car |
 | `?nodetail=1` | Switch the V2 detail shaders off (A/B) |
 | `?merge=0` | Switch off draw-call merging (flat-colour merge and merge by material) |
-| `?showroomv2=1` | Showroom cars with the track's slot materials (experimental, see 22) |
+| `?showroomv2=0` | Old showroom rig and single-material cars on V2 (comparison; V2 showroom is the default since Phase 5, see 28) |
 | `?prewarm=0` | Skip the shader/texture prewarm before the race |
 
 ## Code map (Phase 2)

@@ -53,3 +53,18 @@ for byte identical (see `22-vehicles-phase4.md`).
 
 The story pieces (the precinct lot, the traffic stop, the delivery van) are never thinned: a lower preset
 removes clutter, not the scenes.
+
+## Phase 5 additions (Meshy batch, exported from the Mac)
+
+| asset | KB | LOD0 | LOD1 | LOD2 | impostor | textures | format | geometry |
+|---|---|---|---|---|---|---|---|---|
+| `rv_birch` | 216 | 1694 | 418 | - | 6 | 3 | ktx2 | meshopt |
+| `rv_butcher_stall` | 225 | 2998 | 892 | 226 | - | 3 | ktx2 | meshopt |
+| `rv_colonial_house` | 665 | 5999 | 1799 | 499 | - | 3 | ktx2 | meshopt |
+| `rv_fir` | 232 | 2151 | 544 | - | 6 | 3 | ktx2 | meshopt |
+| `rv_fly_agaric` | 32 | 446 | 105 | - | - | 2 | ktx2 | meshopt |
+| `rv_mossy_log` | 83 | 1432 | 424 | - | - | 2 | ktx2 | meshopt |
+| `rv_timber_gate` | 352 | 1999 | 598 | 177 | - | 4 | ktx2 | meshopt |
+
+Rejected: `ab_fruit_tree` (the LOD0/LOD1 rebake came out black; only the impostor was usable) and
+`rv_dark_pine` (the decimated canopy is too sparse). Placement: `21-revolution-v2.md` / `31-phase5-report.md`.

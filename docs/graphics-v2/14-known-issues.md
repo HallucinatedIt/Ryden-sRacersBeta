@@ -62,3 +62,24 @@
     birch, fir, fly agaric, mossy log) was not exported: the Mac bridge kept disconnecting.
 20. **No Alondra trees were upgraded**: the env's own low-poly trees remain (Meshy trees need hand-authored
     cards, 18).
+
+## Status after Phase 5
+
+- 12 (slot misclassification): **fixed at the source** for Hellcat, Black Lightning, Concordance, White
+  Lightning, BRCC and FDC (27 · Vehicle fixes); compensations removed. Hellcat's windows are only partly glass.
+- 13 (showroom): **fixed**: V2 showroom rig, slot materials by default on V2 (28).
+- 14, 15 (no real-GPU runs for Revolution / High / Ultra / mobile): **still open** (30). No phone measured.
+- 18 (short-run counters): still true; use ≥ 40 frames.
+- 19 (Meshy batch): **done**, except the fruit tree (LOD0 rebake came out black) and the dark pine (decimated
+  canopy too sparse): both rejected.
+
+## Phase 5 known issues
+
+21. **Neon rain** was not added (readability in the LED tunnel and the chicane); optional.
+22. **Revolution cannonball pool and glow sprites** (~65 draws at Yorktown when the artillery fires) are not
+    instanced yet (29).
+23. **The Neon night IBL is global**: the furnace-orange panel shows in reflections everywhere, not only near
+    the furnace (kept dim for that reason). Local reflection probes would fix it.
+24. **Neon glow cards** are placed from furnace mesh clusters; a few sit partly over the road edge in the
+    furnace section (reads as heat on the wet road).
+25. **The showroom** still renders direct (ACES, no post chain); bloom on its neon is not available there.
