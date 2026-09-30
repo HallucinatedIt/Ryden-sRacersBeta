@@ -24,6 +24,7 @@
                env_mesa:{ v2:'models/env/env_mesa.v2.glb?v=1', track:'mesa', needs:['ktx2','meshopt'] },
                env_alondra:{ v2:'models/env/env_alondra.v2.glb?v=1', track:'alondra', needs:['ktx2','meshopt'] },
                env_revolution:{ v2:'models/env/env_revolution.v2.glb?v=1', track:'revolution', needs:['ktx2','meshopt'] },
+               env_neon:{ v2:'models/env/env_neon.v2.glb?v=1', track:'neon', needs:['ktx2','meshopt'] },
                // Phase 3 cars with exported material slots (tools/blender/rr_car_slots.py); folded to one mesh per part on load
                gt44:{ v2:'models/cars/gt40.v2.glb?v=1', car:true }, missile:{ v2:'models/cars/missile_commander.v2.glb?v=1', car:true },
                trout:{ v2:'models/cars/trout_protocol.v2.glb?v=1', car:true }, duck:{ v2:'models/cars/duck_plasma.v2.glb?v=1', car:true },

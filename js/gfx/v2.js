@@ -293,6 +293,52 @@
           haze:{density:0.0012, falloff:0.012, color:0xeacfa2, sunColor:0xffcf92}, exposure:1.1, ibl:0.8, grade:{saturation:1.08, contrast:1.08, wb:[1.03,1.0,0.94]}, bloom:0.075 },
       },
     },
+    // Neon Foundry Nights: midnight in the steelworks. Wet, metallic, dangerous: deep blacks with readable road
+    // edges, the course's own LED show pushed into HDR so bloom finds it, a dark sky with magenta light pollution
+    // and furnace orange low in the north-east, reflections from a night IBL made of neon / sodium / furnace
+    // panels (the black sky alone reflects nothing), wet asphalt with puddles and a squeegeed racing line.
+    // The moon is the only shadow light.
+    neon:{ name:'Neon Foundry · wet midnight',
+      colorManaged:true, toneMapping:'neutral', exposure:1.3,
+      sunDir:[0.35,0.62,-0.7],
+      sun:{ color:0x8fa4ff, intensity:0.45, shadowBias:-0.0003, normalBias:0.03, radius:2.4 },
+      sky:{ zenith:0x03040b, horizon:0x1c1130, warm:0x3a1c10, ground:0x040308, mie:0.35, disk:6, sunRadiance:0.35, clouds:0.22, horizonPow:0.62, brightness:1.0 },
+      ibl:{ skyScale:1.0, intensity:1.0 },
+      night:{
+        // reflections: what wet asphalt, paint and steel see (HDR panels around the horizon, a dim sky overhead)
+        iblSpec:{ background:0x03040a, ground:0x020203, panels:[
+          {w:30,h:4,color:0x22e4ff,intensity:5,pos:[40,4,0]}, {w:30,h:4,color:0xff2e97,intensity:5,pos:[-40,4,6]},
+          {w:26,h:3,color:0x9b4dff,intensity:4,pos:[8,5,40]}, {w:22,h:5,color:0xff6a1c,intensity:3.2,pos:[28,3,-32]}, {w:18,h:3,color:0x3a7bff,intensity:3,pos:[-30,6,-30]},
+          {w:14,h:2,color:0xffb060,intensity:3,pos:[-20,16,-24]}, {w:10,h:2,color:0xfff2e0,intensity:2.5,pos:[0,22,20]},
+          {w:60,h:60,color:0x0b0e1a,intensity:1,pos:[0,40,0]} ] },
+        hdr:{ basic:1.6, shader:1.3, glow:0.85, additive:0.5 },        // multipliers on the course's LED materials (toneMapped:false) so they bloom
+        stripEnv:true,                                  // env materials use the night IBL instead of the course's legacy env map
+        glow:{ re:/^nf_(furnace|furnace_pools)$/, color:0xff5a18, intensity:0.16, size:1.1, cell:14 },
+        steam:{ re:/^nf_stack_rings$/, cell:18, rate:3.5, rise:2.6, life:8, size:17, color:0x8e899a, alpha:0.3, spread:3,
+                furnace:{ re:/^nf_furnace$/, rate:2.5, rise:1.6, life:6, size:19, color:0x5e4238, alpha:0.14 } },
+      },
+      hemi:0.05,
+      haze:{ density:0.0017, falloff:0.018, start:20, base:0, color:0x140e20, sunColor:0x2a2240 },
+      fog:{ near:500, far:1500 },
+      bloom:{ threshold:0.85, knee:0.45, intensity:0.3, radius:1.0 },
+      ao:{ radius:1.0, intensity:0.9, thickness:1.2, exponent:1.4, falloff:1.0 },
+      grade:{ saturation:1.08, contrast:1.12, wb:[0.985,0.99,1.03], lift:[0.005,0.005,0.009], gain:[1,1,1], gamma:1.0, vignette:0.2 },
+      road:{ material:/^m_road$/, roughness:0.62, normalScale:0.5, detailTile:1.4, rubber:0.35, dust:0x1a1a22, dustAmt:0.25, macro:0.18, envMapIntensity:1.0, albedo:1.0, edgeStart:0.8,
+             wet:{ amount:0.85, darken:0.45, puddles:0.6, roughness:0.07 } },
+      decals:{ patchEvery:110, tarEvery:55, crackEvery:40, manholeEvery:70, potholeEvery:0, oilEvery:24, gritTint:0x2a2a30, dirtTint:0x1c1c22 },
+      materials:[
+        {re:/^m_(steel_dark|arch_steel|galv|metal)$/, set:{metalness:0.85, roughness:0.32, envMapIntensity:1.2}},   // wet steel
+        {re:/^m_(wall_dark|cladding)$/, set:{metalness:0.45, roughness:0.5, envMapIntensity:1.0}},
+        {re:/^m_container$/, set:{metalness:0.35, roughness:0.48, envMapIntensity:1.0}},
+        {re:/^m_glass_dark$/, set:{metalness:0.0, roughness:0.04, envMapIntensity:1.5}},
+        {re:/^m_concrete$/, detail:'stone', set:{roughness:0.72}},                                               // damp concrete
+        {re:/^m_(shoulder|curb|barrier)$/, set:{roughness:0.45, envMapIntensity:0.9}},
+        {re:/^m_slag$/, set:{roughness:0.9}},
+        {re:/^m_(signs|gantry_sign|mvm_title)$/, set:{emissiveIntensity:0.8}},    // text stays under the bloom threshold: readable, not a blob
+        {re:/^m_(mvm_art|maximus)$/, set:{emissiveIntensity:0.7}},
+      ],
+      zones:[],
+    },
   };
   const qs=(()=>{ try{ return new URLSearchParams(location.search); }catch(e){ return new URLSearchParams(''); } })();
 
@@ -387,6 +433,8 @@
             m.needsUpdate=true; break; } }); }
       rep.materials=nm; if(env){ let ct=0,tt=0; const seenT=new Set(); env.traverse(o=>{ const m=o.material; if(m&&m.map&&!seenT.has(m.map)){ seenT.add(m.map); tt++; if(m.map.isCompressedTexture) ct++; } }); rep.textures={total:tt,ktx2:ct}; }
       road.forEach(o=>GFX.road.upgradeAsphalt(o,W,P,A,L,Q)); lines.forEach(o=>GFX.road.upgradeLines(o,L)); rep.road=road.length;
+      // --- night tracks: HDR emissives, night IBL for reflections, furnace glow, steam
+      if(L.night) rep.night=V2.night(R,L,Q,r);
       // --- decals on the real road surface
       if(Q.decals && road.length){ const surf=GFX.road.surface(road); const dg=GFX.decals.build(W,P,A,surf,L,R.def.id); W.group.add(dg); rep.decals=dg.userData.stats; }
       // --- wall art (graffiti, posters, painted ads, stencils): one merged mesh on walls that face the road
@@ -416,6 +464,31 @@
         .catch(e=>console.warn('[gfx v2] prewarm',e)).then(()=>{ if(V2.race===R) V2.pending=null; });
       rep.ms=Math.round(performance.now()-t0); V2.report=rep; if(qs.get('gfxdebug')) console.log('[gfx v2] look applied: '+L.name,JSON.stringify(rep));
     },
+    night(R,L,Q,renderer){ const W=R.W, N=L.night, NF=GFX.nightfx, st={}; const env=W.env&&W.env.root;
+      // HDR: the course's LED materials are toneMapped:false basics / shaders authored for a 0..1 output; under the
+      // HDR post chain they must go above the bloom threshold, or the neon reads as flat paint
+      const seen=new Set(); let nb=0, ns=0;
+      W.group.traverse(o=>{ const ms=o.material?(Array.isArray(o.material)?o.material:[o.material]):[]; for(const m of ms){ if(!m||seen.has(m)) continue; seen.add(m);
+        if(m.toneMapped===false&&m.isMeshBasicMaterial&&m.color){ m.color.multiplyScalar(m.blending===THREE.AdditiveBlending?(N.hdr.glow||1):(N.hdr.basic||1)); nb++; }
+        else if(m.toneMapped===false&&m.isShaderMaterial&&!m.userData.v2hdr){ m.userData.v2hdr=1; const k=(m.blending===THREE.AdditiveBlending?(N.hdr.additive!=null?N.hdr.additive:1):(N.hdr.shader||1)).toFixed(3);   /* additive = halos and the fake road reflection: the wet road now reflects for real */ const fs=m.fragmentShader, j=fs.lastIndexOf('}');
+          if(j>0){ m.fragmentShader=fs.slice(0,j)+'\ngl_FragColor.rgb*='+k+';\n'+fs.slice(j); m.needsUpdate=true; ns++; } } } });
+      st.hdr={basic:nb, shader:ns};
+      // reflections: a night IBL (dark, with HDR neon / sodium / furnace panels)
+      if(Q.envLighting&&N.iblSpec){ const e=NF.nightIBL(renderer,N.iblSpec); if(V2.env) V2.env.dispose(); V2.env=e; R.scene.environment=e; R.scene.environmentIntensity=L.ibl.intensity; st.ibl=true; }
+      if(N.stripEnv&&env){ const lg=W.neonEnv; env.traverse(o=>{ const m=o.isMesh&&o.material; if(m&&m.isMeshStandardMaterial&&m.envMap&&(!lg||m.envMap===lg)&&!/water/.test(m.name||'')){ m.envMap=null; m.needsUpdate=true; } }); }
+      // cluster a mesh's vertices into cells (a mesh may hold many stacks / furnace mouths)
+      const clusters=(re,cell)=>{ const C=new Map(); if(!env) return []; const v=new THREE.Vector3(); env.traverse(o=>{ if(!o.isMesh||!re.test(o.name)) return; const pa=o.geometry.attributes.position; o.updateMatrixWorld();
+          for(let k=0;k<pa.count;k++){ v.fromBufferAttribute(pa,k).applyMatrix4(o.matrixWorld); const key=Math.floor(v.x/cell)+','+Math.floor(v.z/cell); let c=C.get(key); if(!c){ c={min:v.clone(),max:v.clone()}; C.set(key,c); } else { c.min.min(v); c.max.max(v); } } });
+        return [...C.values()]; };
+      if(N.glow&&Q.postFX!==false){ const cl=clusters(N.glow.re,N.glow.cell||14); const G=N.glow;
+        const g=NF.glowCards(cl.map(c=>{ const s=c.max.clone().sub(c.min); return {pos:[(c.min.x+c.max.x)/2,(c.min.y+c.max.y)/2+1,(c.min.z+c.max.z)/2], size:Math.max(8,Math.max(s.x,s.z)*(G.size||1.6)), color:G.color, intensity:G.intensity, aspect:0.55}; }));
+        W.group.add(g); st.glowCards=cl.length; }
+      if(N.steam&&(Q.particles||0)>0){ const S=N.steam, em=[];
+        clusters(S.re,S.cell||18).forEach(c=>em.push({pos:[(c.min.x+c.max.x)/2,c.max.y,(c.min.z+c.max.z)/2], rate:S.rate, rise:S.rise, life:S.life, size:S.size, color:S.color, alpha:S.alpha, spread:S.spread}));
+        if(S.furnace) clusters(S.furnace.re,14).forEach(c=>em.push(Object.assign({pos:[(c.min.x+c.max.x)/2,c.max.y+4,(c.min.z+c.max.z)/2], spread:3},S.furnace)));
+        const sys=NF.steam(em,{cap:Math.round(360*(Q.particles||1)), far:560, near:240, wind:[0.8,0.25]});
+        if(sys){ W.group.add(sys.points); V2.steam=sys; const r=renderer; W.updaters.push((dt)=>{ const c=R.game&&R.game.camera; if(c) sys.update(Math.min(dt,0.05),c.position,r.domElement.height); }); st.steam=sys.stats; } }
+      return st; },
     // one derived look per chapter; per frame: find the chapter blend at the player (or the posed car in a
     // benchmark), interpolate sun / sky / haze / grade / exposure, and switch the IBL at the blend midpoint
     // (pre-baked PMREM per chapter: no PMREM work while racing). Runs after the course's own atmosphere updater,

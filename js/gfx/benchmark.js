@@ -59,6 +59,19 @@
       ],
       drive:{id:'boulevard_run', name:'Boulevard run (moving)', i0:20, i1:150, lat:-3, speed:36},
     },
+    // Neon Foundry Nights: the night track. Wet road under the LED arches, the foundry weave, the furnace,
+    // the canal jump, the tech yard, the start arena; stress scene = the LED arch straight (most emissive + reflections)
+    neon:{ track:'neon', car:'gt44', title:'Neon Foundry Nights + GT40', warm:30, frames:180,
+      shots:[
+        {id:'start_arena', name:'Start arena', i:8, lat:-2, cam:{back:8,up:3.4,side:0,ahead:18,fov:66}, why:'grandstands, gantry, event LEDs, wet grid'},
+        {id:'led_arches', name:'LED arch straight', i:250, lat:-2, cam:{back:7.5,up:2.8,side:0,ahead:20,fov:66}, why:'heaviest emissive + wet-road reflections (stress scene candidate)'},
+        {id:'foundry_weave', name:'Foundry weave', i:420, lat:-2, cam:{back:7.5,up:3,side:0,ahead:16,fov:66}, why:'dense industrial: dark steel, containers, pipes'},
+        {id:'furnace', name:'Furnace', i:455, lat:2, cam:{back:9,up:3.6,side:-4,ahead:12,fov:66}, why:'furnace glow, heat, smoke'},
+        {id:'canal_jump', name:'Canal jump', i:515, lat:-1, cam:{back:9,up:4,side:0,ahead:22,fov:66}, why:'harbour/canal, water, jump signs'},
+        {id:'tech_yard', name:'Tech yard', i:650, lat:-2, cam:{back:7.5,up:3,side:0,ahead:16,fov:66}, why:'service buildings, signage, chicane'},
+      ],
+      drive:{id:'arch_run', name:'LED arch run (moving)', i0:190, i1:330, lat:-2, speed:40},
+    },
     // Revolution: one shot per chapter (placed relative to the chapter starts), Yorktown twice (the payoff and
     // the stress scene: siege lines, troops, artillery, harbour, smoke), and a moving run through a chapter blend
     revolution:{ track:'revolution', car:'gt44', title:"Y'all Fuck With Racin? (Revolution) + GT40", warm:30, frames:180,
