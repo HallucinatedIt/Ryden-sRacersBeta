@@ -268,6 +268,10 @@
       // troops cast shadows only in their near tier. The chapter fog below is therefore also the cull distance:
       // it keeps the legacy chapter distances (same tiles in view as before), the haze does the aerial perspective
       zones:[],
+      // Phase 5 draw-call control (Yorktown / mobile): far vegetation tiles (2 draws per tile: foliage + bark) merged per
+      // material per 700 m cell and culled by distance as chunks; the course's crossed light-shaft cards merged to one draw
+      mergeMaterials:{ re:/^rv_veg_far_/, cell:700, far:1500, shadowFar:1 },
+      mergeCards:{ maxTris:2 },
       chapters:{
         // South Carolina swamp: a humid, low golden sun through green-grey mist
         swamp:{ fog:{near:360, far:600}, sun:{color:0xffb574, intensity:2.7}, sky:{zenith:0x4f6b86, horizon:0xdcc39a, warm:0xd9a674, ground:0x3c4a30, clouds:0.46, mie:1.3},
@@ -441,9 +445,12 @@
       if(Q.decals && env && L.walls){ const wm=GFX.decals.buildWalls(W,P,Object.assign({},L.walls,{max:Math.round((L.walls.max||120)*Math.max(0.35,Q.propDensity||1))})); if(wm){ W.group.add(wm); rep.walls=wm.userData.stats; } }
       // --- draw-call control: flat-colour material slots of one object -> one draw (?merge=0 to compare)
       if(env&&qs.get('merge')!=='0') rep.mergeFlat=GFX.lod.mergeFlat(env);
-      if(env&&L.mergeMaterials&&qs.get('merge')!=='0') rep.mergeByMaterial=GFX.lod.mergeByMaterial(env,L.mergeMaterials);
+      const mergedFar=[];
+      if(env&&L.mergeMaterials&&qs.get('merge')!=='0') rep.mergeByMaterial=GFX.lod.mergeByMaterial(env,Object.assign({onMerged:m=>{ if(L.mergeMaterials.far) mergedFar.push(m); }},L.mergeMaterials));
+      // static decoration cards the course builds as one mesh each (Revolution: the crossed light-shaft planes): one draw per material
+      if(L.mergeCards&&qs.get('merge')!=='0'){ const C=L.mergeCards; rep.mergeCards=GFX.lod.mergeByMaterial(W.group,{cell:1e5, filter:o=>!o.name&&o.parent===W.group&&o.geometry&&o.geometry.type==='PlaneGeometry'&&(o.geometry.index?o.geometry.index.count:9)<=(C.maxTris||2)*3&&o.material&&o.material.blending===THREE.AdditiveBlending&&o.material.transparent}); }
       // --- scenery zones: chunk merged meshes, distance culling, far shadows off
-      if(env){ const lod=GFX.lod.manager(Q); rep.zones=lod.zoneEnvironment(env,L.zones); V2.lod=lod; W.updaters.push(()=>{ if(R.game&&R.game.camera) lod.update(R.game.camera); }); }
+      if(env){ const lod=GFX.lod.manager(Q); rep.zones=lod.zoneEnvironment(env,L.zones); V2.lod=lod; mergedFar.forEach(m=>lod.register(m,{far:L.mergeMaterials.far,shadowFar:L.mergeMaterials.shadowFar})); W.updaters.push(()=>{ if(R.game&&R.game.camera) lod.update(R.game.camera); }); }
       // --- MSAA-friendly foliage edges
       if(Q.postFX&&Q.msaa) W.group.traverse(o=>{ if(o.isMesh&&o.material&&o.material.alphaTest>0) o.material.alphaToCoverage=true; });
       // --- cars: V2 vehicle materials + environment

@@ -93,7 +93,7 @@
     const sig=g=>Object.keys(g.attributes).sort().map(k=>k+g.attributes[k].itemSize).join(',');
     const B=new Map(); let before=0;
     root.traverse(o=>{ if(!o.isMesh||o.isInstancedMesh||o.isSkinnedMesh||!o.visible||Array.isArray(o.material)||!o.geometry||!o.geometry.attributes.position) return;
-      const nmN=o.name+' '+((o.parent&&o.parent.name)||''); if(!re.test(nmN)||(opt.skip&&opt.skip.test(nmN))) return; const g=o.geometry; if(g.morphAttributes&&Object.keys(g.morphAttributes).length) return;
+      const nmN=o.name+' '+((o.parent&&o.parent.name)||''); if(opt.filter?!opt.filter(o):(!re.test(nmN)||(opt.skip&&opt.skip.test(nmN)))) return; const g=o.geometry; if(g.morphAttributes&&Object.keys(g.morphAttributes).length) return;
       if(!g.boundingSphere) g.computeBoundingSphere(); c.copy(g.boundingSphere.center).applyMatrix4(o.matrixWorld);
       const key=[o.material.uuid,o.castShadow?1:0,o.receiveShadow?1:0,o.renderOrder,o.frustumCulled?1:0,Math.floor(c.x/cell),Math.floor(c.z/cell),sig(g)].join('|');
       if(!B.has(key)) B.set(key,[]); B.get(key).push(o); before++; });
@@ -112,7 +112,7 @@
         ov+=n; });
       const G=new THREE.BufferGeometry(); names.forEach(k=>G.setAttribute(k,new THREE.BufferAttribute(out[k],list[0].geometry.attributes[k].itemSize))); G.setIndex(new THREE.BufferAttribute(I,1)); G.computeBoundingSphere(); G.computeBoundingBox();
       const f=list[0], m=new THREE.Mesh(G,f.material); m.name=(opt.prefix||'mm_')+((f.material&&f.material.name)||'mat')+'_'+after; m.castShadow=f.castShadow; m.receiveShadow=f.receiveShadow; m.renderOrder=f.renderOrder; m.frustumCulled=f.frustumCulled;
-      m.userData.mergedFrom=list.length; m.matrixAutoUpdate=false; root.add(m); m.updateMatrixWorld(true);
+      m.userData.mergedFrom=list.length; m.matrixAutoUpdate=false; root.add(m); m.updateMatrixWorld(true); if(opt.onMerged) opt.onMerged(m);
       list.forEach(o=>{ if(o.parent) o.parent.remove(o); o.geometry.dispose(); }); after++; merged+=list.length; }
     return {meshesBefore:before, meshesAfter:after, merged, drawsSaved:before-after}; }
 
