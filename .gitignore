@@ -1,2 +1,3 @@
 # regenerable pipeline intermediates (tools/blender/rr_car_slots.py output, extracted textures, logs)
 build/
+__pycache__/
