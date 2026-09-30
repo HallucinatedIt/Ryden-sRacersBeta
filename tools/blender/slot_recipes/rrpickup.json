@@ -1,0 +1,30 @@
+{
+ "car": "fdc",
+ "rot": 90,
+ "why": "FDC is rotated by the game (GLB_ROT) and its wheels are part of the body mesh: they were classified as trim. Wheels by axle discs; dark lower body stays trim.",
+ "wheels": {
+  "axles": [
+   0.683,
+   -0.425
+  ],
+  "r": 0.2,
+  "nxmin": 0.55,
+  "grow": 1.1
+ },
+ "rules": [
+  {
+   "wheel": true,
+   "if": {
+    "wrad": [
+     0.7,
+     1.1
+    ]
+   },
+   "to": "car_tire"
+  },
+  {
+   "wheel": true,
+   "to": "car_wheel"
+  }
+ ]
+}

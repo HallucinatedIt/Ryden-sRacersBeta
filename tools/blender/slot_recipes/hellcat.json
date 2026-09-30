@@ -1,0 +1,110 @@
+{
+ "car": "hellcat",
+ "rot": 90,
+ "why": "Hellcat is rotated by the game (GLB_ROT) and has its wheels in the body mesh. Metallic navy paint reads as chrome (metal map) and its dark lower panels as trim. Wheels by axle discs (tyre = outer ring, rim inside); glass = dark, non-metal, cabin band; chrome/trim elsewhere = paint (sills stay trim).",
+ "wheels": {
+  "axles": [
+   0.62,
+   -0.564
+  ],
+  "r": 0.25,
+  "nxmin": 0.55,
+  "grow": 1.08
+ },
+ "rules": [
+  {
+   "wheel": true,
+   "if": {
+    "wrad": [
+     0.7,
+     1.08
+    ]
+   },
+   "to": "car_tire"
+  },
+  {
+   "wheel": true,
+   "if": {
+    "metal": [
+     0.5,
+     1
+    ],
+    "rough": [
+     0,
+     0.35
+    ],
+    "lum": [
+     0.3,
+     1
+    ]
+   },
+   "to": "car_chrome"
+  },
+  {
+   "wheel": true,
+   "to": "car_wheel"
+  },
+  {
+   "from": [
+    "car_paint",
+    "car_glass",
+    "car_interior",
+    "car_chrome",
+    "car_trim"
+   ],
+   "wheel": false,
+   "if": {
+    "ny": [
+     0.55,
+     1
+    ],
+    "nf": [
+     -0.55,
+     0.4
+    ],
+    "mx": [
+     0,
+     0.12
+    ],
+    "metal": [
+     0,
+     0.3
+    ],
+    "nz": [
+     -0.3,
+     0.92
+    ]
+   },
+   "to": "car_glass"
+  },
+  {
+   "from": [
+    "car_trim"
+   ],
+   "if": {
+    "ny": [
+     0,
+     0.22
+    ],
+    "mx": [
+     0,
+     0.15
+    ]
+   },
+   "to": "car_trim"
+  },
+  {
+   "from": [
+    "car_chrome",
+    "car_trim"
+   ],
+   "to": "car_paint"
+  },
+  {
+   "from": [
+    "car_glass"
+   ],
+   "to": "car_paint"
+  }
+ ]
+}

@@ -1,0 +1,134 @@
+{
+ "car": "lightning",
+ "rot": 0,
+ "why": "Pearl white is metallic in the atlas, so the body read as chrome; the black livery stripes read as glass or trim. Light metallic = paint; dark metallic in the window shapes = glass; dark on the upper body = paint (stripes); carbon trim stays only on the lower body. Wheel meshes keep their own classification.",
+ "rules": [
+  {
+   "mesh": "wheel",
+   "to": "__keep__"
+  },
+  {
+   "from": [
+    "car_chrome"
+   ],
+   "if": {
+    "lum": [
+     0.45,
+     1
+    ]
+   },
+   "to": "car_paint"
+  },
+  {
+   "from": [
+    "car_chrome"
+   ],
+   "if": {
+    "mx": [
+     0,
+     0.3
+    ]
+   },
+   "to": "car_glass",
+   "stop": false,
+   "note": "dark metallic: candidate glass, the window-shape rules below decide"
+  },
+  {
+   "from": [
+    "car_glass"
+   ],
+   "if": {
+    "ny": [
+     0.6,
+     1
+    ],
+    "nside": [
+     0.55,
+     1
+    ]
+   },
+   "to": "car_glass",
+   "note": "side windows"
+  },
+  {
+   "from": [
+    "car_glass"
+   ],
+   "if": {
+    "nf": [
+     0.02,
+     0.48
+    ],
+    "nz": [
+     0.3,
+     0.88
+    ],
+    "ny": [
+     0.6,
+     1
+    ],
+    "nx": [
+     -0.75,
+     0.75
+    ]
+   },
+   "to": "car_glass",
+   "note": "windscreen"
+  },
+  {
+   "from": [
+    "car_glass"
+   ],
+   "if": {
+    "nf": [
+     -0.62,
+     -0.05
+    ],
+    "nz": [
+     0.25,
+     0.88
+    ],
+    "ny": [
+     0.6,
+     1
+    ],
+    "nx": [
+     -0.75,
+     0.75
+    ]
+   },
+   "to": "car_glass",
+   "note": "rear window"
+  },
+  {
+   "from": [
+    "car_glass"
+   ],
+   "if": {
+    "ny": [
+     0,
+     0.35
+    ]
+   },
+   "to": "car_trim"
+  },
+  {
+   "from": [
+    "car_glass"
+   ],
+   "to": "car_paint"
+  },
+  {
+   "from": [
+    "car_trim"
+   ],
+   "if": {
+    "ny": [
+     0.35,
+     1
+    ]
+   },
+   "to": "car_paint"
+  }
+ ]
+}

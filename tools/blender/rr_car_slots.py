@@ -44,7 +44,7 @@ faces. Check the --debug render (false colour per slot) and fix faces by hand in
 (select faces -> assign material slot). docs/graphics-v2/17-vehicle-pipeline.md lists which cars pass as is.
 """
 import bpy, bmesh, sys, os, json, math, argparse, colorsys
-from mathutils import Vector
+from mathutils import Vector, Matrix
 import numpy as np
 
 SLOTS = ['car_paint', 'car_glass', 'car_lights', 'car_chrome', 'car_rubber', 'car_tire', 'car_wheel', 'car_interior', 'car_trim', 'car_emissive']
@@ -61,6 +61,8 @@ def args():
     p.add_argument('--debug', default='', help='render a false-colour slot check image')
     p.add_argument('--report', default='')
     p.add_argument('--labels', default='', help='write the slot of every triangle (per glTF mesh) as JSON, for tools/car_apply_slots.mjs')
+    p.add_argument('--rot', type=float, default=0, help='degrees about the up axis that the GAME applies to this GLB (GLB_ROT in game.js: brcc, fdc, hellcat = 90): classify in the game frame (front = glTF +z)')
+    p.add_argument('--recipe', default='', help='JSON file of per-car correction rules applied after classification (the reviewable "hand pass", see docs/graphics-v2/27-vehicle-fixes.md)')
     p.add_argument('--keep-slots', action='store_true', help='SRC is a hand-edited *.slots.glb: keep its material assignment, just write labels (matched by position)')
     return p.parse_args(a)
 
@@ -102,6 +104,47 @@ def classify_face(f, uvl, B, M, box, wheel, police, center):
     if mx < 0.12 and rough > 0.7 and not up: return 'car_rubber'
     if mx < 0.2 and 0.34 <= rough <= 0.7 and not up and ny < 0.42: return 'car_trim'
     return 'car_paint'
+
+def face_feats(f, uvl, B, M, box):
+    """The numbers a recipe rule can test: position in the car's box (nx: -1 left .. 1 right, ny: 0 floor .. 1 roof,
+    nf: -1 tail .. 1 nose), facing (nz: normal up component, nside: |sideways|), atlas colour and metal/roughness."""
+    uvs = [l[uvl].uv for l in f.loops]; cu = sum((u for u in uvs), Vector((0, 0))) / len(uvs)
+    pts = [cu] + [cu.lerp(u, 0.7) for u in uvs]
+    cols = np.array([sample(*B, p) for p in pts]).mean(0); mr = np.array([sample(*M, p) for p in pts]).mean(0)
+    r, g, b = [float(c) for c in cols]; mx, mn = max(r, g, b), min(r, g, b)
+    c = f.calc_center_median(); n = f.normal; lo, hi = box; sz = hi - lo
+    return {'nx': (c.x - (lo.x + hi.x) / 2) / (sz.x / 2 + 1e-6), 'ny': (c.z - lo.z) / (sz.z + 1e-6), 'nf': ((lo.y + hi.y) / 2 - c.y) / (sz.y / 2 + 1e-6),
+            'nz': n.z, 'nside': abs(n.x), 'lum': 0.2126 * r + 0.7152 * g + 0.0722 * b, 'sat': (mx - mn) / (mx + 1e-5), 'mx': mx,
+            'hue': colorsys.rgb_to_hsv(r, g, b)[0] * 360, 'rough': float(mr[1]), 'metal': float(mr[2]),
+            'z_m': c.z - lo.z, 'y_m': c.y, 'L': sz.y, 'H': sz.z}
+
+def in_wheel(F, W):
+    """Wheel zone for cars whose wheels are part of the body mesh: a disc of radius r*H at each axle (nf), at the
+    sides. Sets F['wrad'] = distance from the nearest axle / wheel radius (tyre = the outer ring)."""
+    F['wrad'] = 9.0
+    if not W or abs(F['nx']) < W.get('nxmin', 0.6): return False
+    rH = W['r'] * F['H']
+    for ax in W['axles']:
+        dy = (F['nf'] - ax) * F['L'] / 2; dz = F['z_m'] - rH
+        F['wrad'] = min(F['wrad'], math.hypot(dy, dz) / rH)
+    return F['wrad'] < W.get('grow', 1.05)
+
+def apply_recipe(bm, uvl, B, M, box, lab, R, mesh_name):
+    import re
+    changed = 0
+    for f in bm.faces:
+        F = None
+        for rule in R.get('rules', []):
+            if rule.get('mesh') and not re.search(rule['mesh'], mesh_name): continue
+            fr = rule.get('from', '*')
+            if fr != '*' and lab[f.index] not in fr: continue
+            if F is None: F = face_feats(f, uvl, B, M, box); F['wheel'] = in_wheel(F, R.get('wheels'))
+            if 'wheel' in rule and bool(rule['wheel']) != F['wheel']: continue
+            ok = all(F[k] >= lim[0] and F[k] <= lim[1] for k, lim in rule.get('if', {}).items())
+            if ok and all(not (F[k] >= lim[0] and F[k] <= lim[1]) for k, lim in rule.get('unless', {}).items()):
+                if rule['to'] != '__keep__' and lab[f.index] != rule['to']: lab[f.index] = rule['to']; changed += 1
+                if rule.get('stop', True): break
+    return lab, changed
 
 def smooth(bm, lab, keep=('car_lights', 'car_emissive'), passes=2):
     faces = list(bm.faces)
@@ -156,7 +199,8 @@ def main():
     B = load_img(A.base); M = load_img(A.mr)
     meshes = [o for o in bpy.context.scene.objects if o.type == 'MESH']
     # car bounds from everything; wheel discs from the wheel meshes
-    allv = [o.matrix_world @ v.co for o in meshes for v in o.data.vertices]
+    RZ = Matrix.Rotation(math.radians(A.rot), 4, 'Z')   # glTF rotateY(a) == Blender rotation about Z by a
+    allv = [RZ @ o.matrix_world @ v.co for o in meshes for v in o.data.vertices]
     lo = Vector([min(v[i] for v in allv) for i in range(3)]); hi = Vector([max(v[i] for v in allv) for i in range(3)]); center = (lo + hi) / 2
     src_mat = next((s.material for o in meshes for s in o.material_slots if s.material), None)
     mats = {}
@@ -167,9 +211,9 @@ def main():
     for o in meshes:
         wheel = None
         if 'wheel' in o.name.lower():
-            ws = [o.matrix_world @ v.co for v in o.data.vertices]; wlo = Vector([min(v[i] for v in ws) for i in range(3)]); whi = Vector([max(v[i] for v in ws) for i in range(3)])
+            ws = [RZ @ o.matrix_world @ v.co for v in o.data.vertices]; wlo = Vector([min(v[i] for v in ws) for i in range(3)]); whi = Vector([max(v[i] for v in ws) for i in range(3)])
             wheel = ((wlo + whi) / 2, max(whi.z - wlo.z, whi.y - wlo.y) / 2)
-        me = o.data; bm = bmesh.new(); bm.from_mesh(me); bm.faces.ensure_lookup_table(); bm.transform(o.matrix_world); bm.normal_update()
+        me = o.data; bm = bmesh.new(); bm.from_mesh(me); bm.faces.ensure_lookup_table(); bm.transform(RZ @ o.matrix_world); bm.normal_update()
         uvl = bm.loops.layers.uv.active
         if A.keep_slots:   # hand-edited: the material each face already has is the answer
             names = [m.name.split('.')[0] if m else 'car_paint' for m in me.materials]
@@ -177,6 +221,9 @@ def main():
         else:
             lab = {f.index: classify_face(f, uvl, B, M, (lo, hi), wheel, A.police, center) for f in bm.faces}
             lab = smooth(bm, lab)
+            if A.recipe:
+                lab, nch = apply_recipe(bm, uvl, B, M, (lo, hi), lab, json.load(open(A.recipe)), o.name); lab = smooth(bm, lab, passes=1)
+                rep.setdefault('recipe_changed', {})[o.name] = nch
         if not wheel and not A.keep_slots:
             lab, r1 = cap_islands(bm, lab, 'car_lights', 0.015); lab, r2 = cap_islands(bm, lab, 'car_emissive', 0.04)
             rep.setdefault('reverted', {})[o.name] = r1 + r2

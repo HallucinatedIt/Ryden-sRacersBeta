@@ -3322,6 +3322,7 @@ class Garage{
     this.platform=new THREE.Group(); this.platform.add(disc,ring); s.add(this.platform); this.platMirror=this.platform.clone(); this.mirror.add(this.platMirror);
     this.carIdx=-1; this.models={}; this.t=0; this.spin=0.4; this.drag=null; this.mode=null; this.frameKey=''; this.fit={d:9,ox:0,oy:0};
     this.cam=new THREE.PerspectiveCamera(30,1,0.1,200); this.base=new THREE.Vector3(0,0.55,0);
+    if(window.GFX&&GFX.showroom) GFX.showroom.upgrade(this);   // Graphics V2: studio env + neutral rims (no-op on legacy)
     this.buildShowcase();
     const cv=$('gl'); cv.addEventListener('pointerdown',e=>{ if(this.g.screen==='garage'){ this.drag=e.clientX; this.swX=e.clientX; this.swT=performance.now(); } }); addEventListener('pointerup',e=>{ if(this.swX!=null&&this.g.screen==='garage'&&this.g.ui.isMobile()){ const dx=e.clientX-this.swX; if(Math.abs(dx)>45&&performance.now()-this.swT<600) this.g.ui.act(dx<0?'nextCar':'prevCar'); } this.swX=null; }); addEventListener('pointermove',e=>{ if(this.drag!=null){ this.spin=0; this.turn.rotation.y+=(e.clientX-this.drag)*0.01; this.drag=e.clientX; } }); addEventListener('pointerup',()=>{ if(this.drag!=null){ this.drag=null; this.spin=0.4; } });
   }
@@ -3356,7 +3357,7 @@ class Garage{
     (m.wheels||[]).forEach(wh=>{ const p=new THREE.Vector3(); wh.parent.getWorldPosition(p); m.root.worldToLocal(p); add(0.75,0.95,p.x,p.z,1); });
     return grp; }
   buildShowcase(){
-    const v=VEHICLES[this.showIdx]; setEnvOnCarMats(this.env); const m=buildCarModel(v,this.env); m.root.traverse(o=>{ if(o.isMesh) o.castShadow=true; }); if(GFX.vehicles&&GFX.vehicles.showroom) GFX.vehicles.showroom(v,m,this.env);
+    const v=VEHICLES[this.showIdx]; setEnvOnCarMats(this.env); const m=buildCarModel(v,this.env); m.root.traverse(o=>{ if(o.isMesh) o.castShadow=true; }); if(GFX.showroom) GFX.showroom.car(this,v,m);
     (m.steerPivots||[]).forEach(p=>p.rotation.y=-0.32);          // wheels turned toward the camera, showroom pose
     m.root.updateMatrixWorld(true); this.showModel=m;
     this.showcase.add(m.root); this.showcase.add(this.contactShadow(m)); this.showcase.rotation.y=this.showYaw;
@@ -3367,8 +3368,8 @@ class Garage{
     this.showPts=pts.length?pts:null; }
   setCar(i){ if(this.carIdx===i) return; this.carIdx=i; [this.turn,this.turnMirror].forEach(g=>g.children.slice().forEach(c=>g.remove(c)));
     const v=VEHICLES[i]; if(!window.CARS_READY && GLB_DATA[v.id] && !CAR_GLTF[v.id]){ window.CARS_WAIT.push(()=>{ if(this.carIdx===i){ this.carIdx=-1; this.setCar(i); } }); return; }
-    if(!this.models[i]){ setEnvOnCarMats(this.env); const m=buildCarModel(VEHICLES[i],this.env); m.root.traverse(o=>{ if(o.isMesh) o.castShadow=true; }); if(GFX.vehicles&&GFX.vehicles.showroom) GFX.vehicles.showroom(VEHICLES[i],m,this.env); m.root.updateMatrixWorld(true); m.shadow=this.contactShadow(m); m.mirrorRoot=m.root.clone(true); this.models[i]=m; }
-    const m=this.models[i]; this.turn.add(m.root); this.turn.add(m.shadow); this.turnMirror.add(m.mirrorRoot); this.pop=0; this.frameKey=''; }
+    if(!this.models[i]){ setEnvOnCarMats(this.env); const m=buildCarModel(VEHICLES[i],this.env); m.root.traverse(o=>{ if(o.isMesh) o.castShadow=true; }); if(GFX.showroom) GFX.showroom.car(this,VEHICLES[i],m); m.root.updateMatrixWorld(true); m.shadow=this.contactShadow(m); m.mirrorRoot=m.root.clone(true); this.models[i]=m; }
+    const m=this.models[i]; this.turn.add(m.root); this.turn.add(m.shadow); this.turnMirror.add(m.mirrorRoot); this.pop=0; this.frameKey=''; if(GFX.showroom) GFX.showroom.platform(this,m); }
   // where on screen the car should sit, from the live layout of the current screen
   stageFor(scr){ const W=innerWidth,H=innerHeight, land=W/H>=1.15;
     if(scr==='menu'){ const c=document.querySelector('#menu .mcol'), lg=document.querySelector('#menu .mlogo'); if(c&&c.offsetParent){ const r=c.getBoundingClientRect();

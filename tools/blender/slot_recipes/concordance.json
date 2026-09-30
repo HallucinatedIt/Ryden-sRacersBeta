@@ -1,0 +1,81 @@
+{
+ "car": "concord",
+ "rot": 0,
+ "why": "Silk-black limousine: black gloss paint reads as glass. Same window-shape rule as Black Lightning.",
+ "rules": [
+  {
+   "from": [
+    "car_glass"
+   ],
+   "if": {
+    "ny": [
+     0.6,
+     1
+    ],
+    "nside": [
+     0.55,
+     1
+    ]
+   },
+   "to": "car_glass",
+   "note": "side windows"
+  },
+  {
+   "from": [
+    "car_glass"
+   ],
+   "if": {
+    "nf": [
+     0.02,
+     0.48
+    ],
+    "nz": [
+     0.3,
+     0.88
+    ],
+    "ny": [
+     0.6,
+     1
+    ],
+    "nx": [
+     -0.75,
+     0.75
+    ]
+   },
+   "to": "car_glass",
+   "note": "windscreen"
+  },
+  {
+   "from": [
+    "car_glass"
+   ],
+   "if": {
+    "nf": [
+     -0.62,
+     -0.05
+    ],
+    "nz": [
+     0.25,
+     0.88
+    ],
+    "ny": [
+     0.6,
+     1
+    ],
+    "nx": [
+     -0.75,
+     0.75
+    ]
+   },
+   "to": "car_glass",
+   "note": "rear window"
+  },
+  {
+   "from": [
+    "car_glass"
+   ],
+   "to": "car_paint",
+   "note": "any other 'glass' is dark paint"
+  }
+ ]
+}

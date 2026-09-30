@@ -1,0 +1,12 @@
+{
+ "car": "brcc", "rot": 90,
+ "why": "BRCC is rotated by the game (GLB_ROT) and has its wheels in the body mesh. Black-and-gold camo: gold reads as chrome, black patches as glass. Wheels by axle discs, glass only dark + in the cabin band, the rest paint.",
+ "wheels": {"axles": [0.561, -0.624], "r": 0.2, "nxmin": 0.55, "grow": 1.1},
+ "rules": [
+  {"wheel": true, "if": {"wrad": [0.7, 1.1]}, "to": "car_tire"},
+  {"wheel": true, "to": "car_wheel"},
+  {"from": ["car_glass", "car_paint", "car_chrome"], "if": {"ny": [0.55, 1], "nf": [-0.5, 0.42], "nz": [-0.3, 0.88], "mx": [0, 0.09]}, "to": "car_glass"},
+  {"from": ["car_glass", "car_chrome"], "to": "car_paint"},
+  {"from": ["car_trim"], "if": {"ny": [0.3, 1]}, "to": "car_paint"}
+ ]
+}
