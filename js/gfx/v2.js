@@ -264,6 +264,23 @@
       ],
       // (rv_palisade lines at Bunker Hill / Yorktown were tried: behind the course's own barriers and hay walls
       //  they did not read from the road at any placement tested, so they are not placed. Asset kept for Phase 5)
+      // Phase 5 Meshy set, placed on free ground found by probing (test/free2.js): a brick house and a farm gate in
+      // Lexington's fields, butcher stalls at Trenton and in the Yorktown village; firs on the Lexington hills,
+      // birches and fly agarics in the Saratoga woods, mossy logs along the swamp. Not in the Yorktown battle
+      // view (the mobile draw-call hotspot): only one stall there.
+      dressing:[
+        {asset:'rv_colonial_house', i:360, lat:30, yaw:1.57, lods:[0,70,180], far:1000, big:true},
+        {asset:'rv_colonial_house', i:438, lat:29, yaw:1.45, lods:[0,70,180], far:1000, big:true},
+        {asset:'rv_timber_gate', i:372, lat:17.5, yaw:1.57, lods:[0,35,90], far:320},
+        {asset:'rv_butcher_stall', i:1456, lat:29, yaw:1.57, lods:[0,40,100], far:380},
+        {asset:'rv_butcher_stall', i:2139, lat:-18.5, yaw:-1.57, lods:[0,40,100], far:380},
+      ],
+      scatter:[
+        {asset:'rv_fir', count:36, band:[16,70], section:[300,580], cluster:3, clusterRadius:9, scale:[0.8,1.2], shadowLevels:1, far:900, minUp:0.8},
+        {asset:'rv_birch', count:44, band:[12,55], section:[1561,2079], cluster:4, clusterRadius:7, scale:[0.8,1.15], shadowLevels:1, far:700, minUp:0.8},
+        {asset:'rv_fly_agaric', count:70, band:[4,22], section:[1561,2079], cluster:5, clusterRadius:2, scale:[0.8,1.4], far:110, minUp:0.85},
+        {asset:'rv_mossy_log', count:24, band:[6,20], section:[2900,3100], cluster:1, scale:[0.8,1.3], far:260, minUp:0.85},
+      ],
       // no zones: the course culls its own vegetation / building tiles by the fog distance (course code), and the
       // troops cast shadows only in their near tier. The chapter fog below is therefore also the cull distance:
       // it keeps the legacy chapter distances (same tiles in view as before), the haze does the aerial perspective
@@ -530,7 +547,7 @@
         R.scene.environmentIntensity=Ln(A.ibl,B.ibl,t); V2.chapter={id:cur.id, next:nxt&&nxt.id, t:+t.toFixed(2), i:idx}; };
       apply(); W.updaters.push(apply); return st; },
     dress(R,L,Q){ const W=R.W, P=R.P; const ray=new THREE.Raycaster(); const targets=[], rockT=[];
-      W.env.root.traverse(o=>{ if(!o.isMesh) return; const nm=o.userData.chunkOf||o.name; if(/rocks|arch/.test(nm)) rockT.push(o); if(!/grass|scrub|cypress|palms|foam|crowd|horizon|rocks|joshua/.test(nm)) targets.push(o); });
+      W.env.root.traverse(o=>{ if(!o.isMesh) return; const nm=o.userData.chunkOf||o.name; if(/rocks|arch/.test(nm)) rockT.push(o); if(!/grass|scrub|cypress|palms|foam|crowd|horizon|rocks|joshua|veg|foliage|bark|water/.test(nm+' '+((o.material&&o.material.name)||''))) targets.push(o); });
       const ids=[...new Set(L.dressing.map(d=>d.asset))]; const ld=GFX.assets.configureLoader(new THREE.GLTFLoader());
       // pipeline props (tools/blender/rr_prop_pipeline.py): nodes lod0/lod1/lod2 (+ lodImp for plants), one GLB per asset
       return Promise.all(ids.map(u=>new Promise(res=>ld.load('models/props/'+u+'.glb?v=3',g=>res([u,g.scene]),undefined,e=>{ console.warn('[gfx v2] dressing asset failed',u,e); res([u,null]); }))))
