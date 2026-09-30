@@ -358,6 +358,8 @@
         {re:/^m_(signs|gantry_sign|mvm_title)$/, set:{emissiveIntensity:0.8}},    // text stays under the bloom threshold: readable, not a blob
         {re:/^m_(mvm_art|maximus)$/, set:{emissiveIntensity:0.7}},
       ],
+      // no extra props: the track is already dense, and the only free concrete off the racing line (tech yard,
+      // found by probing) sits behind the barriers where a parked truck is not seen from the road (tried)
       zones:[],
     },
   };
