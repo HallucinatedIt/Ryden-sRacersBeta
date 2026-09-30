@@ -35,7 +35,7 @@
                genlee:{ v2:'models/cars/general_lee.v2.glb?v=1', car:true }, brcc:{ v2:'models/cars/rotor.v2.glb?v=1', car:true },
                fdc:{ v2:'models/cars/rrpickup.v2.glb?v=1', car:true }, voyager:{ v2:'models/cars/midnight_voyager.v2.glb?v=1', car:true } },
     useVariant(id){ const v=AM.VARIANTS[id]; if(!v) return false; let q=''; try{ q=location.search; }catch(e){}
-      return GFX.settings.pipeline==='v2' && GFX.compat.rev>=160 && !/[?&]origassets/.test(q) && (v.car || !!(GFX.v2&&GFX.v2.LOOKS[v.track])); },
+      return GFX.settings.pipeline==='v2' && GFX.compat.rev>=160 && !/[?&]origassets/.test(q) && (v.car ? !!(GFX.v2&&GFX.v2.carsOn()) : !!(GFX.v2&&GFX.v2.LOOKS[v.track]&&GFX.v2.lookOn(v.track))); },
     // after a GLB is parsed (game.js): slotted car variants are folded to the original structure
     postLoad(id,scene){ const v=AM.VARIANTS[id]; if(v&&v.car&&AM.useVariant(id)&&GFX.vehicles&&GFX.vehicles.foldSlots) GFX.vehicles.foldSlots(scene); return scene; },
     src(id,url){ return AM.useVariant(id)?AM.VARIANTS[id].v2:url; },

@@ -416,7 +416,14 @@
   const V2={
     LOOKS, active:false, look:null, race:null,
     enabled(){ return GFX.settings.pipeline==='v2' && GFX.compat.rev>=160; },
-    lookFor(def){ return def && (LOOKS[def.id]||null); },
+    // Which tracks get their V2 look by default. After the first live test only Neon Foundry stays on: the
+    // other tracks render their original look on r186 (they ran smoother and looked right that way).
+    // ?v2looks=all (or a list, e.g. ?v2looks=alondra,coast) turns the other looks back on to keep working on them.
+    DEFAULT_LOOKS:['neon'],
+    lookOn(id){ const q=qs.get('v2looks'); if(q) return q==='all'?!!LOOKS[id]:q.split(',').includes(id); return V2.DEFAULT_LOOKS.includes(id); },
+    // V2 car materials (slot paint / chrome / glass): off by default after the live test (?v2cars=1 to compare)
+    carsOn(){ return qs.get('v2cars')==='1'; },
+    lookFor(def){ return def && V2.lookOn(def.id) && (LOOKS[def.id]||null); },
     toneMappingConst(){ const t=(V2.look&&V2.look.toneMapping)||'aces'; return t==='neutral'?THREE.NeutralToneMapping:t==='agx'?THREE.AgXToneMapping:THREE.ACESFilmicToneMapping; },
     begin(def,game){ V2.end(); const L=V2.enabled()?V2.lookFor(def):null; if(!L) return false;
       V2.active=true; V2.look=Object.assign({},L); V2.look.sunDir=new THREE.Vector3(...L.sunDir).normalize();
@@ -473,7 +480,7 @@
       // --- MSAA-friendly foliage edges
       if(Q.postFX&&Q.msaa) W.group.traverse(o=>{ if(o.isMesh&&o.material&&o.material.alphaTest>0) o.material.alphaToCoverage=true; });
       // --- cars: V2 vehicle materials + environment
-      const cenv=V2.env||R.env; let nc=0; R.cars.forEach(c=>{ nc+=GFX.vehicles.apply(c,cenv); }); rep.carMaterials=nc;
+      const cenv=V2.env||R.env; let nc=0; R.cars.forEach(c=>{ nc+=V2.carsOn()?GFX.vehicles.apply(c,cenv):GFX.vehicles.light(c); }); rep.carMaterials=nc;
       R.cars.forEach(c=>c.model.root.traverse(o=>{ if(o.isMesh&&o.material&&o.material.map&&o.material.transparent&&/shadow/i.test(o.name||'')) o.material.opacity=0.6; }));
       // --- post look
       GFX.post.enable(Object.assign({},L,{haze:Object.assign({},L.haze,L.hazeC),sunDir:L.sunDir}));

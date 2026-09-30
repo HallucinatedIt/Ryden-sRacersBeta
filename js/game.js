@@ -2822,7 +2822,9 @@ class Race{
     dt=Math.min(dt,0.1); const P=this.P, pl=this.player;
     if(this.paused){ this.game.audio.updateCar(pl,null,true); this.render(); return; }
     this.stateT+=dt;
-    if(this.state==='intro'){ if(this.stateT>4.2||input.skip){ this.state='countdown'; this.stateT=0; this.lastCount=-1; this.game.ui.introCard(false); } }
+    // the intro waits (max ~6 s more) for the Graphics V2 warm-up (shader compile, texture upload), so that hitch
+    // happens under the intro card and never in the middle of 3-2-1-GO
+    if(this.state==='intro'){ const warm=window.GFX&&GFX.v2&&GFX.v2.pending&&GFX.v2.race===this&&this.stateT<10; if((this.stateT>4.2||input.skip)&&!warm){ this.state='countdown'; this.stateT=0; this.lastCount=-1; this.game.ui.introCard(false); } }
     if(this.state==='countdown'){
       const n=Math.floor(this.stateT); if(n!==this.lastCount && n<=3){ this.lastCount=n; if(n<3){ this.sfx('count'); this.game.ui.count(String(3-n)); this.W.lamps.forEach((m,k)=>m.color.setHex(k<=(n*2)?0xff1a1a:0x220808)); } else { this.sfx('go'); this.game.ui.count('GO!'); this.W.lamps.forEach(m=>m.color.setHex(0x18ff5a)); this.state='race'; this.stateT=0; if(this.route) this.cars.forEach(c=>{ c.lap=1; c.lapStart=0; }); } }
       // launch boost: holding throttle right at GO
@@ -3200,6 +3202,7 @@ class Game{
       if(trackLocked(TRACK_DATA[this.sel.track])){ const alt=TRACK_DATA.filter(t=>!trackLocked(t)&&!this.gp.tracks.includes(t.id)); const pick=alt[Math.floor(Math.random()*alt.length)]||TRACK_DATA[0]; this.gp.tracks[this.gp.round]=pick.id; this.sel.track=TRACK_DATA.indexOf(pick); } }
     else if(trackLocked(TRACK_DATA[this.sel.track])){ this.ui.lockedPrompt(TRACK_DATA[this.sel.track]); return; }
     else { Store.set('lastCar',this.sel.vehicle); Store.set('lastTrack',this.sel.track); Store.set('lastDiff',this.sel.diff); }
+    if(this.starting&&performance.now()-this.starting<30000) return; this.starting=performance.now();   // one race build at a time (a second Go / restart while loading built the race twice)
     this.goLandscape();
     const def=TRACK_DATA[this.sel.track]; $('loadName').textContent=def.name; $('loadPlace').textContent=def.place;
     this.show('loading'); this.garage.render();
@@ -3209,6 +3212,7 @@ class Game{
   }
   buildRaceNow(){
     setTimeout(()=>{
+      this.starting=0;
       try{
         if(this.race){ this.race.dispose(); this.race=null; }
         this.race=new Race(this,{track:this.sel.track,vehicle:this.sel.vehicle,diff:this.sel.diff,field:this.gp?this.gp.field:(this.mode==='practice'?[]:null),practice:this.mode==='practice'});

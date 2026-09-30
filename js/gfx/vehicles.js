@@ -160,5 +160,7 @@
       if(car.model.tailMat&&!car.model.tailMat.userData.v2){ car.model.tailMat.userData.v2=1; car.model.tailMat.color.multiplyScalar(0.4); }
       return n; },
   };
+  // the original car materials, only the tail-light glow toned down for the bloom of a V2 look
+  VM.light=function(car){ const m=car.model; if(m&&m.tailMat&&!m.tailMat.userData.v2){ m.tailMat.userData.v2=1; m.tailMat.color.multiplyScalar(0.4); } return 0; };
   window.GFX=window.GFX||{}; window.GFX.vehicles=VM;
 })();

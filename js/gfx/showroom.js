@@ -15,7 +15,7 @@
 (function(){
   const qs=()=>{ try{ return location.search; }catch(e){ return ''; } };
   const SR={
-    enabled(){ return !!(window.GFX&&GFX.settings&&GFX.settings.pipeline==='v2'&&GFX.compat.rev>=160&&!/[?&]showroomv2=0/.test(qs())); },
+    enabled(){ return !!(window.GFX&&GFX.settings&&GFX.settings.pipeline==='v2'&&GFX.compat.rev>=160&&/[?&](showroomv2|v2cars)=1/.test(qs())); },   // off by default after the live test: ?showroomv2=1 to compare
     studioEnv(renderer){ const s=new THREE.Scene(); s.background=new THREE.Color(0x07070a);
       const add=(w,h,c,k,x,y,z,look)=>{ const p=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({color:new THREE.Color(c).multiplyScalar(k),side:THREE.DoubleSide})); p.position.set(x,y,z); p.lookAt(look||new THREE.Vector3(0,0.6,0)); s.add(p); };
       add(16,7,0xfffaf4,2.4,0,11,0.5,new THREE.Vector3(0,0,0.5));   // overhead softbox: the long highlight along roof and bonnet
