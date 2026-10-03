@@ -51,6 +51,19 @@ const Store={
 };
 
 // ===== TRACK DEFINITIONS =====
+// Figure 8 control points: two circles (radius R, centres +-d on x) joined by their two inner tangents, which cross at the
+// origin. 40 points by arc length, starting 40 % along the flat diagonal; the other diagonal climbs to H over the crossing.
+function fig8Points(){ const R=80, d=145, W=18, H=10, RAMP=150, s=R/d, c=Math.sqrt(1-s*s), al=Math.asin(s), pts=[];
+  const seg=(a,b,n)=>{ for(let k=0;k<n;k++){ const t=k/n; pts.push([a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t]); } };
+  const arc=(cx,a0,a1,n)=>{ for(let k=0;k<n;k++){ const a=a0+(a1-a0)*k/n; pts.push([cx+R*Math.cos(a),R*Math.sin(a)]); } };
+  const A1=[-d*c*c,-d*c*s], B1=[d*c*c,d*c*s], B2=[d*c*c,-d*c*s], A2=[-d*c*c,d*c*s];
+  seg(A1,B1,240); arc(d,Math.PI/2+al,-(Math.PI/2+al),345); const bridge=pts.length+120; seg(B2,A2,240); arc(-d,Math.PI/2-al,1.5*Math.PI+al,345);
+  const n=pts.length, cum=[0]; for(let k=1;k<=n;k++){ const a=pts[k-1], b=pts[k%n]; cum.push(cum[k-1]+Math.hypot(b[0]-a[0],b[1]-a[1])); }
+  const L=cum[n], sB=cum[bridge], s0=cum[96], NP=40, out=[];
+  for(let k=0;k<NP;k++){ const sk=(s0+k*L/NP)%L; let j=0; while(j<n-1&&cum[j+1]<sk) j++; const a=pts[j], b=pts[(j+1)%n], t=(sk-cum[j])/Math.max(1e-6,cum[j+1]-cum[j]);
+    let dd=Math.abs(sk-sB); dd=Math.min(dd,L-dd); const y=dd<RAMP?H*0.5*(1+Math.cos(Math.PI*dd/RAMP)):0;
+    out.push([Math.round((a[0]+(b[0]-a[0])*t)*10)/10, Math.round((a[1]+(b[1]-a[1])*t)*10)/10, Math.round(y*100)/100, W]); }
+  return out; }
 // points: [x, z, y, width]
 const TRACK_DATA = [
 {
@@ -183,6 +196,20 @@ const TRACK_DATA = [
     {id:'delaware',at:[25,0.5],label:'CROSSING THE DELAWARE',year:'1776'},{id:'trenton',at:[35,0.6],label:'TRENTON',year:'1776'},{id:'saratoga',at:[44,0.2],label:'SARATOGA',year:'1777'},{id:'yorktown',at:[57,0.2],label:'YORKTOWN',year:'1781'}],
   jumps:[], boosts:[{cp:78,f:0.5,lat:-5},{cp:78,f:0.5,lat:5},{cp:28,f:0.4,lat:0},{cp:45,f:0.5,lat:0},{cp:63,f:0.3,lat:0}],
   items:[{cp:79,f:0.4},{cp:10,f:0.3},{cp:20,f:0.3},{cp:33,f:0.5},{cp:49,f:0.4},{cp:61,f:0.5}],
+  medians:[],
+},
+{
+  // Figure 8 in space. The two diagonals cross in the middle: one runs flat, the other flies over it on a 10 m bridge.
+  // Always 20 laps (practice stays endless, like on every track).
+  // No buffs: no pick-ups or pads, and noPerks = every car runs stock (no home-track bonus, no all-terrain advantage). gp:false keeps the 20-lapper out of the random Grand Prix draw.
+  id:'acid8', name:'Acid Drip Galaxy', place:'The Melting Nebula · Sector 8',
+  blurb:'A figure 8 floating in a galaxy that will not stop melting. Two long sweepers, a flyover where the track crosses itself, a sky that drips and one very large eye that watches every lap. Twenty laps. Nowhere to hide.',
+  note:'Always 20 laps. No buffs: no item boxes, no boost pads and no vehicle bonuses. Just racing.',
+  theme:'space', laps:20, shoulder:2.6, noPerks:true, gp:false,
+  points:fig8Points(),
+  // a pure race: no item boxes, no boost pads, no vehicle bonuses. (To bring pick-ups back, put rows on the two diagonals only,
+  // e.g. items:[{cp:2,f:0.6},{cp:18,f:0.2}]: in the sweepers the AI swerves for them and finds the wall.)
+  jumps:[], boosts:[], items:[],
   medians:[],
 },
 ];
@@ -948,6 +975,8 @@ const THEMES={
    fog:0xf0bf94, fogNear:160, fogFar:1300, exposure:1.02, road:'#4d4d53', roadLine:'yellow', curbA:'#d8262b', curbB:'#f4f4f4', edge:'#8c8c7c', shoulder:'gravel', wall:'guardrail', wallH:0.85 },
  revolution:{ skyTop:0x5a86c4, skyHor:0xffd6a8, sunCol:0xffd2a0, sunI:2.2, sunDir:[-0.7,0.3,0.55], hemiS:0xbfd2f0, hemiG:0x5e6a3a, hemiI:0.9,
    fog:0xe8d6bc, fogNear:160, fogFar:1200, exposure:1.0, road:'#4f4a44', roadLine:'none', curbA:'#8a2a22', curbB:'#e8dcc0', edge:'#8f7a5a', shoulder:'dirt', wall:'wood', wallH:1.0 },
+ space:{ skyTop:0x05010f, skyHor:0x2a0845, sunCol:0xe0b8ff, sunI:1.7, sunDir:[0.35,0.78,0.42], hemiS:0x8a5cff, hemiG:0x123a66, hemiI:1.0,
+   fog:0x0a0318, fogNear:320, fogFar:2600, exposure:1.05, road:'#15101f', roadLine:'white', curbA:'#ff2e97', curbB:'#22e4ff', edge:'#2a2a33', shoulder:'wetconcrete', wall:'neon', wallH:1.0, night:true, space:true },
  night:{ skyTop:0x05041a, skyHor:0x3d1656, sunCol:0x8f9cff, sunI:0.45, sunDir:[0.4,0.7,0.3], hemiS:0x4a3a8a, hemiG:0x160a26, hemiI:0.75,
    fog:0x0c0719, fogNear:60, fogFar:620, exposure:1.05, road:'#1c1c24', roadLine:'white', curbA:'#ff2e97', curbB:'#1a1a22', edge:'#2a2a33', shoulder:'wetconcrete', wall:'neon', wallH:1.0, night:true },
 };
@@ -1512,12 +1541,12 @@ function buildWorld(def,P,Q){
   const th=THEMES[def.sky||def.theme]; const W={group:new THREE.Group(),updaters:[],obstacles:[],items:[],pads:[],slicks:[],th,def,P};
   const G=W.group; const hash=buildRoadHash(P); W.hash=hash;
   const nat=naturalHeightFn(def,P);
-  const heightAt=(x,z)=>{ const b=nat(x,z); const inf=hash(x,z); if(inf.i<0||inf.gap) return b; const near=inf.edge+7; const flat=inf.y-0.35; if(inf.d<near) return flat; return lerp(flat,b,smooth01((inf.d-near)/40)); };
+  const heightAt=th.space?(()=>-400):(x,z)=>{ const b=nat(x,z); const inf=hash(x,z); if(inf.i<0||inf.gap) return b; const near=inf.edge+7; const flat=inf.y-0.35; if(inf.d<near) return flat; return lerp(flat,b,smooth01((inf.d-near)/40)); };
   W.heightAt=heightAt;
   const clearOfRoad=(x,z,m)=>{ const inf=hash(x,z,4); return inf.i<0||inf.d>inf.edge+m; };
   // ---------- lights / sky / fog ----------
   GFX.lighting.createWorldLights(W,th,Q);                 // sun + hemisphere + shadow box (js/gfx/lighting.js)
-  G.add(GFX.environment.makeSky(th,2600));                // sky dome (js/gfx/environment.js)
+  G.add(th.space?spaceSky(W):GFX.environment.makeSky(th,2600));   // sky dome (js/gfx/environment.js); the space track has its own melting galaxy
   W.fog=GFX.environment.makeFog(th,Q);
   // ---------- terrain ----------
   let minx=1e9,maxx=-1e9,minz=1e9,maxz=-1e9; for(let i=0;i<P.N;i++){minx=Math.min(minx,P.x[i]);maxx=Math.max(maxx,P.x[i]);minz=Math.min(minz,P.z[i]);maxz=Math.max(maxz,P.z[i]);}
@@ -1538,7 +1567,7 @@ function buildWorld(def,P,Q){
     const k=0.9+0.2*n2; cols[v*3]=c[0]*k; cols[v*3+1]=c[1]*k; cols[v*3+2]=c[2]*k; }
   tg.setAttribute('color',new THREE.BufferAttribute(cols,3));
   const detail=canvasTex(256,256,(g,w,h)=>{noiseFill(g,w,h,'#bfbfbf',70);},{repeat:true}); detail.repeat.set(tw/12,td/12);
-  const terrain=new THREE.Mesh(tg,new THREE.MeshStandardMaterial({vertexColors:true,map:detail,roughness:0.97})); terrain.receiveShadow=true; G.add(terrain); W.terrainMesh=terrain;
+  const terrain=new THREE.Mesh(tg,new THREE.MeshStandardMaterial({vertexColors:true,map:detail,roughness:0.97})); terrain.receiveShadow=true; G.add(terrain); W.terrainMesh=terrain; if(th.space) terrain.visible=false;
   // ---------- hand-built environment (Blender) ----------
   const ENV=CAR_GLTF['env_'+def.id]?addEnv(W,def,CAR_GLTF['env_'+def.id],Q):null; W.env=ENV;
   if(ENV&&ENV.hasTerrain){ W.terrainMesh.visible=false; }
@@ -1591,8 +1620,8 @@ function buildWorld(def,P,Q){
     const wm=new THREE.Mesh(mergeGeos([gIn,gTop,gOut]),wallMat); wm.castShadow=true; wm.receiveShadow=true; G.add(wm);
     if(th.wall==='neon'){ const nm=new THREE.MeshBasicMaterial({color:sd<0?0xff2e97:0x22e4ff});
       const tube=ribbon(wallInc,i=>L(i)-sd*0.05,i=>L(i)+sd*0.05*0,H+0.02,H+0.02,0,1,4); const tube2=ribbon(wallInc,L,L,H-0.18,H+0.02,0,1,4);
-      G.add(new THREE.Mesh(mergeGeos([tube,tube2]),new THREE.MeshBasicMaterial({color:sd<0?0xff2e97:0x22e4ff,side:THREE.DoubleSide})));
-      const glow=ribbon(wallInc,i=>L(i)-sd*1.6,L,0.03,0.03,0,1,8); const gm=new THREE.MeshBasicMaterial({map:glowStripTex(),color:sd<0?0xff2e97:0x22e4ff,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:0.55});
+      { const tm=new THREE.MeshBasicMaterial({color:sd<0?0xff2e97:0x22e4ff,side:THREE.DoubleSide}); G.add(new THREE.Mesh(mergeGeos([tube,tube2]),tm)); (W.neonMats=W.neonMats||[]).push({m:tm,sd}); }
+      const glow=ribbon(wallInc,i=>L(i)-sd*1.6,L,0.03,0.03,0,1,8); const gm=new THREE.MeshBasicMaterial({map:glowStripTex(),color:sd<0?0xff2e97:0x22e4ff,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:0.55}); (W.neonMats=W.neonMats||[]).push({m:gm,sd});
       if(sd>0){ const gg=ribbon(wallInc,i=>L(i)-1.6,L,0.03,0.03,0,1,8); G.add(new THREE.Mesh(gg,gm)); } else { const gg=ribbon(wallInc,L,i=>L(i)+1.6,0.03,0.03,1,0,8); G.add(new THREE.Mesh(gg,gm)); } }
     if(railLike){ // posts
       const pts=[]; for(let i=0;i<P.N;i+=2){ if(P.gap[i]||P.hidden[i]) continue; const p=ptAt(i,L(i)+sd*0.15,0); pts.push({x:p[0],y:p[1]-0.4,z:p[2],ry:0,s:[0.12,1.2,0.12]}); }
@@ -1651,7 +1680,7 @@ function buildWorld(def,P,Q){
   W.updaters.push((dt,t)=>{ W.mudBoxes.forEach(b=>{ if(!b.active){ b.t-=dt; if(b.t<=0){ b.active=true; b.grp.visible=true; } } b.grp.rotation.y=t*1.4+b.spin; b.grp.position.y=b.y+Math.sin(t*2+b.spin)*0.15; }); });
   W.updaters.push((dt,t)=>{ W.items.forEach(b=>{ if(!b.active){ b.t-=dt; if(b.t<=0){b.active=true;b.grp.visible=true; b.grp.scale.setScalar(0.01);} } else { const s=b.grp.scale.x; if(s<1) b.grp.scale.setScalar(Math.min(1,s+dt*3)); } b.grp.rotation.y=t*1.6+b.spin; b.grp.rotation.x=Math.sin(t*1.2+b.spin)*0.3; b.grp.position.y=b.y+Math.sin(t*2+b.spin)*0.18; }); });
   // theme scenery
-  W.nat=nat; buildScenery(W,def,P,Q,{heightAt,clearOfRoad,ptAt,hash,nat,ribbon,notGap});
+  W.nat=nat; if(th.space) buildSpaceScenery(W,def,P,Q,{ptAt,ribbon,notGap}); else buildScenery(W,def,P,Q,{heightAt,clearOfRoad,ptAt,hash,nat,ribbon,notGap});
   // minimap outline
   W.mini=[]; for(let i=0;i<P.N;i+=3) W.mini.push([P.x[i],P.z[i]]);
   W.update=(dt,t)=>W.updaters.forEach(f=>f(dt,t));
@@ -2133,6 +2162,115 @@ function buildCountryScenery(W,def,P,Q,H,K){
     const cap=new THREE.Mesh(new THREE.ConeGeometry(5.3,2.6,24),steel); cap.position.y=23.3; tw.add(cap); tw.traverse(o=>{ if(o.isMesh) o.castShadow=true; }); G.add(tw); }
 }
 
+// ===== ACID DRIP GALAXY: the space track (figure 8) =====
+// Everything here is cheap on purpose: one sky shader, a handful of instanced meshes, canvas textures, no extra lights.
+function spaceSky(W){
+  const U={t:{value:0}}; W.spaceU=U;
+  const mat=new THREE.ShaderMaterial({side:THREE.BackSide,depthWrite:false,fog:false,uniforms:U,
+    vertexShader:'varying vec3 d;void main(){d=position;vec4 p=projectionMatrix*modelViewMatrix*vec4(position,1.);gl_Position=p.xyww;}',
+    fragmentShader:`uniform float t; varying vec3 d;
+      float h3(vec3 p){return fract(sin(dot(p,vec3(12.9898,78.233,45.164)))*43758.5453);}
+      float n3(vec3 p){vec3 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
+        return mix(mix(mix(h3(i),h3(i+vec3(1,0,0)),f.x),mix(h3(i+vec3(0,1,0)),h3(i+vec3(1,1,0)),f.x),f.y),
+                   mix(mix(h3(i+vec3(0,0,1)),h3(i+vec3(1,0,1)),f.x),mix(h3(i+vec3(0,1,1)),h3(i+vec3(1,1,1)),f.x),f.y),f.z);}
+      float fb(vec3 p){float a=0.,w=.5;for(int k=0;k<4;k++){a+=w*n3(p);p=p*2.02+vec3(3.1,1.7,5.3);w*=.5;}return a;}
+      vec3 pal(float x){return .5+.5*cos(6.2832*(x+vec3(0.,.33,.67)));}
+      void main(){ vec3 n=normalize(d); vec3 p=n*2.1;
+        // nebula: domain-warped noise that slowly flows, colours cycling through the whole spectrum
+        float wa=fb(p+vec3(0.,t*.016,0.)), wb=fb(p*1.2+vec3(5.2,1.3,t*.012));
+        float f=fb(p*1.3+vec3(wa,wb,wa*wb)*2.4+vec3(0.,0.,t*.008));
+        float neb=smoothstep(.40,.78,f);
+        vec3 c=vec3(.016,.004,.045)+pal(f*1.7+wa*.8+t*.012)*neb*.5+pal(wb*2.+.4)*neb*neb*neb*.3;
+        // stars (two sizes, twinkling)
+        vec3 q=floor(n*250.); float hs=h3(q); c+=vec3(step(.9972,hs))*(.45+.55*sin(t*2.3+hs*600.))*(1.-neb*.6);
+        vec3 q2=floor(n*90.); float h2=h3(q2+7.); c+=pal(h2*9.)*step(.9985,h2)*(1.1+.5*sin(t*1.4+h2*90.));
+        // galaxy core
+        float g=max(dot(n,normalize(vec3(-.55,.3,.78))),0.); c+=vec3(1.,.78,.55)*pow(g,110.)*1.3+pal(.92+t*.004)*pow(g,14.)*.22;
+        // the sky is melting: goo hangs from the zenith in slow drips
+        float a=atan(n.z,n.x); vec3 rg=vec3(cos(a),sin(a),0.);
+        float col=pow(abs(sin(a*7.+2.*n3(rg*2.+4.))),10.);
+        float edge=.64-.09*n3(rg*4.+vec3(0.,0.,t*.03))-.5*col*n3(rg*3.+9.)*(.62+.38*sin(t*.11+a*2.));
+        float goo=smoothstep(edge-.01,edge+.01,n.y);
+        vec3 gc=mix(vec3(.5,1.,.08),vec3(1.,.12,.72),.5+.5*sin(a*3.+t*.17+n.y*7.)); gc=mix(gc,pal(a*.32+t*.02),.35);
+        float rim=smoothstep(edge+.07,edge,n.y);
+        c=mix(c,gc*(.22+.55*rim)+vec3(1.)*pow(rim,8.)*.25,goo*.92);
+        gl_FragColor=vec4(c,1.);}`});
+  W.updaters.push((dt,t)=>{ U.t.value=t; });
+  const m=new THREE.Mesh(new THREE.SphereGeometry(2600,32,16),mat); m.renderOrder=-10; m.frustumCulled=false; return m;
+}
+function buildSpaceScenery(W,def,P,Q,H){
+  const G=W.group, {ptAt,ribbon,notGap}=H, D=Q.density||1, hue=new THREE.Color();
+  const basic=(o)=>new THREE.MeshBasicMaterial(o);
+  // ---- road: black glass with marbled acid swirls; the lines glow and drift through the spectrum
+  const swirl=(g,w,h,alpha,grey)=>{ let sd=11; const r=()=>{ sd=(sd*16807)%2147483647; return (sd-1)/2147483646; };
+    for(let k=0;k<46;k++){ const x=r()*w, y=r()*h; g.strokeStyle=grey?`rgba(255,255,255,${alpha*(0.5+r())})`:`hsla(${Math.floor(r()*360)},95%,58%,${alpha*(0.5+r())})`; g.lineWidth=3+r()*16; g.beginPath(); g.moveTo(x,y);
+      g.bezierCurveTo(x+(r()-0.5)*260,y+r()*160,x+(r()-0.5)*260,y+140+r()*200,x+(r()-0.5)*120,y+300+r()*220); g.stroke(); } };
+  const lines=(g,w,h,cE,cC)=>{ g.fillStyle=cE; g.fillRect(w*0.03,0,9,h); g.fillRect(w*0.97-9,0,9,h); g.fillStyle=cC; for(let y=0;y<h;y+=256) g.fillRect(w/2-6,y,12,150); };
+  const mapT=canvasTex(512,1024,(g,w,h)=>{ g.fillStyle='#0d0718'; g.fillRect(0,0,w,h); swirl(g,w,h,0.2,false); lines(g,w,h,'#8a8a92','#8a8a92'); },{repeat:true,aniso:8});
+  const emT=canvasTex(512,1024,(g,w,h)=>{ g.fillStyle='#000'; g.fillRect(0,0,w,h); swirl(g,w,h,0.11,true); lines(g,w,h,'#fff','#fff'); },{repeat:true,aniso:8});
+  const rm=W.roadMat; rm.map=mapT; rm.emissiveMap=emT; rm.emissive=new THREE.Color(0xff2e97); rm.emissiveIntensity=0.9; rm.roughness=0.2; rm.metalness=0.45; rm.needsUpdate=true;
+  // ---- underside: the ribbon has a belly, so it reads as a slab from below (the flyover passes right over the cars)
+  const belly=new THREE.Mesh(ribbon(notGap,i=>-P.wl[i]-0.45,i=>P.wr[i]+0.45,-0.62,-0.62,0,1,14),basic({map:canvasTex(256,256,(g,w,h)=>{ g.fillStyle='#12061f'; g.fillRect(0,0,w,h); let sd=5; const r=()=>{ sd=(sd*16807)%2147483647; return (sd-1)/2147483646; };
+      for(let k=0;k<70;k++){ g.fillStyle=`hsla(${[300,95,185,280][k%4]},90%,55%,${0.08+r()*0.2})`; g.beginPath(); g.ellipse(r()*w,r()*h,6+r()*30,10+r()*46,0,0,TAU); g.fill(); } },{repeat:true}),side:THREE.DoubleSide}));
+  G.add(belly);
+  // ---- acid drips hanging off both edges of the ribbon
+  { const cone=new THREE.ConeGeometry(0.34,1,7); cone.rotateX(Math.PI); cone.translate(0,-0.5,0); const blob=new THREE.SphereGeometry(0.2,7,5); blob.translate(0,-1.0,0);
+    const list=[]; const cols=[0x9dff1a,0xff2ec4,0x22e4ff,0xb44cff,0xffe23d];
+    for(let i=0;i<P.N;i+=2) for(const sd of [-1,1]){ if(rnd()>0.42*Math.min(1,D+0.3)) continue; const e=(sd<0?P.wl[i]:P.wr[i])+0.45+rr(-0.25,0.05); const p=ptAt(i,e*sd,-0.55);
+      const len=rnd()<0.12?rr(5,11):rr(0.7,3.6); const wd=rr(0.7,1.5)*(len>5?1.5:1); list.push({x:p[0],y:p[1],z:p[2],ry:rnd()*TAU,s:[wd,len,wd],c:cols[Math.floor(rnd()*cols.length)]}); }
+    G.add(instanced(mergeGeos([cone,blob]),basic({color:0xffffff}),list,false)); W.spaceDrips=list.length; }
+  // ---- warp hoops around the road (one instanced mesh, colours chase along the lap)
+  { const R0=P.w[0]/2+5.2, tor=new THREE.TorusGeometry(R0,0.32,8,44); const list=[]; const step=Math.round(46/P.spacing);
+    for(let i=Math.round(20/P.spacing);i<P.N;i+=step){ if(Math.hypot(P.x[i],P.z[i])<52) continue;   /* none at the crossing: a hoop there would cut through the other deck */ list.push({x:P.x[i],y:P.y[i]+2.6,z:P.z[i],ry:Math.atan2(P.tx[i],P.tz[i]),i}); }
+    const hoops=instanced(tor,basic({color:0xffffff}),list,false); G.add(hoops); W.spaceHoops=list.length;
+    W.updaters.push((dt,t)=>{ for(let k=0;k<list.length;k++){ hue.setHSL((k*0.11+t*0.22)%1,1,0.56); hoops.setColorAt(k,hue); } hoops.instanceColor.needsUpdate=true; }); }
+  // ---- the wall neon and the road lines drift through the spectrum
+  W.updaters.push((dt,t)=>{ (W.neonMats||[]).forEach(o=>{ o.m.color.setHSL((t*0.05+(o.sd<0?0:0.5))%1,1,0.55); }); rm.emissive.setHSL((t*0.04+0.8)%1,1,0.5); rm.emissiveIntensity=0.8+0.25*Math.sin(t*1.7); });
+  // ---- THE EYE (left lobe): it watches the player
+  { const tex=canvasTex(1024,512,(g,w,h)=>{ g.fillStyle='#efe6dc'; g.fillRect(0,0,w,h);
+      let sd=23; const r=()=>{ sd=(sd*16807)%2147483647; return (sd-1)/2147483646; };
+      g.lineCap='round'; for(let k=0;k<90;k++){ let x=r()*w, y=h*0.24+r()*h*0.76; g.strokeStyle=`rgba(${170+r()*60},20,40,${0.25+r()*0.35})`; g.lineWidth=1+r()*3; g.beginPath(); g.moveTo(x,y); for(let q=0;q<6;q++){ x+=(r()-0.5)*40; y-=10+r()*28; g.lineTo(x,y); } g.stroke(); }
+      const gr=g.createLinearGradient(0,0,0,h*0.22); gr.addColorStop(0,'#000'); gr.addColorStop(0.2,'#000'); gr.addColorStop(0.22,'#ffe23d'); gr.addColorStop(0.45,'#ff2ec4'); gr.addColorStop(0.7,'#22e4ff'); gr.addColorStop(0.93,'#3a1a8a'); gr.addColorStop(1,'#12061f');
+      g.fillStyle=gr; g.fillRect(0,0,w,h*0.22); for(let x=0;x<w;x+=6){ g.strokeStyle=`rgba(${r()<0.5?'0,0,0':'255,255,255'},${0.10+r()*0.22})`; g.lineWidth=1+r()*2; g.beginPath(); g.moveTo(x,h*0.048); g.lineTo(x+(r()-0.5)*8,h*0.212); g.stroke(); } });
+    const geo=new THREE.SphereGeometry(40,40,24); geo.rotateX(Math.PI/2);   // pupil (texture top) looks down +Z, so lookAt() aims it
+    const eye=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({map:tex,emissiveMap:tex,emissive:0xffffff,emissiveIntensity:0.5,roughness:0.25,metalness:0.0})); eye.position.set(-145,22,0); G.add(eye); W.spaceEye=eye;
+    const lid=new THREE.Mesh(new THREE.TorusGeometry(41.5,2.2,8,40),basic({color:0xff2ec4})); eye.add(lid); lid.position.z=30; lid.scale.setScalar(0.64);   // glowing lash ring around the iris
+    const tq=new THREE.Quaternion(), m4=new THREE.Matrix4(), up=new THREE.Vector3(0,1,0), tp=new THREE.Vector3();
+    W.updaters.push((dt,t)=>{ const cam=(typeof GAME!=='undefined'&&GAME&&GAME.camera)?GAME.camera:null; if(!cam) return; tp.copy(cam.position); tp.x+=Math.sin(t*0.7)*6; tp.y+=Math.sin(t*0.9)*4;
+      m4.lookAt(tp,eye.position,up); tq.setFromRotationMatrix(m4); eye.quaternion.slerp(tq,Math.min(1,dt*2.2)); eye.position.y=22+Math.sin(t*0.5)*2.5; hue.setHSL((t*0.06)%1,1,0.55); lid.material.color.copy(hue); }); }
+  // ---- THE MELTING PLANET (right lobe): banded acid planet, tilted rainbow ring, long drips off its belly
+  { const tex=canvasTex(512,256,(g,w,h)=>{ let sd=41; const r=()=>{ sd=(sd*16807)%2147483647; return (sd-1)/2147483646; }; const bands=['#9dff1a','#1fd6a0','#ff2ec4','#7a2cff','#ffe23d','#ff7a1a','#22e4ff','#ff2e6a'];
+      for(let y=0;y<h;y+=2){ const k=Math.floor((y/h)*11+Math.sin(y*0.09)*0.8); g.fillStyle=bands[((k%bands.length)+bands.length)%bands.length]; g.fillRect(0,y,w,2); }
+      for(let k=0;k<160;k++){ const x=r()*w, y=r()*h; g.fillStyle=`hsla(${Math.floor(r()*360)},95%,60%,0.35)`; g.beginPath(); g.ellipse(x,y,8+r()*42,3+r()*8,0,0,TAU); g.fill(); }
+      for(let k=0;k<60;k++){ const x=r()*w; g.fillStyle=`hsla(${[95,320,185][k%3]},100%,62%,0.55)`; g.fillRect(x,r()*h*0.8,2+r()*5,20+r()*80); } },{repeat:true});
+    const grp=new THREE.Group(); grp.position.set(145,17,0); G.add(grp);
+    const pl=new THREE.Mesh(new THREE.SphereGeometry(34,36,22),new THREE.MeshStandardMaterial({map:tex,emissiveMap:tex,emissive:0xffffff,emissiveIntensity:0.42,roughness:0.5})); grp.add(pl);
+    const rt=canvasTex(256,8,(g,w,h)=>{ for(let x=0;x<w;x++){ g.fillStyle=`hsla(${x/w*720},100%,60%,${(x%23<17)?0.85:0.1})`; g.fillRect(x,0,1,h); } });
+    const rg=new THREE.RingGeometry(44,66,72,1); { const uv=rg.attributes.uv, ps=rg.attributes.position; for(let k=0;k<uv.count;k++){ const rr2=Math.hypot(ps.getX(k),ps.getY(k)); uv.setXY(k,(rr2-44)/22,0.5); } }
+    const ring=new THREE.Mesh(rg,basic({map:rt,side:THREE.DoubleSide,transparent:true,depthWrite:false})); ring.rotation.set(-1.15,0.25,0); grp.add(ring);
+    const cone=new THREE.ConeGeometry(1,1,8); cone.rotateX(Math.PI); cone.translate(0,-0.5,0); const blob=new THREE.SphereGeometry(0.62,8,6); blob.translate(0,-1.0,0); const dl=[];
+    let sd=77; const r=()=>{ sd=(sd*16807)%2147483647; return (sd-1)/2147483646; };
+    for(let k=0;k<22;k++){ const a=r()*TAU, q=r()*0.75, rad=34*Math.sin(q*1.2), yy=-34*Math.cos(q*1.2)+1.5; const len=10+r()*34; const wd=1.6+r()*3.4; dl.push({x:Math.cos(a)*rad,y:yy,z:Math.sin(a)*rad,s:[wd,len,wd],c:[0x9dff1a,0xff2ec4,0x22e4ff,0xffe23d][k%4]}); }
+    grp.add(instanced(mergeGeos([cone,blob]),basic({color:0xffffff}),dl,false));
+    W.updaters.push((dt,t)=>{ pl.rotation.y=t*0.05; ring.rotation.z=t*0.12; grp.position.y=17+Math.sin(t*0.4+2)*2; }); }
+  // ---- crystal belt slowly orbiting the whole circuit + drifting stardust
+  { const geo=new THREE.OctahedronGeometry(1,0), list=[]; const n=Math.round(150*Math.min(1,D+0.2));
+    for(let k=0;k<n;k++){ const a=rnd()*TAU, rad=rr(330,620); hue.setHSL(rnd(),0.95,0.6); list.push({x:Math.cos(a)*rad,y:rr(-90,120),z:Math.sin(a)*rad*0.8,rx:rnd()*3,ry:rnd()*3,rz:rnd()*3,s:[rr(2,7),rr(5,20),rr(2,7)],c:hue.getHex()}); }
+    const belt=instanced(geo,new THREE.MeshStandardMaterial({color:0xffffff,emissive:0x5a2aa8,emissiveIntensity:0.9,roughness:0.25,metalness:0.3,flatShading:true}),list,false); G.add(belt);
+    const np=Math.round(700*Math.min(1,D+0.2)), pos=new Float32Array(np*3), col=new Float32Array(np*3);
+    for(let k=0;k<np;k++){ pos[k*3]=rr(-330,330); pos[k*3+1]=rr(-45,70); pos[k*3+2]=rr(-190,190); hue.setHSL(rnd(),1,0.7); col[k*3]=hue.r; col[k*3+1]=hue.g; col[k*3+2]=hue.b; }
+    const pg=new THREE.BufferGeometry(); pg.setAttribute('position',new THREE.BufferAttribute(pos,3)); pg.setAttribute('color',new THREE.BufferAttribute(col,3));
+    const dust=new THREE.Points(pg,new THREE.PointsMaterial({size:1.5,map:glowTex(),vertexColors:true,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,sizeAttenuation:true})); G.add(dust);
+    W.updaters.push((dt,t)=>{ belt.rotation.y=t*0.012; dust.rotation.y=Math.sin(t*0.05)*0.08; dust.position.y=Math.sin(t*0.3)*2; }); }
+  // ---- mushroom islands outside the sweepers (glowing caps)
+  { const stem=new THREE.CylinderGeometry(0.28,0.42,1,7); stem.translate(0,0.5,0); const cap=new THREE.SphereGeometry(1,10,6,0,TAU,0,Math.PI/2); cap.scale(1,0.7,1); cap.translate(0,1,0);
+    const stems=[], caps=[], rocks=[]; const isl=[[-300,-14,70],[-285,-20,-90],[300,-12,-60],[290,-22,95],[0,-38,150],[10,-30,-160]];
+    isl.forEach(([x,y,z],q)=>{ rocks.push({x,y:y-6,z,ry:q,s:[20,9,16],c:[0x3a1d5c,0x1d3a5c,0x4a1d4a][q%3]});
+      for(let k=0;k<7;k++){ const a=rnd()*TAU, d2=rr(1,13), hh=rr(3,11), cw=rr(2,5.5); const px=x+Math.cos(a)*d2, pz=z+Math.sin(a)*d2*0.8; stems.push({x:px,y:y+1,z:pz,s:[cw*0.3,hh,cw*0.3],c:0xe8dcff}); hue.setHSL(rnd(),1,0.58); caps.push({x:px,y:y+1+hh-cw*0.55,z:pz,s:[cw,cw*0.8,cw],c:hue.getHex()}); } });
+    G.add(instanced(new THREE.IcosahedronGeometry(1,1),new THREE.MeshStandardMaterial({color:0xffffff,roughness:0.9,flatShading:true}),rocks,false));
+    G.add(instanced(stem,new THREE.MeshStandardMaterial({color:0xffffff,emissive:0x443366,roughness:0.7}),stems,false)); G.add(instanced(cap,basic({color:0xffffff}),caps,false)); }
+}
+
 // ===== PARTICLES, SKIDS, RAIN =====
 class Particles{
   constructor(max,additive){
@@ -2194,7 +2332,7 @@ const TIER_COL=[[0.35,0.75,1.0],[1.0,0.6,0.15],[1.0,0.25,0.85]];
 class Car{
   constructor(race,v,idx,isPlayer){
     this.race=race; this.v=v; this.idx=idx; this.isPlayer=isPlayer; this.name=v.name;
-    this.ph=vehiclePhysics(v); this.homeBonus=homeBonus(race.def&&race.def.id,v.id); this.hazImm=0; this.model=buildCarModel(v,race.env);
+    this.ph=vehiclePhysics(v); this.homeBonus=homeBonus(race.def&&race.def.id,v.id); if(race.def&&race.def.noPerks){ this.ph.allTerrain=false; this.homeBonus=0; }   /* level-field tracks: every car runs stock */ this.hazImm=0; this.model=buildCarModel(v,race.env);
     this.halfW=this.model.dims.W/2; this.halfL=this.model.dims.L/2;
     this.radius=Math.max(1.15,Math.min(1.5,this.model.dims.L*0.29));
     this.inp={thr:0,brk:0,steer:0,drift:false,item:false};
@@ -2840,7 +2978,7 @@ class Race{
     this.scene=new THREE.Scene(); this.scene.add(this.W.group); this.scene.fog=this.W.fog;
     this.env=makeEnvFromTheme(game.renderer,this.W.th); GFX.environment.applyWorldIBL(this.scene,this.env,game.Q);   // world IBL is off in Phase 1
     setEnvOnCarMats(this.env);
-    this.dustCol=this.def.sky==='revolution'?[0.72,0.64,0.52]:({country:[0.62,0.34,0.2],city:[0.75,0.7,0.6],desert:[0.85,0.62,0.42],coast:[0.72,0.64,0.5],night:[0.4,0.38,0.5]})[this.def.theme];
+    this.dustCol=this.def.sky==='revolution'?[0.72,0.64,0.52]:({country:[0.62,0.34,0.2],city:[0.75,0.7,0.6],desert:[0.85,0.62,0.42],coast:[0.72,0.64,0.5],night:[0.4,0.38,0.5],space:[0.55,0.35,0.85]})[this.def.theme];
     // fx
     this.fx={sparks:new Particles(Q.density>0.7?1600:900,true),dust:new Particles(Q.density>0.7?900:500,false),skids:new Skids(Q.density>0.7?1400:700)};
     this.fx.dustBurst=(car)=>{ if(!this.nearCam(car)) return; for(let k=0;k<14;k++) this.fx.dust.emit(car.x+rr(-1.5,1.5),car.y+0.2,car.z+rr(-1.5,1.5),rr(-4,4)+car.vx*0.2,rr(0.5,2.5),rr(-4,4)+car.vz*0.2,rr(0.6,1.2),0.8,3,this.dustCol[0],this.dustCol[1],this.dustCol[2],0.45,2,-0.2); };
@@ -3018,6 +3156,7 @@ class Race{
     if(c.isPlayer){ this.cam.snap=true; this.game.ui.portal(); this.sfx('portal'); }
   }
   onLap(c){
+    if(c.finished) return;   // a finished car that keeps circulating must not finish again (20-lap races: the leader can lap once more before the player is home)
     const now=this.raceTime;
     if(c.lap>1 && this.route && c.lap===2 && !c.openDone){ c.openDone=true; c.openLap=now-c.lapStart; c.lapTimes.push(c.openLap); }
     else if(c.lap>1){ const lt=now-c.lapStart; c.lapTimes.push(lt); if(c.bestLap==null||lt<c.bestLap) c.bestLap=lt;
@@ -3735,14 +3874,14 @@ class UI{
   }
 }
 const GP_ELIM=[2,1,1], GP_LEN=4;
-function rollGPTracks(prev){ const ids=TRACK_DATA.filter(t=>!trackLocked(t)).map(t=>t.id); let pick;
+function rollGPTracks(prev){ const ids=TRACK_DATA.filter(t=>!trackLocked(t)&&t.gp!==false).map(t=>t.id); let pick;
   for(let tries=0;tries<20;tries++){ const a=ids.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } pick=a.slice(0,GP_LEN); if(!prev||pick.join()!==prev.join()) break; }
   return pick; }
 let GP_TRACKS=rollGPTracks();
 function esc(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function drawTrackThumb(cv,def){
   const g=cv.getContext('2d'), w=cv.width,h=cv.height;
-  const th=THEMES[def.theme]; const bgs={revolution:['#ffd6a8','#2d4f86'],country:['#ffc98a','#4f7fc4'],dusk:['#ff9a6a','#2c2f78'],city:['#f5c98a','#3f86d8'],desert:['#f0b27a','#c2562a'],coast:['#ffbe86','#1c5a8a'],night:['#3d1656','#05041a']}[def.sky||def.theme];
+  const th=THEMES[def.theme]; const bgs={revolution:['#ffd6a8','#2d4f86'],country:['#ffc98a','#4f7fc4'],dusk:['#ff9a6a','#2c2f78'],city:['#f5c98a','#3f86d8'],desert:['#f0b27a','#c2562a'],coast:['#ffbe86','#1c5a8a'],night:['#3d1656','#05041a'],space:['#5a1a8a','#05010f']}[def.sky||def.theme];
   const gr=g.createLinearGradient(0,0,0,h); gr.addColorStop(0,bgs[1]); gr.addColorStop(1,bgs[0]); g.fillStyle=gr; g.fillRect(0,0,w,h);
   if(!def._thumb){ const P=buildTrackPath(def); def._thumb={x:Array.from(P.x),z:Array.from(P.z),y:Array.from(P.y),h:Array.from(P.hidden),s0:P.route?P.route.york:0}; }
   const T=def._thumb; let a=1e9,b=-1e9,c=1e9,d=-1e9; T.x.forEach((x,i)=>{a=Math.min(a,x);b=Math.max(b,x);c=Math.min(c,T.z[i]);d=Math.max(d,T.z[i]);});
