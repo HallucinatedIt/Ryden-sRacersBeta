@@ -822,8 +822,8 @@ const PROP_INFO={
   claw_can:{h:6, kind:'billboard', face:1, themes:{sweet:1, alondra:1}, median:{sweet:[22,40,58]}},
   echelon_can:{h:6, kind:'billboard', face:-1, themes:{sweet:1, alondra:1}, median:{sweet:[31,49]}},
   // Pepperbox TV billboard: one steel bulletin structure, a different show on every board (PB_SHOWS)
-  pbboard:{kind:'billboard', face:1, pepperbox:true, themes:{mesa:2, coast:2, neon:2, country:2}},                 // ground bulletin (open roads), 17.6 x 9 m
-  pbpole:{kind:'billboard', face:1, pepperbox:true, pole:true, themes:{sweet:2, alondra:3}},                    // city: the same board on a 21 m monopole, reads over the rooftops
+  pbboard:{kind:'billboard', face:1, pepperbox:true, themes:{mesa:2, coast:1, neon:2, country:2}},                 // ground bulletin (open roads), 17.6 x 9 m
+  pbpole:{kind:'billboard', face:1, pepperbox:true, pole:true, themes:{sweet:2, alondra:3, coast:2}},                    // city: the same board on a 21 m monopole, reads over the rooftops
 };
 // Pepperbox TV shows (key art from pepperbox.tv, models/props/pepperbox/<id>.jpg, 2048x1024, light weathering baked in)
 const PB_SHOWS=["boysinthegarage", "battleinnajaf", "kindaconsensual", "underwhelminginc", "unfiltered", "lethimcook", "awfulandlawful", "internetesquire", "underwhelmingaftershow", "9holereviews", "acquisitionsanonymous", "administrativeresults", "americanmarksman", "unsubscribe", "brandonherrera", "habituallinecrosser", "pewview", "forgottenweapons", "kentuckyballistics", "micahmayfield", "unsubscribegang", "underwhelmingpodcast", "manvsmorning", "fatelectrician", "cappyarmy", "lorelodge", "angrycops", "cappyscombatreview", "overserved", "junkyarddigs", "millennialfarmer", "underqualified", "operationdonut"];
@@ -847,6 +847,60 @@ function propTemplate(id){
   const T={parts,w:size.x*s,d:size.z*s,h:size.y*s}; PROP_PROC[id]=T; return T;
 }
 function makeProp(id){ const T=propTemplate(id); if(!T) return null; const grp=new THREE.Group(); T.parts.forEach(p=>{ const m=new THREE.Mesh(p.g,p.mt); m.castShadow=true; m.receiveShadow=true; grp.add(m); }); return grp; }
+// Pepperbox boards must be seen: sight lines from the approach (driver's eye, three distances) to five points of the
+// face are tested against everything already built (environment model, terrain, earlier props), and the body of the
+// board is swept for geometry it would stand in. A spot that is hidden or buried in rock is skipped.
+const PB_VIS={W:null,why:{}};
+// one pass over the scenery: world-space triangles in a 32 m grid, so a sight line only tests the triangles near it
+function pbIndex(W){ const C=32, cells=new Map(), big=[]; let tri=new Float32Array(9*65536), solid=new Uint8Array(65536), n=0; const inst=[]; const v=new THREE.Vector3();
+  W.group.updateMatrixWorld(true);
+  W.group.traverse(o=>{ if(!o.isMesh||!o.visible||!o.geometry||o.isSkinnedMesh) return; const m=Array.isArray(o.material)?o.material[0]:o.material; if(!m||m.side===THREE.BackSide) return;
+    const g=o.geometry, pos=g.attributes&&g.attributes.position; if(!pos) return; if(!g.boundingSphere) g.computeBoundingSphere(); if(g.boundingSphere.radius*o.matrixWorld.getMaxScaleOnAxis()>2500) return;   // sky, sea, far backdrop
+    const sol=!(m.isShaderMaterial||(m.transparent&&!m.alphaTest)||m.blending===THREE.AdditiveBlending)?1:0;
+    if(o.isInstancedMesh){ if(sol) inst.push(o); return; }
+    const ix=g.index, cnt=ix?ix.count:pos.count, mw=o.matrixWorld;
+    const P=new Float32Array(pos.count*3); for(let k=0;k<pos.count;k++){ v.fromBufferAttribute(pos,k).applyMatrix4(mw); P[k*3]=v.x; P[k*3+1]=v.y; P[k*3+2]=v.z; }
+    for(let k=0;k+2<cnt;k+=3){ const i0=ix?ix.getX(k):k, i1=ix?ix.getX(k+1):k+1, i2=ix?ix.getX(k+2):k+2;
+      if(n>=solid.length){ const t2=new Float32Array(tri.length*2); t2.set(tri); tri=t2; const s2=new Uint8Array(solid.length*2); s2.set(solid); solid=s2; }
+      const q=n*9; for(let c=0;c<3;c++){ tri[q+c]=P[i0*3+c]; tri[q+3+c]=P[i1*3+c]; tri[q+6+c]=P[i2*3+c]; } solid[n]=sol;
+      const x0=Math.floor(Math.min(tri[q],tri[q+3],tri[q+6])/C), x1=Math.floor(Math.max(tri[q],tri[q+3],tri[q+6])/C), z0=Math.floor(Math.min(tri[q+2],tri[q+5],tri[q+8])/C), z1=Math.floor(Math.max(tri[q+2],tri[q+5],tri[q+8])/C);
+      if((x1-x0+1)*(z1-z0+1)>36) big.push(n); else for(let cx=x0;cx<=x1;cx++) for(let cz=z0;cz<=z1;cz++){ const key=cx*65536+cz; let a=cells.get(key); if(!a) cells.set(key,a=[]); a.push(n); }
+      n++; } });
+  return {C,cells,big,tri,solid,n,inst,ray:new THREE.Raycaster()}; }
+// does the segment a->b hit anything? (all=true also counts glowing / see-through things: LED arches, glass)
+function pbHit(I,a,b,all){ const dx=b.x-a.x, dy=b.y-a.y, dz=b.z-a.z, T=I.tri, C=I.C;
+  const test=k=>{ if(!all&&!I.solid[k]) return false; const q=k*9, ax=T[q],ay=T[q+1],az=T[q+2], e1x=T[q+3]-ax,e1y=T[q+4]-ay,e1z=T[q+5]-az, e2x=T[q+6]-ax,e2y=T[q+7]-ay,e2z=T[q+8]-az;
+    const px=dy*e2z-dz*e2y, py=dz*e2x-dx*e2z, pz=dx*e2y-dy*e2x, det=e1x*px+e1y*py+e1z*pz; if(det>-1e-9&&det<1e-9) return false; const f=1/det, sx=a.x-ax, sy=a.y-ay, sz=a.z-az;
+    const u=f*(sx*px+sy*py+sz*pz); if(u<0||u>1) return false; const qx=sy*e1z-sz*e1y, qy=sz*e1x-sx*e1z, qz=sx*e1y-sy*e1x; const w=f*(dx*qx+dy*qy+dz*qz); if(w<0||u+w>1) return false;
+    const t=f*(e2x*qx+e2y*qy+e2z*qz); return t>0.002&&t<0.998; };
+  const x0=Math.floor(Math.min(a.x,b.x)/C), x1=Math.floor(Math.max(a.x,b.x)/C), z0=Math.floor(Math.min(a.z,b.z)/C), z1=Math.floor(Math.max(a.z,b.z)/C);
+  for(let cx=x0;cx<=x1;cx++) for(let cz=z0;cz<=z1;cz++){ const arr=I.cells.get(cx*65536+cz); if(arr) for(let k=0;k<arr.length;k++) if(test(arr[k])) return true; }
+  for(let k=0;k<I.big.length;k++) if(test(I.big[k])) return true;
+  if(I.inst.length){ const len=Math.hypot(dx,dy,dz)||1; I.ray.set(a,new THREE.Vector3(dx/len,dy/len,dz/len)); I.ray.near=0; I.ray.far=len; if(I.ray.intersectObjects(I.inst,false).length) return true; }
+  return false; }
+// Pepperbox boards must be seen: sight lines from the approach (driver's eye, three distances) to seven points of the
+// face are tested against everything already built (environment model, terrain, earlier props), the body of the board
+// is swept for geometry it would stand in, and the road must have open sky. A hidden or buried spot is skipped.
+function pbSpotOK(W,P,i,x,y,z,ang,info){
+  if(PB_VIS.W!==W){ PB_VIS.W=W; PB_VIS.I=pbIndex(W); }
+  const I=PB_VIS.I, why=PB_VIS.why, no=k=>{ why[k]=(why[k]||0)+1; return false; }; if(!I.n&&!I.inst.length) return true;
+  const ax=Math.cos(ang), az=-Math.sin(ang), nx=Math.sin(ang), nz=Math.cos(ang);   // board x axis, face normal
+  const lift=info.pole?12:0, zc=y+1.95+lift+3.06;                                    // face centre height
+  const V=(px,py,pz)=>new THREE.Vector3(px,py,pz), eyes=[];
+  // 1) the board faces the approach (not its back, not its edge)
+  for(const back of [14,28,44]){ const k=((i-back)%P.N+P.N)%P.N; const eye=V(P.x[k],P.y[k]+1.5,P.z[k]); const ex=eye.x-x, ez=eye.z-z, el=Math.hypot(ex,ez)||1; if((ex*nx+ez*nz)/el<0.3) return no('facing'); eyes.push(eye); }
+  // 2) open sky over the approach: no boards beside a tunnel, the LED arch run or under a gantry
+  { let roof=0; for(const back of [0,10,22]){ const k=((i-back)%P.N+P.N)%P.N; if(pbHit(I,V(P.x[k],P.y[k]+2.2,P.z[k]),V(P.x[k],P.y[k]+32,P.z[k]),true)) roof++; } if(roof>=2) return no('roof'); }   // one hit = a wire or a single gantry: fine
+  // 3) the body stands in nothing: sweeps along the board (front, back, top, bottom) and down through it
+  for(const [off,h] of [[-1.6,zc],[1.6,zc],[-0.6,zc+2.7],[-0.6,zc-2.7],[0.8,zc+2.2],[0.8,zc-2.2]]){
+    if(pbHit(I,V(x-ax*8.9+nx*off,h,z-az*8.9+nz*off),V(x+ax*8.9+nx*off,h,z+az*8.9+nz*off))) return no('body'); }
+  if(!info.pole) for(const u of [-7,-3.5,0,3.5,7]){ if(pbHit(I,V(x+ax*u,y+9.4,z+az*u),V(x+ax*u,y+1.2,z+az*u))) return no('top'); }
+  // 4) the face is seen from the road
+  const tg=[[0,0],[-6.8,0],[6.8,0],[-5,2.2],[5,2.2],[-5,-2.2],[5,-2.2]].map(([u,v])=>V(x+ax*u+nx*0.9,zc+v,z+az*u+nz*0.9));
+  const total=eyes.length*tg.length, maxMiss=Math.floor(total*0.14); let miss=0;
+  for(const eye of eyes) for(const t of tg){ if(pbHit(I,eye,t)&&++miss>maxMiss) return no('hidden'); }
+  why.ok=(why.ok||0)+1; return true;
+}
 // Places GLB props for this track along straight sections, facing the road. Returns blocker circles.
 function placeTrackProps(W,def,P,H){
   const blockers=[]; if(typeof CAR_GLTF==='undefined') return blockers;
@@ -868,10 +922,15 @@ function placeTrackProps(W,def,P,H){
         if(bill){ const nx=-P.tx[i]*0.8-sd*P.rx[i]*0.6, nz=-P.tz[i]*0.8-sd*P.rz[i]*0.6; ang=info.face>0?Math.atan2(nx,nz):Math.atan2(-nx,-nz); }
         else ang=Math.atan2(-sd*P.rx[i],-sd*P.rz[i]);
         if(!(info.pole?H.footprintClear(x,z,ang,3,3,1.0):H.footprintClear(x,z,ang,T.w+1,T.d+1,1.0))){ PROP_DBG.fp++; continue; } if(blockers.some(b=>Math.hypot(b.x-x,b.z-z)<b.r+Math.max(T.w,T.d)/2)) continue;
+        if(info.pepperbox){ let gy=1e9, gh=-1e9; for(const [a,b] of [[-1,-1],[1,-1],[1,1],[-1,1],[0,0]]){ const hh=H.heightAt(x+a*T.w/2,z+b*T.d/2); gy=Math.min(gy,hh); gh=Math.max(gh,hh); }
+          if(info.pole){ const py=H.heightAt(x,z)-P.y[i]; if(py<-2.5||py>6){ PB_VIS.why.footing=(PB_VIS.why.footing||0)+1; continue; } gy=H.heightAt(x,z); }
+          if(!info.pole&&gh-gy>1.6){ PB_VIS.why.steep=(PB_VIS.why.steep||0)+1; continue; }                       // too steep for a ground board: it would hang in the air or dig in
+          if(!pbSpotOK(W,P,i,x,gy-0.05,z,ang,info)) continue; }
         picks.push({i,x,z,ang}); break; } }
-    picks.forEach(p=>{ const o=makeProp(id); if(PROP_INFO[id].pepperbox) pbFace(o); let y=1e9; for(const [a,b] of [[-1,-1],[1,-1],[1,1],[-1,1]]){ y=Math.min(y,H.heightAt(p.x+a*T.w/2,p.z+b*T.d/2)); } o.position.set(p.x,y-0.05,p.z); o.rotation.y=p.ang; W.group.add(o); (W.props=W.props||[]).push({id,x:p.x,z:p.z,y,ang:p.ang,i:p.i});
+    picks.forEach(p=>{ const o=makeProp(id); if(PROP_INFO[id].pepperbox) pbFace(o); let y=1e9; for(const [a,b] of [[-1,-1],[1,-1],[1,1],[-1,1]]){ y=Math.min(y,H.heightAt(p.x+a*T.w/2,p.z+b*T.d/2)); } if(PROP_INFO[id].pole) y=H.heightAt(p.x,p.z); o.position.set(p.x,y-0.05,p.z); o.rotation.y=p.ang; W.group.add(o); (W.props=W.props||[]).push({id,x:p.x,z:p.z,y,ang:p.ang,i:p.i});
       blockers.push({x:p.x,z:p.z,r:Math.hypot(T.w,T.d)/2+1.5}); });
   }
+  PB_VIS.W=null; PB_VIS.I=null;   // free the triangle index
   return blockers;
 }
 
