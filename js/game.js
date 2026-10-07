@@ -3365,7 +3365,7 @@ class Race{
     this.time+=DT; const P=this.P, N=P.N; const racing=this.state!=='intro'&&this.state!=='countdown';
     for(const c of this.cars){
       if(!racing){ c.score=this.route?-((this.route.entry-c.pr.i+N)%N):((c.pr.i-this.cpIdx[NCP-1]+N)%N); c.inp.thr=0; c.inp.brk=0; c.step(DT); c.vx=c.vz=0; const g=this.W.grid[c.idx]; if(g){ const P=this.P; c.x=P.x[g.i]+P.rx[g.i]*g.lat; c.z=P.z[g.i]+P.rz[g.i]*g.lat; c.h=Math.atan2(P.tx[g.i],P.tz[g.i]); } continue; }
-      const LP=P.loop; if(LP && !c.loop && c.grounded && ((c.pr.i-LP.i0+N)%N)<LP.span) this.loopEnter(c);
+      const LP=P.loop; if(c.loopCD>0) c.loopCD-=DT; if(LP && !c.loop && !(c.loopCD>0) && c.grounded && ((c.pr.i-LP.i0+N)%N)<LP.span) this.loopEnter(c);
       if(c.loop) this.loopStep(c,DT); else c.step(DT);
       if(!racing) continue;
       // take-off fire: a car on the lip of a jump (or entering the loop) sets off that feature's pyro
@@ -3449,7 +3449,7 @@ class Race{
     if(c.isPlayer){ this.sfx('boost'); this.game.ui.flash('FULL SEND!','#c9a66b',1.1); } if(this.W.pyro) this.W.pyro('loop',c); }
   loopStep(c,dt){ const L=this.P.loop, P=this.P, N=P.N, o=c.loop; const th=2*Math.PI*o.u; const v=o.v*(1-0.22*Math.sin(th/2)*Math.sin(th/2));   // a touch slower over the top
     o.u+=v*dt/L.len;
-    if(o.u>=1){ c.loop=null; const lat=clamp(o.lat*(P.w[L.i1]/2)/((L.w-3.2)/2),-P.w[L.i1]/2+1.5,P.w[L.i1]/2-1.5); c.place(L.i1,lat); c.vF=o.v; c.vx=Math.sin(c.h)*o.v; c.vz=Math.cos(c.h)*o.v; c.ghost=Math.max(c.ghost,0.25); if(c.isPlayer) this.shake(0.25); return; }
+    if(o.u>=1){ c.loop=null; const lat=clamp(o.lat*(P.w[L.i1]/2)/((L.w-3.2)/2),-P.w[L.i1]/2+1.5,P.w[L.i1]/2-1.5); c.place((L.i1+1)%N,lat); c.loopCD=0.6; c.vF=o.v; c.vx=Math.sin(c.h)*o.v; c.vz=Math.cos(c.h)*o.v; c.ghost=Math.max(c.ghost,0.25); if(c.isPlayer) this.shake(0.25); return; }
     L.pos(o.u,o.lat,c); o.th=2*Math.PI*o.u; c.h=Math.atan2(L.fx,L.fz); const cs=Math.cos(o.th); c.vx=L.fx*v*cs; c.vz=L.fz*v*cs; c.vy=0; c.vF=v; c.vS=0; c.yaw=0; c.grounded=true; c.offroad=false; c.offroadRaw=false;
     const i=(L.i0+Math.min(L.span-1,Math.floor(o.u*L.span)))%N; c.i=i; c.pr.i=i; c.pr.t=0; c.pr.lat=o.lat; c.pr.h=c.y; c.pr.gap=0; c.pr.w=P.w[i]; c.pr.wl=P.wl[i]; c.pr.wr=P.wr[i]; c.pr.tx=L.fx; c.pr.tz=L.fz; c.pr.rx=L.rx; c.pr.rz=L.rz; c.pr.slope=0; c.pr.median=0;
     if(c.ghost>0) c.ghost-=dt; if(c.shield>0) c.shield-=dt; if(c.itemCD>0) c.itemCD-=dt; }
