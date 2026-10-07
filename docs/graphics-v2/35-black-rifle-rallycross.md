@@ -30,4 +30,4 @@ for the game). No official logo artwork is used. To put the real marks on: repla
 
 ## Leaderboard (Supabase)
 
-The layout changed, so times post under `roast_r2` (`rev:2`). It must be allowed in `race_results_track_check`; floors: lap >= 18 s, race >= 360 s. Old `roast` times stay on the old board.
+The layout changed, so times post under `roast_r3` (`rev:3`; `roast_r2` was the first rework, before the Big Air moved). It must be allowed in `race_results_track_check`; floors: lap >= 18 s, race >= 360 s. Old `roast` times stay on the old board.
