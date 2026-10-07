@@ -55,7 +55,7 @@ const Store={
 // roads that cross there: the start straight at ground level, the upper straight in the air (the jump's gap).
 function rallyPoints(){ const S=0.88, W=16; return [
   [0,-80,0],[0,-25,0],[0,30,0],[0,50,0],[0,62,0],[15,74,0],[15,92,0],[24,150,0.5],[55,190,1.5],[105,200,2.5],[152,175,3.5],[170,125,4.5],[160,70,5],
-  [125,36,5],[70,30,5],[0,30,3.5],[-70,30,2],[-125,25,1.5],[-165,-5,1.5],[-175,-55,3],[-172,-110,7],[-165,-170,1],[-135,-215,0],[-80,-230,0],[-30,-205,0],[-5,-150,0]
+  [125,36,5],[70,30,5],[0,30,3.5],[-70,30,2],[-125,25,1.5],[-160,4,1.5],[-173,-30,2],[-173,-110,2],[-173,-200,1],[-152,-246,0],[-92,-266,0],[-35,-238,0],[-5,-172,0]
  ].map(p=>[Math.round(p[0]*S*10)/10,Math.round(p[1]*S*10)/10,p[2],W]); }
 // Oval control points: two straights (S) and two half circles (R), driven counter-clockwise (left turns), 40 points by arc
 // length starting 55 % along the front straight.
@@ -248,9 +248,9 @@ const TRACK_DATA = [
   // the start straight, the west straight with the Big Air, and the long left-hander home.
   points:rallyPoints(),
   loop:{cp:4,f:0,cpx:5,fx:0,r:11,w:11},
-  jumps:[{cp:14,f:0.48,len:16,h:4.6,gap:32,name:'CROSSOVER JUMP'},{cp:19,f:0.35,len:22,h:6.5,gap:30,name:'DARK ROAST BIG AIR'}],
+  jumps:[{cp:14,f:0.48,len:16,h:4.6,gap:32,name:'CROSSOVER JUMP'},{cp:19,f:0.4,len:22,h:4.4,gap:26,name:'DARK ROAST BIG AIR'}],
   // pads and item rows only where the stage runs straight
-  boosts:[{cp:0,f:0.5,lat:0},{cp:13,f:0.55,lat:0},{cp:18,f:0.7,lat:0}],
+  boosts:[{cp:0,f:0.5,lat:0},{cp:13,f:0.55,lat:0},{cp:19,f:0.05,lat:0}],
   items:[{cp:6,f:0.5},{cp:16,f:0.6}],
   medians:[],
 },
@@ -2108,11 +2108,9 @@ function buildScenery(W,def,P,Q,H){
       const pm=new THREE.MeshStandardMaterial({color:0xd6d6d6,vertexColors:true,roughness:0.85}); G.add(instanced(bodyUp,pm,bodies,true)); G.add(instanced(skinStand,pm,calm,false));
       const cg=new THREE.Group(); cg.add(instanced(bodyUp,pm,cheerB,true)); cg.add(instanced(skinUp,pm,cheerS,false)); G.add(cg); W.updaters.push((dt,t)=>{ cg.position.y=Math.abs(Math.sin(t*5))*0.14; }); W.rallyStats={fans:bodies.length+cheerB.length}; }
     // ---- sponsor boards on legs
-    { const b1=P.idxAt(8,0.2), b2=P.idxAt(11,0.6), b3=P.idxAt(22,0.4), b4=P.idxAt(17,0.5);
-      billboard(b1,outSide(b1),9,[{text:'BLACK RIFLE',font:F2,color:TAN,y:0.3},{text:'COFFEE COMPANY',font:F1,color:'#f2efe8',y:0.6},{text:'FRESH ROASTED · FULL SEND',font:'bold 44px "Chakra Petch", sans-serif',color:RED,y:0.86}],BLK,8);
-      billboard(b2,outSide(b2),9,[{text:'BRCC',font:'italic 260px "Racing Sans One", Impact, sans-serif',color:BLK,y:0.44},{text:'BLACK RIFLE COFFEE COMPANY',font:'bold 56px "Chakra Petch", sans-serif',color:BLK,y:0.84}],TAN,8);
-      billboard(b3,outSide(b3),9,[{text:'FUELED BY',font:F1,color:'#f2efe8',y:0.3},{text:'DARK ROAST',font:'italic 170px "Racing Sans One", Impact, sans-serif',color:TAN,y:0.64}],BLK,8);
-      billboard(b4,outSide(b4),9,[{text:'SEND IT',font:'italic 230px "Racing Sans One", Impact, sans-serif',color:'#f2efe8',y:0.42},{text:'BLACK RIFLE RALLYCROSS',font:'bold 60px "Chakra Petch", sans-serif',color:TAN,y:0.84}],RED,8); }
+    /* sponsor boards on legs: the official coffee bag packshots and logo (models/props/brcc/board1..6.jpg) */
+    { const TL=new THREE.TextureLoader(); [[8,0.2],[11,0.6],[22,0.4],[17,0.5],[7,0.5],[20,0.9],[24,0.6],[16,0.6]].forEach((q,n)=>{ const bi=P.idxAt(q[0],q[1]); const g=billboard(bi,outSide(bi),13,[{text:'BLACK RIFLE COFFEE',font:F1,color:'#f2efe8',y:0.5}],BLK,8); g.scale.setScalar(1.45); { const v=(bi-26+P.N)%P.N, gx=g.position.x, gz=g.position.z; g.rotation.y=Math.atan2(P.x[v]-gx,P.z[v]-gz); keep(gx,gz,13); for(let u=1;u<=3;u++) keep(gx+(P.x[v]-gx)*u/4,gz+(P.z[v]-gz)*u/4,9); }
+        const t=TL.load('models/props/brcc/board'+(n%6+1)+'.jpg?v=1'); GFX.compat.srgb(t); t.anisotropy=8; const m=g.children[0].material[4]; m.map=t; m.needsUpdate=true; }); }
     // ---- the forest: pines close to the stage and thick beyond it, rocks and log piles in between
     { const dark=coneTreeGeo(0x0d2a12), light=coneTreeGeo(0x16401a); const near=scatter(340,5,90,6,(x,y,z)=>({x,y:y-0.3,z,ry:rnd()*TAU,s:rr(2.2,4.4)})), far=areaScatter(300,34,(x,y,z)=>({x,y:y-0.3,z,ry:rnd()*TAU,s:rr(3,5.6)}));
       const all=near.concat(far).filter(t=>!(W.rk||[]).some(k=>Math.hypot(t.x-k[0],t.z-k[1])<k[2])); G.add(instanced(dark,vcMat,all.filter((t,k)=>k%2===0),true)); G.add(instanced(light,vcMat,all.filter((t,k)=>k%2===1),true));
