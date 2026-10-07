@@ -3187,7 +3187,7 @@ const DIFFS={easy:{base:0.9,rb:0.05,label:'Easy'},normal:{base:1.0,rb:0.1,label:
 const ITEMS={nitro:{name:'Nitro Cell',icon:'⚡',col:'#22e4ff'},aegis:{name:'Aegis Bubble',icon:'◈',col:'#7ff6ff'},slick:{name:'Glaze Slick',icon:'◍',col:'#ff4fb0'}};
 class Race{
   constructor(game,opt){
-    this.game=game; this.opt=opt; this.def=TRACK_DATA[opt.track]; if(this.def&&this.def.account&&!(game.online&&game.online.hasAccess())) throw new Error('This track is for signed-in racers. Create an account or log in to unlock it.'); this.practice=!!opt.practice; this.laps=this.practice?999:this.def.laps;
+    this.game=game; this.opt=opt; this.def=TRACK_DATA[opt.track]; if(this.def&&this.def.account&&!(game.online&&game.online.hasAccess())) throw new Error('This track is for signed-in racers. Create an account or log in to unlock it.'); this.practice=!!opt.practice; this.laps=this.practice?999:(opt.laps||this.def.laps); this.shortRace=!this.practice&&this.laps!==this.def.laps;   /* Grand Prix runs the 20-lap tracks over 10: no race-time record or leaderboard post for those */
     GFX.v2.begin(this.def,game);   // Graphics V2 look for this track (Pacifica), or nothing: graphics only
     const Q=game.Q; this.time=0; this.raceTime=0; this.state='intro'; this.stateT=0; this.acc=0; this.paused=false;
     this.P=buildTrackPath(this.def); this.A=analyzeTrack(this.P);
@@ -3209,8 +3209,11 @@ class Race{
     const d=DIFFS[opt.diff]; const spread=[0.02,0.012,0.006,0,-0.006,-0.012,-0.02];
     this.cars=[]; const playerSlot=Math.min(total-1,opt.diff==='easy'?3:opt.diff==='hard'?7:5); let ai=0;
     // grid order: slot -> {v,isP}. A track can reserve pole for one car (Y'all Fuck With Racin?: the Colonial Hellcat always starts P1, whoever drives it)
-    const order=[]; { let a=0; for(let s=0;s<total;s++) order.push(s===playerSlot?{v:pv,isP:true}:{v:field[a++],isP:false}); }
-    const poleId=this.P.route&&this.P.route.pole;
+    let order=[]; { let a=0; for(let s=0;s<total;s++) order.push(s===playerSlot?{v:pv,isP:true}:{v:field[a++],isP:false}); }
+    // Grand Prix, race 2 onward: the grid is the previous race's finishing order (winner on pole). opt.order = vehicle ids, '__player__' for you.
+    let fromResults=false;
+    if(opt.order&&opt.order.length===total){ const o2=opt.order.map(id=>id==='__player__'?{v:pv,isP:true}:{v:field.find(v=>v.id===id),isP:false}); if(o2.every(o=>o.v)&&o2.filter(o=>o.isP).length===1){ order=o2; fromResults=true; } }
+    const poleId=!fromResults&&this.P.route&&this.P.route.pole;
     if(poleId && VEHICLES.some(v=>v.id===poleId)){ let k=order.findIndex(o=>o.v.id===poleId);
       if(k<0){ const pv2=VEHICLES.find(v=>v.id===poleId); k=order.map(o=>!o.isP).lastIndexOf(true); order[k]={v:pv2,isP:false}; }
       const [o]=order.splice(k,1); order.unshift(o); }
@@ -3381,7 +3384,7 @@ class Race{
     c.lapStart=now;
     if(c.lap>this.laps){ c.finished=true; c.finishTime=now; this.finishOrder.push(c); c.finishPos=this.finishOrder.length;
       if(c.isPlayer){ this.state='finish'; this.stateT=0; this.sfx('finish'); if(this.W.rev&&this.W.rev.celebrate) this.W.rev.celebrate(); this.game.audio.setMusic('menu'); this.game.ui.flash(ordinal(c.finishPos)+' PLACE!',c.finishPos<=3?'#ffc23d':'#22e4ff',3);
-        if(this.best.race==null||now<this.best.race){ this.best.race=now; this.best.raceCar=c.v.name; this.newRaceRecord=true; Store.set('best_'+trackKey(this.def),this.best); } }
+        if(!this.shortRace&&(this.best.race==null||now<this.best.race)){ this.best.race=now; this.best.raceCar=c.v.name; this.newRaceRecord=true; Store.set('best_'+trackKey(this.def),this.best); } }
       return; }
     if(c.isPlayer && c.lap>1 && this.practice){ const lt=c.lapTimes[c.lapTimes.length-1]; this.sfx('lap'); this.game.ui.flash('LAP '+fmtTime(lt)+(lt<=c.bestLap+1e-6?' · BEST':''),'#22e4ff'); return; }
     if(c.isPlayer && c.lap>1){ if(c.lap===this.laps){ this.sfx('final'); this.game.ui.flash('FINAL LAP','#ff2e97'); } else { this.sfx('lap'); this.game.ui.flash('LAP '+c.lap+' / '+this.laps,'#22e4ff'); } }
@@ -3418,7 +3421,7 @@ class Race{
     list.forEach(c=>{ if(!c.finished){ const remain=this.route? this.laps*this.route.span-c.score : (this.laps+1)*P.N - (c.score); c.estTime=this.raceTime+Math.max(0,remain)*P.spacing/avg(c); } else c.estTime=c.finishTime; });
     list.sort((a,b)=>{ if(a.finished&&b.finished) return a.finishPos-b.finishPos; if(a.finished) return -1; if(b.finished) return 1; return a.estTime-b.estTime; });
     return {track:this.def, place:list.indexOf(this.player)+1, rows:list.map((c,k)=>({pos:k+1,driver:c.driver,car:c.v.name,time:c.estTime,est:!c.finished,best:c.bestLap,player:c.isPlayer,color:c.v})),
-      finished:this.player.finished, playerTime:this.player.finishTime, playerBest:this.player.bestLap, newRace:!!this.newRaceRecord, newLap:!!this.newLapRecord, best:this.best};
+      finished:this.player.finished, shortRace:!!this.shortRace, playerTime:this.player.finishTime, playerBest:this.player.bestLap, newRace:!!this.newRaceRecord, newLap:!!this.newLapRecord, best:this.best};
   }
   buildMiniPath(){ const P=this.P; let minx=1e9,maxx=-1e9,minz=1e9,maxz=-1e9; for(let i=0;i<P.N;i++){minx=Math.min(minx,P.x[i]);maxx=Math.max(maxx,P.x[i]);minz=Math.min(minz,P.z[i]);maxz=Math.max(maxz,P.z[i]);}
     this.mini={minx,maxx,minz,maxz}; }
@@ -3644,7 +3647,7 @@ class Game{
       this.starting=0;
       try{
         if(this.race){ this.race.dispose(); this.race=null; }
-        this.race=new Race(this,{track:this.sel.track,vehicle:this.sel.vehicle,diff:this.sel.diff,field:this.gp?this.gp.field:(this.mode==='practice'?[]:null),practice:this.mode==='practice'});
+        this.race=new Race(this,{track:this.sel.track,vehicle:this.sel.vehicle,diff:this.sel.diff,field:this.gp?this.gp.field:(this.mode==='practice'?[]:null),practice:this.mode==='practice',laps:this.gp?gpLapsFor(TRACK_DATA[this.sel.track]):null,order:this.gp?this.gp.order:null});
         this.show('race'); $('hud').classList.add('on');
       }catch(e){ this.ui.error(e); console.error(e); this.show('menu'); }
     },60);
@@ -3661,31 +3664,32 @@ class Game{
       else html+=`<div class="gpo">${esc(win.driver)} wins the Grand Prix in the ${esc(win.car)}. You finished ${ordinal(rows.findIndex(x=>x.player)+1)} in the final.</div>`;
       btns=`<div class="btn small gold" data-gp="new"><span>New Grand Prix</span></div><div class="btn small" data-gp="quit"><span>Main menu</span></div>`;
     } else {
-      const k=GP_ELIM[r]; const out=rows.slice(rows.length-k); const meOut=out.some(x=>x.player);
-      html+=`<div class="gpo">Eliminated: ${out.map(x=>x.player?'<b>YOU</b>':esc(x.driver)+' ('+esc(x.car)+')').join(', ')}</div>`;
+      const k=(gp.elim||GP_ELIM)[r]||0; const out=k?rows.slice(rows.length-k):[]; const meOut=out.some(x=>x.player);
+      if(out.length) html+=`<div class="gpo">Eliminated: ${out.map(x=>x.player?'<b>YOU</b>':esc(x.driver)+' ('+esc(x.car)+')').join(', ')}</div>`;
       if(meOut){ gp.done=true; html+=`<div class="gpn">Your Grand Prix is over. Finish higher to survive the cut.</div>`; btns=`<div class="btn small gold" data-gp="new"><span>Try again</span></div><div class="btn small" data-gp="quit"><span>Main menu</span></div>`; }
-      else { gp.field=rows.slice(0,rows.length-k).filter(x=>!x.player).map(x=>x.color.id); gp.round++; const nt=TRACK_DATA.find(t=>t.id===GPT[gp.round]);
-        html+=`<div class="gpn">You survive! Next: <b>${nt.name}</b> with ${gp.field.length+1} racers${gp.round===GPT.length-1?' · FINAL':''}.</div>`;
+      else { const keep=rows.slice(0,rows.length-k); gp.field=keep.filter(x=>!x.player).map(x=>x.color.id); gp.order=keep.map(x=>x.player?'__player__':x.color.id); gp.round++; const nt=TRACK_DATA.find(t=>t.id===GPT[gp.round]);
+        const myGrid=gp.order.indexOf('__player__')+1; html+=`<div class="gpn">You survive! Next: <b>${nt.name}</b> with ${gp.field.length+1} racers${gp.round===GPT.length-1?' · FINAL':''}. You start <b>${ordinal(myGrid)}</b> on the grid (this race's finishing order).</div>`;
         btns=`<div class="btn small gold" data-gp="next"><span>${gp.round===GPT.length-1?'Start the final':'Next race'}</span></div><div class="btn small" data-gp="quit"><span>Quit Grand Prix</span></div>`; }
     }
     el.innerHTML=html; bt.innerHTML=btns;
     bt.querySelectorAll('[data-gp]').forEach(b=>b.addEventListener('click',()=>this.ui.act('gp_'+b.dataset.gp)));
   }
-  newGP(){ const others=VEHICLES.filter((v,i)=>i!==this.sel.vehicle).map(v=>v.id).sort(()=>Math.random()-0.5); if(this.gp&&this.gp.done) GP_TRACKS=rollGPTracks(GP_TRACKS); this.gp={round:0,diff:this.sel.diff,field:others.slice(0,7),tracks:GP_TRACKS.slice()}; this.startRace(); }
+  newGP(){ const others=VEHICLES.filter((v,i)=>i!==this.sel.vehicle).map(v=>v.id).sort(()=>Math.random()-0.5); if(this.gp&&this.gp.done) GP_TRACKS=rollGPTracks(GP_TRACKS); const series=this.gpSeries||'classic', tracks=gpSeriesTracks(series); this.gp={round:0,diff:this.sel.diff,field:others.slice(0,7),tracks,series,elim:gpElim(tracks.length),order:null}; this.startRace(); }
   async postOnline(res){
     const el=$('resOnline'); el.className='msg'; el.textContent='';
     if(!res.finished || res.posted) return; res.posted=true;
     if(this.sel.diff!=='hard'){ el.textContent='Leaderboards count Hard difficulty only.'; return; }
-    if(!this.online.user){ if(this.autopilot) return; const pend=Store.get('pending',[]); pend.push({track:trackKey(res.track),car:VEHICLES[this.sel.vehicle].id,race:res.playerTime*1000,lap:res.playerBest?res.playerBest*1000:null,at:Date.now()}); Store.set('pending',pend.slice(-10));
+    if(!this.online.user){ if(this.autopilot) return; const pend=Store.get('pending',[]); pend.push({track:trackKey(res.track),car:VEHICLES[this.sel.vehicle].id,race:res.shortRace?null:res.playerTime*1000,lap:res.playerBest?res.playerBest*1000:null,at:Date.now()}); Store.set('pending',pend.slice(-10));
       el.innerHTML='Your Hard time is saved on this device. <b>Log in or create a racer name</b> and it posts to the online leaderboard automatically. <a href="#" id="resLogin" style="color:var(--gold)">Log in now →</a>';
       const a=$('resLogin'); if(a) a.onclick=ev=>{ ev.preventDefault(); this.ui.act('quit'); this.ui.act('account'); }; return; }
     if(this.autopilot){ return; }
     const tr=trackKey(res.track), car=VEHICLES[this.sel.vehicle].id;
     el.textContent='Posting to leaderboards…';
     try{
-      await this.online.submit(tr,car,res.playerTime*1000,res.playerBest?res.playerBest*1000:null);
-      const [rr,lr]=await Promise.all([this.online.rankOf(tr,'race',res.playerTime*1000),res.playerBest?this.online.rankOf(tr,'lap',res.playerBest*1000):null]);
-      el.innerHTML=`Posted as <b>${this.online.user}</b> · this race would rank <b>#${rr||'?'}</b>`+(lr?` · best lap <b>#${lr}</b>`:'')+' on the online board';
+      const raceMs=res.shortRace?null:res.playerTime*1000;   // a 10-lap Grand Prix run of a 20-lap track only posts its best lap
+      await this.online.submit(tr,car,raceMs,res.playerBest?res.playerBest*1000:null);
+      const [rr,lr]=await Promise.all([raceMs?this.online.rankOf(tr,'race',raceMs):null,res.playerBest?this.online.rankOf(tr,'lap',res.playerBest*1000):null]);
+      el.innerHTML=`Posted as <b>${this.online.user}</b>`+(raceMs?` · this race would rank <b>#${rr||'?'}</b>`:' · Grand Prix runs this track over 10 laps, so only the lap counts')+(lr?` · best lap <b>#${lr}</b>`:'')+' on the online board';
     }catch(e){ el.className='msg bad'; el.textContent='Couldn’t post to leaderboards: '+e.message; }
   }
 }
@@ -4001,9 +4005,14 @@ class UI{
       if(on.user && !rows.some(r=>r.username===on.user)){ const mine=await on.myBest(track,kind); if(mine&&req===this.boardReq){ const rk=await on.rankOf(track,kind,mine.time_ms); m.innerHTML=`Your best: <b>${fmtTime(mine.time_ms/1000)}</b> in the ${carName(mine.car)} · rank #${rk}`; } }
     }catch(e){ if(req!==this.boardReq) return; m.className='msg bad'; m.textContent=e.message; }
   }
-  gpIntroUI(){ const g=this.g; const sizes=[8]; GP_ELIM.forEach((k,i)=>sizes.push(sizes[i]-k));
-    $('gpRounds').innerHTML=GP_TRACKS.map((id,i)=>{ const t=TRACK_DATA.find(x=>x.id===id); return `<div class="gpr"><div class="n">Race ${i+1}${i===GP_TRACKS.length-1?' · Final':''}</div><canvas width="300" height="240"></canvas><h3>${t.name}</h3><div class="f">${sizes[i]} racers${i<GP_ELIM.length?' · '+GP_ELIM[i]+' knocked out':' · winner takes all'}</div></div>`; }).join('');
-    $('gpRounds').querySelectorAll('canvas').forEach((cv,i)=>drawTrackThumb(cv,TRACK_DATA.find(x=>x.id===GP_TRACKS[i])));
+  gpIntroUI(){ const g=this.g; const series=g.gpSeries||'classic', TR=gpSeriesTracks(series), EL=gpElim(TR.length); const sizes=[8]; EL.forEach((k,i)=>sizes.push(sizes[i]-k));
+    $('gpTitle').textContent=series==='marathon'?'Marathon Grand Prix':'Grand Prix';
+    $('gpHint').textContent=(series==='marathon'?'The 20-lap tracks back to back, '+GP_LAPS_LONG+' laps each':TR.length+' random tracks back to back')+' · the slowest racers are knocked out after each race · from race 2 you start where you finished';
+    $('gpSeries').querySelectorAll('button').forEach(b=>{ b.classList.toggle('on',b.dataset.s===series); b.onclick=()=>{ g.gpSeries=b.dataset.s; g.audio.play('blip'); this.gpIntroUI(); }; });
+    const sh=document.querySelector('[data-act="gpShuffle"]'); if(sh) sh.style.display=series==='marathon'?'none':'';
+    $('gpRounds').style.gridTemplateColumns='repeat('+Math.max(1,TR.length)+',minmax(0,1fr))';
+    $('gpRounds').innerHTML=TR.map((id,i)=>{ const t=TRACK_DATA.find(x=>x.id===id); return `<div class="gpr"><div class="n">Race ${i+1}${i===TR.length-1?' · Final':''}</div><canvas width="300" height="240"></canvas><h3>${t.name}</h3><div class="f">${gpLapsFor(t)} laps · ${sizes[i]} racers${i<EL.length?(EL[i]?' · '+EL[i]+' knocked out':''):' · winner takes all'}</div></div>`; }).join('');
+    $('gpRounds').querySelectorAll('canvas').forEach((cv,i)=>drawTrackThumb(cv,TRACK_DATA.find(x=>x.id===TR[i])));
     $('gpDiff').querySelectorAll('button').forEach(b=>{ b.classList.toggle('on',b.dataset.d===g.sel.diff); b.onclick=()=>{ g.sel.diff=b.dataset.d; g.audio.play('blip'); this.gpIntroUI(); }; }); }
   carDots(){ $('carDots').innerHTML=VEHICLES.map(()=>'<b></b>').join(''); }
   carInfo(){
@@ -4091,6 +4100,12 @@ class UI{
   }
 }
 const GP_ELIM=[2,1,1], GP_LEN=4;
+// Grand Prix series. classic: 4 random tracks. marathon: every 20-lap track, in list order, cut to 10 laps each (new 20-lap
+// tracks join automatically). Every series ends with a 4-car final: gpElim(n) = how many are knocked out after each race.
+const GP_LAPS_LONG=10;
+function gpElim(n){ return n<=1?[]:n===2?[4]:n===3?[2,2]:n===4?[2,1,1]:[1,1,1,1].concat(new Array(Math.max(0,n-5)).fill(0)); }
+function gpSeriesTracks(series){ return series==='marathon'?TRACK_DATA.filter(t=>t.laps>=20&&!trackLocked(t)).map(t=>t.id):GP_TRACKS.slice(); }
+function gpLapsFor(def){ return def.laps>=20?GP_LAPS_LONG:def.laps; }
 function rollGPTracks(prev){ const ids=TRACK_DATA.filter(t=>!trackLocked(t)&&t.gp!==false).map(t=>t.id); let pick;
   for(let tries=0;tries<20;tries++){ const a=ids.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } pick=a.slice(0,GP_LEN); if(!prev||pick.join()!==prev.join()) break; }
   return pick; }
