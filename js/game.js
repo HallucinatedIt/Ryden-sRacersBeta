@@ -3451,7 +3451,9 @@ function segDist(px,py,pz,ax,ay,az,bx,by,bz){ const vx=bx-ax,vy=by-ay,vz=bz-az; 
 // ===== RACE MANAGER =====
 const NCP=12, DT=1/120, MUD_TIRE_TIME=5;
 const DIFFS={easy:{base:0.9,rb:0.05,label:'Easy'},normal:{base:1.0,rb:0.1,label:'Normal'},hard:{base:1.07,rb:0.18,label:'Hard'}};
-const ITEMS={nitro:{name:'Nitro Cell',icon:'⚡',col:'#22e4ff'},aegis:{name:'Aegis Bubble',icon:'◈',col:'#7ff6ff'},slick:{name:'Glaze Slick',icon:'◍',col:'#ff4fb0'}};
+// range: the Range Finder (asked for by players). Using it puts the exact distance left in the race on screen for the rest of
+// the race: it appears big in the centre, then docks under the timer and counts down. Only the human driver can roll it, once.
+const ITEMS={nitro:{name:'Nitro Cell',icon:'⚡',col:'#22e4ff'},aegis:{name:'Aegis Bubble',icon:'◈',col:'#7ff6ff'},slick:{name:'Glaze Slick',icon:'◍',col:'#ff4fb0'},range:{name:'Range Finder',icon:'◎',col:'#f2c61a'}};
 class Race{
   constructor(game,opt){
     this.game=game; this.opt=opt; this.def=TRACK_DATA[opt.track]; if(this.def&&this.def.account&&!(game.online&&game.online.hasAccess())) throw new Error('This track is for signed-in racers. Create an account or log in to unlock it.'); this.practice=!!opt.practice; this.laps=this.practice?999:(opt.laps||this.def.laps); this.shortRace=!this.practice&&this.laps!==this.def.laps;   /* Grand Prix runs the 20-lap tracks over 10: no race-time record or leaderboard post for those */
@@ -3679,17 +3681,25 @@ class Race{
     if(c.isPlayer && c.lap>1 && this.practice){ const lt=c.lapTimes[c.lapTimes.length-1]; this.sfx('lap'); this.game.ui.flash('LAP '+fmtTime(lt)+(lt<=c.bestLap+1e-6?' · BEST':''),'#22e4ff'); return; }
     if(c.isPlayer && c.lap>1){ if(c.lap===this.laps){ this.sfx('final'); this.game.ui.flash('FINAL LAP','#ff2e97'); } else { this.sfx('lap'); this.game.ui.flash('LAP '+c.lap+' / '+this.laps,'#22e4ff'); } }
   }
-  rollItem(c){ const r=Math.random(), pos=c.rank/8;
+  rollItem(c){ if(c.isPlayer && !this.rangeOn && Math.random()<0.2) return 'range'; const r=Math.random(), pos=c.rank/8;
     const wN=0.2+0.6*pos, wA=0.35-0.15*pos, wS=0.45-0.3*pos; const t=wN+wA+wS; const x=r*t; return x<wN?'nitro':x<wN+wA?'aegis':'slick'; }
   useItem(c){
     const it=c.item; c.item=null;
     if(it==='nitro'){ c.giveBoost(1.6); c.boostMax=1.6; if(c.isPlayer) this.sfx('boost',1.2); else this.sfx3d('boost',c); }
+    else if(it==='range'){ if(c.isPlayer){ this.rangeOn=true; this.rangeAt=this.raceTime; this.sfx('pickup'); } }
     else if(it==='aegis'){ c.shield=7; if(c.isPlayer) this.sfx('shield'); else this.sfx3d('shield',c); }
     else if(it==='slick'){ const fx=Math.sin(c.h),fz=Math.cos(c.h); const x=c.x-fx*(c.halfL+2.2), z=c.z-fz*(c.halfL+2.2); const i=this.P.nearest(x,z,c.i,10); const pr=this.P.project(x,z,i,{});
       if(pr.gap) { c.item=null; return; }
       const m=new THREE.Mesh(this.slickGeo,this.slickMat); m.rotation.x=-Math.PI/2; m.position.set(x,pr.h+0.06,z); m.receiveShadow=true; this.scene.add(m);
       this.slicks.push({x,z,mesh:m,owner:c,age:0}); if(this.slicks.length>12) this.removeSlick(0); if(c.isPlayer) this.sfx('drop'); else this.sfx3d('drop',c); }
   }
+  // metres left in the race for car c along the road (the lap line is sample 0; the drag-strip routes count by their own span)
+  distLeft(c){ const P=this.P, N=P.N, sp=P.spacing, i=c.pr.i||0, t=c.pr.t||0;
+    if(c.finished) return 0;
+    if(this.route){ const R0=this.route; const v=c.cp===0?(((R0.entry-i+N)%N)+this.laps*R0.span)*sp:Math.max(0,(this.laps*R0.span-c.score)*sp); c._dl=Math.min(c._dl==null?v:c._dl,v); return c._dl; }   /* the portal hop between the drag strip and the circuit must not make it count up */
+    const dIn=((i+N)%N+t)*sp, L=N*sp; if(this.practice) return Math.max(0,L-dIn);
+    if(c.lap<1) return this.laps*L+Math.max(0,L-dIn)%L;
+    return Math.max(0,(this.laps-c.lap)*L+(L-dIn)); }
   removeSlick(k){ const s=this.slicks[k]; this.scene.remove(s.mesh); this.slicks.splice(k,1); }
   collide(){
     const cs=this.cars;
@@ -4362,10 +4372,16 @@ class UI{
     $('board').innerHTML=sorted.map(o=>`<div class="${o.isPlayer?'me':''}"><b>${o.finished?o.finishPos:o.rank}</b>${o.isPlayer?'YOU':o.driver} · ${o.v.name}</div>`).join('');
     // item
     let icon='',nm='';
-    if(this.rollT>0){ this.rollT-=1/15; const ks=Object.keys(ITEMS); const k=ks[Math.floor(Math.random()*3)]; icon=ITEMS[k].icon; nm='. . .'; this.g.audio.play('roll'); $('itemBox').style.borderColor='#fff'; }
+    if(this.rollT>0){ this.rollT-=1/15; const ks=Object.keys(ITEMS); const k=ks[Math.floor(Math.random()*ks.length)]; icon=ITEMS[k].icon; nm='. . .'; this.g.audio.play('roll'); $('itemBox').style.borderColor='#fff'; }
     else if(c.item){ icon=ITEMS[c.item].icon; nm=ITEMS[c.item].name; $('itemBox').style.borderColor=ITEMS[c.item].col; $('hItem').style.color=ITEMS[c.item].col; }
     else { $('itemBox').style.borderColor='rgba(255,255,255,.35)'; }
     $('hItem').textContent=icon; $('hItemN').textContent=nm;
+    // Range Finder: centre for 1.4 s, then docked under the timer, counting down
+    { const db=$('distBox'); if(db){ if(!R.rangeOn){ if(this.distOn){ db.className=''; db.removeAttribute('style'); this.distOn=false; } }
+        else { if(!this.distOn){ this.distOn=true; db.removeAttribute('style'); db.className='on'; } const m=R.distLeft(c), mi=this.g.S.units==='mph';
+          $('hDist').textContent=c.finished?'FINISHED':mi?(m>=161?(m/1609.344).toFixed(2)+' mi':Math.round(m*3.28084)+' ft'):(m>=1000?(m/1000).toFixed(2)+' km':Math.round(m)+' m');
+          $('hDistL').textContent=c.finished?'':R.practice?'TO THE LAP LINE':'LEFT IN THE RACE';
+          if(R.raceTime-R.rangeAt>1.4){ const tb=$('timeBox').getBoundingClientRect(); if(!db.classList.contains('dock')) db.classList.add('dock'); db.style.left=tb.right+'px'; db.style.top=(tb.bottom+8)+'px'; } } } }
     const hb=$('hBuff'); if(c.mudT>0){ hb.style.display='block'; hb.textContent='🛞 MUD TIRES '+c.mudT.toFixed(1)+'s'; } else hb.style.display='none';
     // drift / boost meter
     const bar=$('boostBar').firstElementChild;

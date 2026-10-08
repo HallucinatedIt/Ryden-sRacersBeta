@@ -80,6 +80,11 @@ input[type=range]{width:100%;accent-color:var(--pink)}
 #hLap{font-family:var(--disp);font-size:30px;font-style:italic;color:#fff}#hLap span{color:var(--dim);font-size:20px}
 .tl{font-size:12px;letter-spacing:.14em;color:var(--dim);display:flex;justify-content:space-between;gap:16px}.tl b{color:#fff;font-weight:600;letter-spacing:.04em;font-variant-numeric:tabular-nums}
 #itemBox{position:absolute;left:50%;top:max(12px,env(safe-area-inset-top));transform:translateX(-50%);width:74px;height:74px;border-radius:10px;border:3px solid rgba(255,255,255,.35);background:rgba(10,4,26,.6);display:flex;align-items:center;justify-content:center;font-size:40px;box-shadow:0 0 14px rgba(255,46,151,.35)}
+#distBox{position:absolute;left:50%;top:36%;transform:translate(-50%,-50%) scale(1.7);opacity:0;pointer-events:none;background:rgba(10,4,26,.62);padding:7px 14px 6px;border-radius:8px;border:2px solid #f2c61a;text-align:center;white-space:nowrap;z-index:3;transition:left .7s cubic-bezier(.65,0,.3,1),top .7s cubic-bezier(.65,0,.3,1),transform .7s cubic-bezier(.65,0,.3,1),opacity .3s}
+#distBox.on{opacity:1}
+#distBox.dock{transform:translate(-100%,0) scale(1)}
+#distBox b{display:block;font-size:24px;line-height:1.05;color:#f2c61a;letter-spacing:.03em;font-variant-numeric:tabular-nums}
+#distBox span{display:block;font-size:9px;letter-spacing:.2em;color:#fff;margin-top:2px}
 #itemBox .nm{position:absolute;bottom:-18px;font-size:10px;letter-spacing:.14em;white-space:nowrap;text-transform:uppercase;color:#fff;text-shadow:0 0 4px #000}
 #miniBox{position:absolute;left:max(12px,env(safe-area-inset-left));bottom:max(12px,env(safe-area-inset-bottom))}
 #mini{width:170px;height:170px;border-radius:50%;background:rgba(10,4,26,.6);border:2px solid rgba(255,255,255,.2);display:block}
@@ -529,6 +534,7 @@ body:not(.racing) #chapterTag{display:none}
   <div id="posBox"><div id="hPos"></div><div id="board"></div></div>
   <div id="timeBox"><div id="hLap"></div><div class="tl">TIME <b id="hTime"></b></div><div class="tl">LAP <b id="hLapT"></b></div><div class="tl">BEST <b id="hBest"></b></div></div>
   <div id="itemBox"><span id="hItem"></span><span class="nm" id="hItemN"></span></div>
+  <div id="distBox"><b id="hDist"></b><span id="hDistL"></span></div>
   <div id="hBuff" style="position:absolute;left:50%;top:calc(max(12px,env(safe-area-inset-top)) + 104px);transform:translateX(-50%);font-size:12px;letter-spacing:.14em;color:#ffc23d;text-shadow:0 0 6px #000;display:none"></div>
   <div id="miniBox"><canvas id="mini" width="340" height="340"></canvas><div id="miniName"></div></div>
   <div id="boostWrap"><div id="boostLbl">DRIFT</div><div id="boostBar"><i></i></div></div>
@@ -556,28 +562,28 @@ body:not(.racing) #chapterTag{display:none}
 <script>(function(){ var want=/[?&]three=r128/.test(location.search), gl2=false;
   try{ var c=document.createElement('canvas'), g=window.WebGL2RenderingContext&&c.getContext('webgl2'); gl2=!!g; if(g){ var x=g.getExtension('WEBGL_lose_context'); if(x) x.loseContext(); } }catch(e){}
   window.RR_THREE=(want||!gl2)?'r128':'r186';
-  if(window.RR_THREE==='r128') document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script><script src="js/vendor/GLTFLoader.r128.js?v=20261007d"><\/script>');
-  else document.write('<script src="js/vendor/three.r186.min.js?v=20261007d"><\/script>'); })();</script>
+  if(window.RR_THREE==='r128') document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script><script src="js/vendor/GLTFLoader.r128.js?v=20261007f"><\/script>');
+  else document.write('<script src="js/vendor/three.r186.min.js?v=20261007f"><\/script>'); })();</script>
 <!-- Graphics V2 (js/gfx/*): compat, settings, renderer, lighting, environment, materials, post, assets, perf overlay, benchmark. See docs/graphics-v2/ -->
-<script src="js/gfx/compat.js?v=20261007d"></script>
-<script src="js/gfx/settings.js?v=20261007d"></script>
-<script src="js/gfx/renderer.js?v=20261007d"></script>
-<script src="js/gfx/lighting.js?v=20261007d"></script>
-<script src="js/gfx/environment.js?v=20261007d"></script>
-<script src="js/gfx/materials.js?v=20261007d"></script>
-<script src="js/gfx/post.js?v=20261007d"></script>
-<script src="js/gfx/sky.js?v=20261007d"></script>
-<script src="js/gfx/road.js?v=20261007d"></script>
-<script src="js/gfx/decals.js?v=20261007d"></script>
-<script src="js/gfx/lod.js?v=20261007d"></script>
-<script src="js/gfx/scatter.js?v=20261007d"></script>
-<script src="js/gfx/roadside.js?v=20261007d"></script>
-<script src="js/gfx/vehicles.js?v=20261007d"></script>
-<script src="js/gfx/nightfx.js?v=20261007d"></script>
-<script src="js/gfx/showroom.js?v=20261007d"></script>
-<script src="js/gfx/v2.js?v=20261007d"></script>
-<script src="js/gfx/assets.js?v=20261007d"></script>
-<script src="js/gfx/perf.js?v=20261007d"></script>
-<script src="js/gfx/benchmark.js?v=20261007d"></script>
-<script src="js/game.js?v=20261007d"></script>
+<script src="js/gfx/compat.js?v=20261007f"></script>
+<script src="js/gfx/settings.js?v=20261007f"></script>
+<script src="js/gfx/renderer.js?v=20261007f"></script>
+<script src="js/gfx/lighting.js?v=20261007f"></script>
+<script src="js/gfx/environment.js?v=20261007f"></script>
+<script src="js/gfx/materials.js?v=20261007f"></script>
+<script src="js/gfx/post.js?v=20261007f"></script>
+<script src="js/gfx/sky.js?v=20261007f"></script>
+<script src="js/gfx/road.js?v=20261007f"></script>
+<script src="js/gfx/decals.js?v=20261007f"></script>
+<script src="js/gfx/lod.js?v=20261007f"></script>
+<script src="js/gfx/scatter.js?v=20261007f"></script>
+<script src="js/gfx/roadside.js?v=20261007f"></script>
+<script src="js/gfx/vehicles.js?v=20261007f"></script>
+<script src="js/gfx/nightfx.js?v=20261007f"></script>
+<script src="js/gfx/showroom.js?v=20261007f"></script>
+<script src="js/gfx/v2.js?v=20261007f"></script>
+<script src="js/gfx/assets.js?v=20261007f"></script>
+<script src="js/gfx/perf.js?v=20261007f"></script>
+<script src="js/gfx/benchmark.js?v=20261007f"></script>
+<script src="js/game.js?v=20261007f"></script>
 </body></html>
