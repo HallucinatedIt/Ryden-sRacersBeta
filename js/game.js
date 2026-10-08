@@ -61,7 +61,7 @@ function rallyPoints(){ const S=0.88, W=16; return [
 // the north straight that splits round an island (cp 7-10, 46 m wide with a 20 m median), the west leg heading south, a short
 // infield hairpin and a U-turn back onto the start straight. The west leg points straight at a brick wall (see def.shortcut).
 function knifePoints(){ const W=16; return [
-  [-40,-95],[40,-95],[112,-92],[152,-62],[162,0],[144,60],[102,90],[52,95,0,36],[5,95,0,46],[-50,95,0,46],[-100,94,0,36],[-142,84,0,26],[-172,52,0,19],
+  [-40,-95],[40,-95],[112,-92],[152,-62,2],[162,0,6,18],[144,60,9.5,20],[102,90,11,22],[52,95,11,36],[5,95,11,46],[-50,95,11,46],[-100,94,10,36],[-142,84,7,26],[-172,52,3,19],
   [-178,8],[-168,-20],[-138,-28],[-112,-30],[-97,-45],[-112,-61],[-130,-62],[-141,-64],[-152,-79],[-137,-95],[-90,-95]
  ].map(p=>[p[0],p[1],p[2]||0,p[3]||W]); }
 // Oval control points: two straights (S) and two half circles (R), driven counter-clockwise (left turns), 40 points by arc
@@ -267,13 +267,13 @@ const TRACK_DATA = [
   // shortcut: a hidden cut-through. Driving straight on at the end of the west leg, into the brick wall marked 9 3/4, carries a
   //   human driver on rails through a short tunnel to the U-turn (cp = where the straight-on line starts, cpx = where it rejoins,
   //   side = which side of the road the tunnel arrives on). AI cars never take it.
-  id:'knife', name:'Knifehand Arena', place:'The Department of Knife Hands',
-  blurb:'Indoor, floodlit and extremely well regulated. The Department of Knife Hands presents a stadium circuit under one giant roof: the Chop comes down over the east sweeper, the north straight splits round the monument (pick a side), and a full house of colonials watches you do it twenty times. Some say there is a faster way round. The Department does not comment on brick walls.',
+  id:'knife', name:'Knifehand Arena', place:'The Megadome · Department of Knife Hands', rev:2,
+  blurb:'A dome so large it has weather, a district inside it and room left over. The Department of Knife Hands presents the Megadome: a jump off the line, the Chop coming down over the climb, a raised straight that splits round the monument (pick a side), then down into the brick streets of the Old Quarter while a hologram the size of a tower block watches. Some say there is a faster way round. The Department does not comment on house numbers.',
   note:'Always 20 laps. No car bonuses here: every car runs stock. Item boxes and boost pads are live.',
   theme:'arena', laps:20, shoulder:2.6, noPerks:true, gp:false,
   points:knifePoints(),
   shortcut:{cp:13,f:0,cpx:21,fx:0,name:'9 3/4'},
-  jumps:[], boosts:[{cp:0,f:0.5,lat:0},{cp:8,f:0.1,lat:15.5},{cp:8,f:0.1,lat:-15.5}], items:[{cp:1,f:0.5},{cp:12,f:0.5}],
+  jumps:[{cp:0,f:0.35,len:14,h:2.6,gap:0,name:'DIRECTIVE ONE'}], boosts:[{cp:22,f:0.5,lat:0},{cp:8,f:0.1,lat:15.5},{cp:8,f:0.1,lat:-15.5}], items:[{cp:1,f:0.7},{cp:12,f:0.3}],
   medians:[{cp:7,f:0.55,len:100,w:20}],
 },
 ];
@@ -1066,8 +1066,8 @@ const THEMES={
    fog:0xe8d6bc, fogNear:160, fogFar:1200, exposure:1.0, road:'#4f4a44', roadLine:'none', curbA:'#8a2a22', curbB:'#e8dcc0', edge:'#8f7a5a', shoulder:'dirt', wall:'wood', wallH:1.0 },
  rally:{ skyTop:0x4d7fc0, skyHor:0xe9dcc4, sunCol:0xfff0d2, sunI:2.5, sunDir:[0.5,0.62,-0.42], hemiS:0xc4d6ee, hemiG:0x5a4a34, hemiI:0.9,
    fog:0xd9d2be, fogNear:180, fogFar:1300, exposure:1.0, road:'#7b5b3d', roadLine:'none', dirtRoad:true, curbA:'#6a4a2e', curbB:'#8a6a48', edge:'#6f5236', shoulder:'rallydirt', wall:'wood', wallH:1.0, groundBase:[0.3,0.4,0.22] },
- arena:{ skyTop:0xdfe6ee, skyHor:0xf4f1e6, sunCol:0xfff6e4, sunI:2.2, sunDir:[0.22,0.9,0.3], hemiS:0xe6eaf0, hemiG:0x6a675a, hemiI:0.8,
-   fog:0xe9e6da, fogNear:420, fogFar:2400, exposure:1.0, road:'#34353a', roadLine:'white', curbA:'#f2c61a', curbB:'#1b1b1f', edge:'#e6e3d8', shoulder:'apron', wall:'knife', wallH:1.15, groundBase:[0.5,0.5,0.46], arena:true },
+ arena:{ skyTop:0xdfe6ee, skyHor:0xf4f1e6, sunCol:0xfff6e4, sunI:2.2, sunDir:[0.22,0.9,0.3], hemiS:0xdcecf8, hemiG:0x5a6470, hemiI:0.85,
+   fog:0xc4d8ea, fogNear:520, fogFar:3000, exposure:1.0, road:'#2c2f36', roadLine:'white', curbA:'#f2c61a', curbB:'#1b1b1f', edge:'#39d8ff', shoulder:'apron', wall:'knife', wallH:1.15, groundBase:[0.5,0.5,0.46], arena:true },
  oval:{ skyTop:0x3a74c8, skyHor:0xffc48a, sunCol:0xffc890, sunI:2.5, sunDir:[-0.62,0.42,0.5], hemiS:0xb8ccf0, hemiG:0x6a6a52, hemiI:0.85,
    fog:0xf0c8a0, fogNear:260, fogFar:1700, exposure:1.0, road:'#48474c', roadLine:'none', curbA:'#ffd23f', curbB:'#f4f4f4', edge:'#e9e9e6', shoulder:'apron', wall:'safer', wallH:1.15, groundBase:[0.4,0.5,0.3] },
  space:{ skyTop:0x05010f, skyHor:0x2a0845, sunCol:0xe0b8ff, sunI:1.7, sunDir:[0.35,0.78,0.42], hemiS:0x8a5cff, hemiG:0x123a66, hemiI:1.0,
@@ -1115,7 +1115,7 @@ function wallTexture(kind){
     if(kind==='jersey'){ noiseFill(g,w,h,'#c9c4ba',20); g.fillStyle='rgba(0,0,0,0.25)'; g.fillRect(0,h-10,w,10);
       const cols=['#ff2e97','#27d3ff','#ffd23f','#7cff6b','#b65cff']; for(let i=0;i<5;i++){ g.fillStyle=cols[Math.floor(Math.random()*5)]; g.globalAlpha=0.8; g.beginPath(); g.ellipse(Math.random()*w,20+Math.random()*25,10+Math.random()*25,6+Math.random()*10,Math.random(),0,TAU); g.fill(); } g.globalAlpha=1;
       g.fillStyle='rgba(0,0,0,0.3)'; g.fillRect(w-3,0,3,h); }
-    else if(kind==='knife'){ noiseFill(g,w,h,'#dedbd0',9); g.fillStyle='#4b5320'; g.fillRect(0,6,w,9); g.fillStyle='#15151a'; g.fillRect(0,17,w,3); g.fillStyle='rgba(0,0,0,0.2)'; g.fillRect(w-3,0,3,h); }
+    else if(kind==='knife'){ noiseFill(g,w,h,'#2e353e',8); g.fillStyle='#f2c61a'; g.fillRect(0,6,w,7); g.fillStyle='#39d8ff'; g.fillRect(0,h-12,w,4); g.fillStyle='rgba(0,0,0,0.2)'; g.fillRect(w-3,0,3,h); }
     else if(kind==='safer'){ noiseFill(g,w,h,'#f1f0ec',8); g.fillStyle='#ec6228'; g.fillRect(0,6,w,7); g.fillStyle='#15151a'; g.fillRect(0,15,w,4);
       for(let i=0;i<14;i++){ g.fillStyle=`rgba(20,20,20,${0.12+Math.random()*0.3})`; g.fillRect(Math.random()*w,26+Math.random()*26,20+Math.random()*70,1.5+Math.random()*2.5); }   // tyre marks
       g.fillStyle='rgba(0,0,0,0.22)'; g.fillRect(0,h-8,w,8); g.fillStyle='rgba(0,0,0,0.18)'; for(let x=0;x<w;x+=64) g.fillRect(x,0,2,h); }
@@ -1675,7 +1675,7 @@ function buildWorld(def,P,Q){
     else if(def.theme==='country'){ c=lerp3([0.34,0.52,0.2],[0.6,0.58,0.28],smooth01((n-0.4)*2.5)); if(y<-3) c=lerp3([0.42,0.3,0.18],c,smooth01((y+6)/3)); if(slope>0.35) c=lerp3(c,[0.55,0.32,0.18],clamp((slope-0.35)*2,0,1)); }
     else if(def.theme==='coast'){ if(y<-1.5) c=[0.82,0.74,0.56]; else c=lerp3([0.72,0.62,0.34],[0.36,0.46,0.22],smooth01((n-0.35)*3)); if(slope>0.3) c=lerp3(c,[0.47,0.42,0.37],clamp((slope-0.3)*2.5,0,1)); if(y<-8) c=[0.55,0.5,0.42]; }
     else if(def.theme==='rally'){ c=lerp3([0.1,0.2,0.07],[0.2,0.16,0.09],smooth01((n-0.38)*2.6)); if(dd<7) c=lerp3([0.3,0.2,0.12],c,smooth01(dd/7)); if(slope>0.3) c=lerp3(c,[0.4,0.34,0.27],clamp((slope-0.3)*2.5,0,1)); }
-    else if(def.theme==='arena'){ c=dd<5?[0.13,0.13,0.15]:((Math.floor(x/14)+Math.floor(z/14))&1)?[0.2,0.21,0.2]:[0.17,0.18,0.17]; if(dd>=5&&dd<6.2) c=[0.8,0.62,0.06]; }   /* sealed concrete in big slabs, a yellow safety line round the track */
+    else if(def.theme==='arena'){ c=dd<5?[0.1,0.11,0.13]:((Math.floor(x/22)+Math.floor(z/22))&1)?[0.15,0.18,0.22]:[0.12,0.15,0.19]; if(dd>=5&&dd<6.2) c=[0.8,0.62,0.06]; }   /* deck plates in two blue-greys, a yellow safety line round the track */
     else if(def.theme==='oval'){ const hi=hash(x,z,7); const lat=hi.i<0?1:((x-P.x[hi.i])*P.rx[hi.i]+(z-P.z[hi.i])*P.rz[hi.i]);
       if(lat<0){ c=(Math.floor((x+z)/9)&1)?[0.2,0.5,0.17]:[0.25,0.57,0.2]; if(dd<4) c=[0.34,0.34,0.36]; }            // infield: mown stripes, asphalt apron by the wall
       else c=dd<34?[0.4,0.4,0.42]:lerp3([0.5,0.47,0.38],[0.33,0.45,0.24],smooth01((n-0.4)*3)); }                    // outside: concourse, then lots and grass
@@ -1909,7 +1909,7 @@ function buildScenery(W,def,P,Q,H){
     const m=new THREE.Mesh(new THREE.BoxGeometry(2.4,1.2,0.12),chevMat); m.position.set(p[0],p[1]+1.9,p[2]); m.rotation.y=Math.atan2(-P.rx[i]*side,-P.rz[i]*side); m.scale.x=side>0?-1:1; G.add(m); }
   // grandstand at start (all tracks)
   const GST=(typeof propTemplate==='function')?propTemplate('grandstand'):null;
-  if(W.env&&W.env.skipStand){ }
+  if((W.env&&W.env.skipStand)||def.theme==='arena'){ }
   else if(GST){ const i=Math.round(26/P.spacing); const sc=55/GST.w; const e=P.wr[i]+4+GST.d*sc/2; const x=P.x[i]+P.rx[i]*e, z=P.z[i]+P.rz[i]*e; const o=makeProp('grandstand'); o.scale.setScalar(sc); o.position.set(x,heightAt(x,z)-0.1,z); o.rotation.y=Math.atan2(-P.rx[i],-P.rz[i]); G.add(o); }
   else { const i=Math.round(22/P.spacing); const side=1; const e=P.wr[i]+4; const x=P.x[i]+P.rx[i]*e, z=P.z[i]+P.rz[i]*e, y=heightAt(x,z); const grp=new THREE.Group(); grp.position.set(x,y,z); grp.rotation.y=Math.atan2(P.tx[i],P.tz[i]); G.add(grp);
     const crowd=[]; for(let r=0;r<6;r++){ const st=new THREE.Mesh(new THREE.BoxGeometry(6+r*0,1,40),stdMat(th.night?0x2a2a38:0xb0aca4)); st.position.set(-(r*1.6+2),r*1.0+0.5,0); st.scale.x=0.3; st.receiveShadow=true; grp.add(st);
@@ -2516,82 +2516,104 @@ function spaceSky(W){
   W.updaters.push((dt,t)=>{ U.t.value=t; });
   const m=new THREE.Mesh(new THREE.SphereGeometry(2600,32,16),mat); m.renderOrder=-10; m.frustumCulled=false; return m;
 }
-// ===== KNIFEHAND ARENA (theme 'arena'): everything stands inside one roofed stadium. The floor edge is an ellipse round the
-// track; stands, wall and roof are bands swept round it. Lower tier = instanced colonial troops (rv_troops, lowest LOD),
-// upper tier = a painted crowd. The knifehand model (CAR_GLTF.knifehand, 0.41 m tall, Y up, flat in XY) is used at several sizes.
+// ===== KNIFEHAND ARENA (theme 'arena'): a science-fiction megadome, far larger than any building could be, with a whole
+// district inside it. Far away: stacked crowd tiers and a lattice roof swept round an ellipse. Near the track: hovering
+// grandstands full of colonials (rv_troops, lowest LOD), a hovering LED board with the Department's lines, light gates,
+// a hologram knifehand over the infield, and the Old Quarter: a brick street along the west leg, where the 9 3/4 door is.
+// The knifehand model (CAR_GLTF.knifehand, 0.41 m tall, Y up, flat in XY) is used at several sizes.
 function buildArenaScenery(W,def,P,Q,H,U){
-  const G=W.group, N=P.N, {ptAt}=H, stdMat=U.stdMat, b=W.bounds, cx=(b.minx+b.maxx)/2, cz=(b.minz+b.maxz)/2, A=(b.maxx-b.minx)/2+40, B=(b.maxz-b.minz)/2+42;
-  const OD='#4b5320', YEL='#f2c61a', BLK='#15151a', BONE='#e9e6da';
-  const F1='bold 86px "Chakra Petch", sans-serif', F2='italic 120px "Racing Sans One", Impact, sans-serif';
+  const G=W.group, N=P.N, {ptAt,heightAt}=H, stdMat=U.stdMat, b=W.bounds, cx=(b.minx+b.maxx)/2, cz=(b.minz+b.maxz)/2, A=(b.maxx-b.minx)/2+250, B=(b.maxz-b.minz)/2+250;
+  const OD='#4b5320', YEL='#f2c61a', BLK='#15151a', BONE='#e9e6da', CY=0x39d8ff, DS=THREE.DoubleSide;
+  const F2='italic 120px "Racing Sans One", Impact, sans-serif';
   const ell=(a,d)=>{ const ca=Math.cos(a), sa=Math.sin(a); let nx=B*ca, nz=A*sa; const nl=Math.hypot(nx,nz); nx/=nl; nz/=nl; return [cx+A*ca+nx*d,cz+B*sa+nz*d,nx,nz]; };
-  const band=(d0,y0,d1,y1,urep,mat,SEG=144)=>{ const pos=[],uv=[],idx=[]; for(let q=0;q<=SEG;q++){ const a=q/SEG*TAU, p0=ell(a,d0), p1=ell(a,d1); pos.push(p0[0],y0,p0[1],p1[0],y1,p1[1]); uv.push(q/SEG*urep,0,q/SEG*urep,1); if(q<SEG){ const k=q*2; idx.push(k,k+1,k+2,k+1,k+3,k+2); } }
+  const band=(d0,y0,d1,y1,urep,mat,SEG=120)=>{ const pos=[],uv=[],idx=[]; for(let q=0;q<=SEG;q++){ const a=q/SEG*TAU, p0=ell(a,d0), p1=ell(a,d1); pos.push(p0[0],y0,p0[1],p1[0],y1,p1[1]); uv.push(q/SEG*urep,0,q/SEG*urep,1); if(q<SEG){ const k=q*2; idx.push(k,k+1,k+2,k+1,k+3,k+2); } }
     const g=new THREE.BufferGeometry(); g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3)); g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2)); g.setIndex(idx); g.computeVertexNormals(); const m=new THREE.Mesh(g,mat); G.add(m); return m; };
-  const outS=i=>{ const q=ptAt(i,10,0); return Math.hypot(q[0]-cx,q[2]-cz)>Math.hypot(P.x[i]-cx,P.z[i]-cz)?1:-1; };
-  const DS=THREE.DoubleSide;
-  // ---- retaining wall with the Department's lettering, all the way round
-  { const lines=['DEPARTMENT OF KNIFE HANDS','KNIFEHAND ARENA','MADE BY SERVICE MEMBERS FOR SERVICE MEMBERS','LOCK IT UP','STANDARD-ISSUE DIRECTIVE INSTRUMENT','FIX YOURSELF','DEPARTMENT OF KNIFE HANDS','GOOD TO GO'];
+  const OUT=(()=>{ const q=ptAt(0,10,0); return Math.hypot(q[0]-cx,q[2]-cz)>Math.hypot(P.x[0]-cx,P.z[0]-cz)?1:-1; })();   /* which side of the road is the outside of the lap */
+  const wallAt=i=>OUT>0?P.wr[i]:P.wl[i], outPt=(i,d,dy)=>ptAt(i,OUT*(wallAt(i)+d),dy||0), inRy=i=>Math.atan2(-OUT*P.rx[i],-OUT*P.rz[i]);
+  const SC=P.sc, oldQ=i=>{ if(!SC) return false; const d=(i-P.idxAt(12,0.1)+N)%N; return d<((P.idxAt(22,0.4)-P.idxAt(12,0.1)+N)%N); };   /* the Old Quarter: west leg, infield and U-turn */
+  const glow=(c,o)=>new THREE.MeshBasicMaterial(Object.assign({color:c,fog:false},o||{}));
+  const pulse=[];   /* materials that breathe */
+  // ---------- the shell: floor rim, six stacked crowd tiers leaning back into the haze, the lattice roof ----------
+  { const lines=['DEPARTMENT OF KNIFE HANDS','KNIFEHAND ARENA','DEPTKNIFEHANDS.COM','LOCK IT UP','MADE BY SERVICE MEMBERS FOR SERVICE MEMBERS','FIX YOURSELF','DEPARTMENT OF KNIFE HANDS','GOOD TO GO'];
     const t=canvasTex(4096,128,(g,w,h)=>{ const pw=w/lines.length; lines.forEach((tx,k)=>{ const dark=k%2===0; g.fillStyle=dark?BLK:(k%4===1?OD:YEL); g.fillRect(k*pw,0,pw,h); g.fillStyle=dark?YEL:(k%4===1?BONE:BLK); g.textAlign='center'; g.textBaseline='middle';
-        let fs=70; g.font='bold '+fs+'px "Chakra Petch", sans-serif'; while(g.measureText(tx).width>pw-40&&fs>20){ fs-=4; g.font='bold '+fs+'px "Chakra Petch", sans-serif'; } g.fillText(tx,k*pw+pw/2,h/2+2); g.fillStyle='rgba(255,255,255,0.5)'; g.fillRect(k*pw,0,3,h); }); },{repeat:true});
-    t.anisotropy=8; band(0,-0.5,0,4.2,6,new THREE.MeshStandardMaterial({map:t,roughness:0.8,side:DS})); }
-  // ---- lower tier: 5 concrete rows (the colonials stand here)
-  const ROWS=5, RUN=1.8, RISE=0.95, Y0=4.2; const conc=stdMat(0x6a675f,{side:DS}), conc2=stdMat(0x504e48,{side:DS});
-  for(let r=0;r<ROWS;r++){ band(r*RUN,Y0+r*RISE,(r+1)*RUN,Y0+r*RISE,1,conc,96); band((r+1)*RUN,Y0+r*RISE,(r+1)*RUN,Y0+(r+1)*RISE,1,conc2,96); }
-  // ---- upper tier: one raked band with a painted crowd in colonial colours
-  const D1=ROWS*RUN, Y1=Y0+ROWS*RISE, D2=D1+36, Y2=Y1+25;
-  { const t=canvasTex(512,512,(g,w,h)=>{ g.fillStyle='#4a4842'; g.fillRect(0,0,w,h); const coats=['#2b3f6b','#2b3f6b','#c9b38a','#6b4a2e','#f0ece0','#7a1f1f','#3d5a3a','#2b3f6b'], skin=['#e8c39e','#d2a47c','#f1d2b4'];
-      for(let r=0;r<22;r++){ const y=h-(r+1)*h/22; g.fillStyle='rgba(0,0,0,0.18)'; g.fillRect(0,y+h/22-3,w,3); for(let k=0;k<34;k++){ if(Math.random()<0.1) continue; const x=k*w/34+(r%2)*7+Math.random()*3;
-          g.fillStyle=coats[Math.floor(Math.random()*coats.length)]; g.fillRect(x,y+8,10,13); g.fillStyle=skin[Math.floor(Math.random()*3)]; g.fillRect(x+2.5,y+3,5,5); g.fillStyle='#15120f'; g.fillRect(x+0.5,y+1,9,2.4); } } },{repeat:true});
-    t.anisotropy=8; band(D1,Y1,D2,Y2,34,new THREE.MeshStandardMaterial({map:t,roughness:0.9,side:DS})); }
-  // ---- concourse wall with suites and banners, then the roof
-  { const t=canvasTex(1024,256,(g,w,h)=>{ g.fillStyle='#a9a69c'; g.fillRect(0,0,w,h); g.fillStyle='#22303a'; g.fillRect(0,150,w,70); g.fillStyle='rgba(255,255,255,0.25)'; for(let k=0;k<16;k++) g.fillRect(k*64+4,156,56,26); g.fillStyle='#8f8c82'; for(let k=0;k<16;k++) g.fillRect(k*64-2,150,4,70);
-      [[OD,BONE,'KNIFE HANDS'],[BLK,YEL,'LOCK IT UP'],[YEL,BLK,'D.O.K.H.'],[OD,YEL,'GOOD TO GO']].forEach((q,k)=>{ const x=k*256+40; g.fillStyle=q[0]; g.fillRect(x,12,176,120); g.fillStyle=q[1]; g.font='bold 30px "Chakra Petch", sans-serif'; g.textAlign='center'; g.textBaseline='middle'; g.fillText(q[2],x+88,72); }); },{repeat:true});
-    t.anisotropy=8; band(D2,Y2,D2,Y2+16,14,new THREE.MeshStandardMaterial({map:t,roughness:0.85,side:DS}));
-    const rt=canvasTex(512,512,(g,w,h)=>{ g.fillStyle='#b9c4cf'; g.fillRect(0,0,w,h); g.strokeStyle='#7f8a96'; g.lineWidth=5; for(let k=0;k<=4;k++){ g.beginPath(); g.moveTo(k*w/4,0); g.lineTo(k*w/4,h); g.stroke(); g.beginPath(); g.moveTo(0,k*h/4); g.lineTo(w,k*h/4); g.stroke(); }
-      g.strokeStyle='#96a2ae'; g.lineWidth=2; for(let k=0;k<4;k++) for(let j=0;j<4;j++){ g.beginPath(); g.moveTo(k*w/4,j*h/4); g.lineTo((k+1)*w/4,(j+1)*h/4); g.moveTo((k+1)*w/4,j*h/4); g.lineTo(k*w/4,(j+1)*h/4); g.stroke(); }
-      g.fillStyle='#ffffff'; for(let k=0;k<4;k++) for(let j=0;j<4;j++) g.fillRect(k*w/4+44,j*h/4+52,40,24); },{repeat:true}); rt.repeat.set(18,7);
-    const dome=new THREE.Mesh(new THREE.SphereGeometry(1,56,14,0,TAU,0,Math.PI/2),new THREE.MeshBasicMaterial({map:rt,side:THREE.BackSide,fog:false})); dome.scale.set(A+D2+7,62,B+D2+7); dome.position.set(cx,Y2+15,cz); G.add(dome);
-    // floodlight bars under the roof
-    const bars=[]; for(let k=0;k<20;k++){ const a=k/20*TAU, q=ell(a,-24); bars.push({x:q[0],y:Y2+34,z:q[1],ry:Math.atan2(q[2],q[3]),s:[22,1.2,3.2]}); }
-    G.add(instanced(new THREE.BoxGeometry(1,1,1),new THREE.MeshBasicMaterial({color:0xfffbe8,fog:false}),bars,false));
-    const hang=[]; bars.forEach(q=>{ hang.push({x:q.x,y:q.y+9,z:q.z,s:[0.25,18,0.25]}); }); G.add(instanced(new THREE.BoxGeometry(1,1,1),stdMat(0x6a7078),hang,false)); }
-  // ---- centre-hung scoreboard
-  { const t=textPanelTex([{text:'DEPARTMENT OF',font:F1,color:BONE,y:0.24},{text:'KNIFE HANDS',font:'italic 150px "Racing Sans One", Impact, sans-serif',color:YEL,y:0.55},{text:'KNIFEHAND ARENA · 20 LAPS',font:'bold 44px "Chakra Petch", sans-serif',color:BONE,y:0.86}],{w:1024,h:512,bg:BLK,border:OD});
-    const sm=new THREE.MeshBasicMaterial({map:t}), dk=stdMat(0x1a1b1f); const sb=new THREE.Mesh(new THREE.BoxGeometry(30,15,30),[sm,sm,dk,dk,sm,sm]); sb.position.set(cx,52,cz); G.add(sb);
-    const ring=new THREE.Mesh(new THREE.BoxGeometry(33,2,33),stdMat(0x4b5320)); ring.position.set(cx,43.6,cz); G.add(ring); const cab=new THREE.Mesh(new THREE.CylinderGeometry(0.4,0.4,40,6),dk); cab.position.set(cx,79,cz); G.add(cab); }
-  // ---- floor lettering in the infield
-  { const t=canvasTex(2048,256,(g,w,h)=>{ g.clearRect(0,0,w,h); g.fillStyle='rgba(242,198,26,0.85)'; g.font='bold 104px "Chakra Petch", sans-serif'; g.textAlign='center'; g.textBaseline='middle'; g.fillText('DEPARTMENT OF KNIFE HANDS',w/2,h/2+8); });
-    const m=new THREE.Mesh(new THREE.PlaneGeometry(190,24),new THREE.MeshBasicMaterial({map:t,transparent:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2})); m.rotation.x=-Math.PI/2; m.rotation.z=Math.PI; m.position.set(cx+40,0.08,cz+22); G.add(m); }
-  // ---- the crowd: colonials in the lower tier, facing the floor; one in three cheers
+        let fs=70; g.font='bold '+fs+'px "Chakra Petch", sans-serif'; while(g.measureText(tx).width>pw-40&&fs>20){ fs-=4; g.font='bold '+fs+'px "Chakra Petch", sans-serif'; } g.fillText(tx,k*pw+pw/2,h/2+2); }); },{repeat:true});
+    t.anisotropy=8; band(0,-1,0,22,5,new THREE.MeshBasicMaterial({map:t,side:DS}));
+    const crowd=canvasTex(512,512,(g,w,h)=>{ g.fillStyle='#39404a'; g.fillRect(0,0,w,h); const coats=['#2b3f6b','#2b3f6b','#c9b38a','#6b4a2e','#f0ece0','#7a1f1f','#3d5a3a','#2b3f6b'];
+        for(let r=0;r<40;r++){ const y=h-(r+1)*h/40; for(let k=0;k<64;k++){ if(Math.random()<0.12) continue; g.fillStyle=coats[Math.floor(Math.random()*coats.length)]; g.fillRect(k*8+(r%2)*4,y+3,5,7); g.fillStyle='#e8c39e'; g.fillRect(k*8+(r%2)*4+1,y+1,3,2.5); } } },{repeat:true}); crowd.anisotropy=4;
+    const cm=new THREE.MeshBasicMaterial({map:crowd,side:DS,color:0xd8dde4}), TIERS=6, RUN=30, RISE=38, GAP=6; const strip=glow(CY), strip2=glow(0xf2c61a);
+    for(let k=0;k<TIERS;k++){ const d0=k*RUN, y0=22+k*(RISE+GAP); band(d0,y0,d0+RUN,y0+RISE,90,cm); band(d0+RUN,y0+RISE,d0+RUN,y0+RISE+GAP,1,k%2?strip2:strip); }
+    const TOP=22+TIERS*(RISE+GAP), DT=TIERS*RUN;
+    const rt=canvasTex(512,512,(g,w,h)=>{ g.fillStyle='#bcd3e6'; g.fillRect(0,0,w,h); const gr=g.createRadialGradient(w/2,h/2,10,w/2,h/2,w*0.6); gr.addColorStop(0,'#f4fbff'); gr.addColorStop(1,'#a9c4dc'); g.fillStyle=gr; g.fillRect(0,0,w,h);
+        g.strokeStyle='#4f6a86'; g.lineWidth=7; const R=128, hx=R*Math.sqrt(3)/2; for(let row=-1;row<4;row++) for(let col=-1;col<4;col++){ const ox=col*hx*2+(row&1?hx:0), oy=row*R*1.5; g.beginPath(); for(let q=0;q<6;q++){ const an=Math.PI/6+q*Math.PI/3; const X=ox+R*Math.cos(an), Y=oy+R*Math.sin(an); q?g.lineTo(X,Y):g.moveTo(X,Y); } g.closePath(); g.stroke(); } },{repeat:true}); rt.repeat.set(26,9);
+    const dome=new THREE.Mesh(new THREE.SphereGeometry(1,64,16,0,TAU,0,Math.PI/2),new THREE.MeshBasicMaterial({map:rt,side:THREE.BackSide,fog:false})); dome.scale.set(A+DT+12,430,B+DT+12); dome.position.set(cx,TOP-6,cz); G.add(dome);
+    // ring of light pylons on the floor, far out
+    const py=[],tips=[]; for(let k=0;k<28;k++){ const q=ell(k/28*TAU,-70), hh=150+((k*7)%5)*26; py.push({x:q[0],y:0,z:q[1],s:[5,hh,5]}); tips.push({x:q[0],y:hh,z:q[1],s:[9,14,9]}); }
+    G.add(instanced(new THREE.BoxGeometry(1,1,1).translate(0,0.5,0),stdMat(0x39424d,{metalness:0.5,roughness:0.45}),py,false)); G.add(instanced(new THREE.BoxGeometry(1,1,1).translate(0,0.5,0),glow(0xfff6d8),tips,false));
+    // glowing rings set in the deck
+    [-40,-110,-180].forEach((d,k)=>band(d,0.06,d-1.6,0.06,1,glow(k%2?0xf2c61a:CY,{transparent:true,opacity:0.7}),160)); }
+  // ---------- hovering LED board round the outside of the lap (not through the Old Quarter) ----------
+  { const lines=['DEPARTMENT OF KNIFE HANDS','DEPTKNIFEHANDS.COM','LOCK IT UP','KNIFEHAND ARENA','FIX YOURSELF','MADE BY SERVICE MEMBERS FOR SERVICE MEMBERS','GOOD TO GO','DEPTKNIFEHANDS.COM'];
+    const t=canvasTex(4096,128,(g,w,h)=>{ const pw=w/lines.length; lines.forEach((tx,k)=>{ const dark=k%2===0; g.fillStyle=dark?'#0b0d12':(k%4===1?OD:YEL); g.fillRect(k*pw,0,pw,h); g.fillStyle=dark?YEL:(k%4===1?BONE:BLK); g.textAlign='center'; g.textBaseline='middle';
+        let fs=74; g.font='bold '+fs+'px "Chakra Petch", sans-serif'; while(g.measureText(tx).width>pw-36&&fs>20){ fs-=4; g.font='bold '+fs+'px "Chakra Petch", sans-serif'; } g.fillText(tx,k*pw+pw/2,h/2+2); g.fillStyle='rgba(57,216,255,0.9)'; g.fillRect(k*pw,0,pw,5); g.fillRect(k*pw,h-5,pw,5); }); },{repeat:true}); t.anisotropy=8;
+    const pos=[],uv=[]; let u=0; const PER=230;   /* metres of board per pass of the texture */
+    for(let i=0;i<N;i++){ const j=(i+1)%N; if(oldQ(i)||oldQ(j)||P.gap[i]) { u+=P.spacing; continue; } const a0=outPt(i,3.2,2.4), b0=outPt(i,3.2,5.0), a1=outPt(j,3.2,2.4), b1=outPt(j,3.2,5.0), u0=-OUT*u/PER, u1=-OUT*(u+P.spacing)/PER; u+=P.spacing;
+      pos.push(...a0,...b0,...a1,...b0,...b1,...a1); uv.push(u0,0,u0,1,u1,0,u0,1,u1,1,u1,0); }
+    const g=new THREE.BufferGeometry(); g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3)); g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2)); G.add(new THREE.Mesh(g,new THREE.MeshBasicMaterial({map:t,side:DS})));
+    const em=[]; for(let i=0;i<N;i+=9){ if(oldQ(i)) continue; const q=outPt(i,3.2,0); em.push({x:q[0],y:q[1]+1.2,z:q[2],s:[0.5,0.25,0.5]}); } G.add(instanced(new THREE.CylinderGeometry(1,0.5,1,8),glow(CY),em,false)); }
+  // ---------- hovering grandstands with the crowd: colonials, facing the road; one in three cheers ----------
   { const src=CAR_GLTF['rv_troops'], types=['continental','militia','french','continental','militia']; const pool={};
     if(src) ['continental','militia','french'].forEach(t=>{ const m=revFindMesh(src,t+'_l2')||revFindMesh(src,t+'_l1'); if(m) pool[t]={p:revPrep(m),calm:[],cheer:[]}; });
-    const SP=1.75/Math.max(0.45,Q.density||1); let k=0;
-    for(let r=0;r<ROWS;r++){ let a=r*0.01; while(a<TAU){ const sp=Math.hypot(A*Math.sin(a),B*Math.cos(a)); k++; if(rnd()<0.84){ const q=ell(a,r*RUN+0.9), t=types[(k*7+r*3)%5], pl=pool[t]; if(pl) (rnd()<0.34?pl.cheer:pl.calm).push({x:q[0],y:Y0+r*RISE,z:q[1],ry:Math.atan2(-q[2],-q[3])+rr(-0.3,0.3),s:rr(0.98,1.1)}); } a+=SP/sp; } }
+    const ROWS=5, WD=44, steps=[]; for(let r=0;r<ROWS;r++){ const bx=new THREE.BoxGeometry(WD,0.5,1.7); bx.translate(0,r*0.95-0.25,r*1.7+0.85); steps.push(bx); } const hull=new THREE.BoxGeometry(WD+2,1.4,ROWS*1.7+2); hull.translate(0,-1.2,ROWS*0.85); steps.push(hull);
+    const back=new THREE.BoxGeometry(WD+2,3.2,0.4); back.translate(0,ROWS*0.95+0.9,ROWS*1.7+0.8); steps.push(back);
+    const barges=[],under=[]; const NB=Math.max(6,Math.round(13*Math.min(1,Q.density||1))); let k=0;
+    for(let n=0;n<NB*3&&barges.length<NB;n++){ const i=Math.round((n+0.5)*N/(NB*1.55))%N; if(oldQ(i)||oldQ((i+12)%N)||oldQ((i-12+N)%N)||Math.abs(P.curv[i])>0.02) continue; if(barges.some(q=>Math.min((q.i-i+N)%N,(i-q.i+N)%N)<26)) continue;
+      const q=outPt(i,9.5,0), ry=inRy(i)+Math.PI, y=q[1]+3.4; barges.push({i,x:q[0],y,z:q[2],ry}); under.push({x:q[0]-Math.sin(ry)*ROWS*0.85,y:y-2.0,z:q[2]-Math.cos(ry)*ROWS*0.85,ry,s:[WD-4,0.2,ROWS*1.7-1]});
+      const fx=Math.sin(ry), fz=Math.cos(ry), rx=Math.cos(ry), rz=-Math.sin(ry);
+      for(let r=0;r<ROWS;r++) for(let s=-WD/2+1.2;s<WD/2-1;s+=1.72){ k++; if(rnd()>0.86) continue; const d=r*1.7+0.9, t=types[(k*7+r*3)%5], pl=pool[t]; if(pl) (rnd()<0.34?pl.cheer:pl.calm).push({x:q[0]+rx*s+fx*d,y:y+r*0.95,z:q[2]+rz*s+fz*d,ry:ry+Math.PI+rr(-0.3,0.3),s:rr(0.98,1.1)}); } }
+    G.add(instanced(mergeGeos(steps),stdMat(0x2c3540,{metalness:0.45,roughness:0.5}),barges,true)); G.add(instanced(new THREE.BoxGeometry(1,1,1),glow(CY),under,false));
     const cg=new THREE.Group(); G.add(cg); let n=0; Object.values(pool).forEach(pl=>{ pl.p.m.side=THREE.FrontSide; const a=instanced(pl.p.g,pl.p.m,pl.calm,false), c=instanced(pl.p.g,pl.p.m,pl.cheer,false); a.frustumCulled=false; c.frustumCulled=false; G.add(a); cg.add(c); n+=pl.calm.length+pl.cheer.length; });
-    W.updaters.push((dt,t)=>{ cg.position.y=Math.abs(Math.sin(t*4.2))*0.16; }); W.arenaStats={fans:n}; }
-  // ---- knifehands
+    W.updaters.push((dt,t)=>{ cg.position.y=Math.abs(Math.sin(t*4.2))*0.16; }); W.arenaStats={fans:n,stands:barges.length}; }
+  // ---------- knifehands ----------
   let khG=null; { const src=CAR_GLTF['knifehand']; if(src) src.traverse(o=>{ if(o.isMesh&&!khG){ o.updateMatrixWorld(true); khG=o.geometry.clone(); khG.applyMatrix4(o.matrixWorld); if(!khG.attributes.normal) khG.computeVertexNormals(); } }); }
   if(!khG){ khG=new THREE.BoxGeometry(0.12,0.4,0.05); khG.translate(0,0.2,0); }
   const gold=new THREE.MeshStandardMaterial({color:0xc08a14,metalness:0.15,roughness:0.5}), olive=new THREE.MeshStandardMaterial({color:0x4a5426,metalness:0.1,roughness:0.6});
   const plinthT=textPanelTex([{text:'DEPARTMENT OF',font:'bold 70px "Chakra Petch", sans-serif',color:YEL,y:0.3},{text:'KNIFE HANDS',font:'bold 110px "Chakra Petch", sans-serif',color:YEL,y:0.68}],{w:1024,h:512,bg:'#1c1d21',border:YEL});
-  const statue=(x,z,ry,S,mat,ph)=>{ const g=new THREE.Group(); g.position.set(x,0,z); g.rotation.y=ry; const pm=new THREE.MeshStandardMaterial({map:plinthT,roughness:0.6}), dk=stdMat(0x1c1d21); const pb=new THREE.Mesh(new THREE.BoxGeometry(S*0.2,ph,S*0.1),[dk,dk,dk,dk,pm,pm]); pb.position.y=ph/2; pb.castShadow=true; g.add(pb);
-    const h=new THREE.Mesh(khG,mat); h.scale.setScalar(S); h.position.y=ph; h.castShadow=true; g.add(h); G.add(g); return g; };
+  const statue=(x,y,z,ry,S,mat,ph)=>{ const g=new THREE.Group(); g.position.set(x,y,z); g.rotation.y=ry; const pm=new THREE.MeshBasicMaterial({map:plinthT}), dk=stdMat(0x1c1d21); const pb=new THREE.Mesh(new THREE.BoxGeometry(S*0.2,ph,S*0.1),[dk,dk,dk,dk,pm,pm]); pb.position.y=ph/2; pb.castShadow=true; g.add(pb);
+    const ring=new THREE.Mesh(new THREE.TorusGeometry(S*0.13,0.25,6,28),glow(CY)); ring.rotation.x=Math.PI/2; ring.position.y=0.4; g.add(ring); const h=new THREE.Mesh(khG,mat); h.scale.setScalar(S); h.position.y=ph; h.castShadow=true; g.add(h); G.add(g); return g; };
   // the monument on the nose of the island where the road splits, a row of smaller hands down the island
   const ML=(def.medians||[])[0];
-  if(ML){ const i0=P.idxAt(ML.cp,ML.f), n=Math.round(ML.len/P.spacing), iN=(i0+9)%N, ry=Math.atan2(-P.tx[iN],-P.tz[iN]); statue(P.x[iN],P.z[iN],ry,62,gold,6);
-    const row=[]; for(let k=22;k<n-8;k+=11){ const i=(i0+k)%N; row.push({x:P.x[i],y:1.2,z:P.z[i],ry:Math.atan2(-P.tx[i],-P.tz[i]),s:20}); } const rm=instanced(khG,olive,row,true); rm.frustumCulled=false; G.add(rm);
-    const pl=row.map(q=>({x:q.x,y:0.3,z:q.z,ry:q.ry,s:[3.2,1.2,2.2]})); G.add(instanced(new THREE.BoxGeometry(1,1,1).translate(0,0.5,0),stdMat(0x1c1d21),pl,true));
-    // decision board on the nose and a barrier round the island
-    const sg=new THREE.Group(), iB=(i0+2)%N; sg.position.set(P.x[iB],0,P.z[iB]); sg.rotation.y=ry; const st=textPanelTex([{text:'← MAKE A DECISION →',font:'bold 92px "Chakra Petch", sans-serif',color:BLK,y:0.5}],{w:1024,h:256,bg:YEL,border:BLK});
+  if(ML){ const i0=P.idxAt(ML.cp,ML.f), n=Math.round(ML.len/P.spacing), iN=(i0+9)%N, ry=Math.atan2(-P.tx[iN],-P.tz[iN]); statue(P.x[iN],P.y[iN],P.z[iN],ry,62,gold,6);
+    const row=[]; for(let k=22;k<n-8;k+=11){ const i=(i0+k)%N; row.push({x:P.x[i],y:P.y[i]+1.2,z:P.z[i],ry:Math.atan2(-P.tx[i],-P.tz[i]),s:20}); } const rm=instanced(khG,olive,row,true); rm.frustumCulled=false; G.add(rm);
+    const pl=row.map(q=>({x:q.x,y:q.y-0.9,z:q.z,ry:q.ry,s:[3.2,1.2,2.2]})); G.add(instanced(new THREE.BoxGeometry(1,1,1).translate(0,0.5,0),stdMat(0x1c1d21),pl,true));
+    const sg=new THREE.Group(), iB=(i0+2)%N; sg.position.set(P.x[iB],P.y[iB],P.z[iB]); sg.rotation.y=ry; const st=textPanelTex([{text:'MAKE A DECISION',font:'bold 100px "Chakra Petch", sans-serif',color:BLK,y:0.5}],{w:1024,h:256,bg:YEL,border:BLK});
     const sbd=new THREE.Mesh(new THREE.BoxGeometry(11,2.8,0.4),[stdMat(0x222222),stdMat(0x222222),stdMat(0x222222),stdMat(0x222222),new THREE.MeshBasicMaterial({map:st}),stdMat(0x222222)]); sbd.position.y=2.6; sg.add(sbd); G.add(sg);
     const hz=canvasTex(128,64,(g,w,h)=>{ g.fillStyle=YEL; g.fillRect(0,0,w,h); g.fillStyle=BLK; for(let q=-h;q<w+h;q+=32){ g.beginPath(); g.moveTo(q,0); g.lineTo(q+16,0); g.lineTo(q+16+h,h); g.lineTo(q+h,h); g.fill(); } },{repeat:true});
     const hm=new THREE.MeshStandardMaterial({map:hz,roughness:0.7,side:DS}); [-1,1].forEach(sd=>G.add(new THREE.Mesh(H.ribbon((i,j)=>P.median[i]>0.3&&P.median[j]>0.3,i=>sd*P.median[i],i=>sd*P.median[i],0,1.25,0,1,3),hm))); }
-  // statues flanking the start line and at the far corners of the floor
-  { const i=P.idxAt(0,0.15), sd=outS(i), q=ptAt(i,sd*(P.wr[i]+16),0), ry=Math.atan2(-sd*P.rx[i],-sd*P.rz[i]); statue(q[0],q[2],ry,46,gold,5); const q2=ptAt((i+40)%N,sd*(P.wr[i]+16),0); statue(q2[0],q2[2],ry,46,gold,5); }
-  // ---- THE CHOP: a giant knifehand on a tower outside the east sweeper that chops down across the road
-  { const i=P.idxAt(4,0), sd=outS(i), e=(sd>0?P.wr[i]:P.wl[i])+7, q=ptAt(i,sd*e,0), PH=7.0, S=(e+P.w[i]/2+6)/0.406;
-    const tw=new THREE.Group(); tw.position.set(q[0],0,q[2]); /* local X = across the road toward the inside, local Z = along it */ const ix=-sd*P.rx[i], iz=-sd*P.rz[i]; tw.rotation.y=Math.atan2(-iz,ix); G.add(tw);
-    const hzT=canvasTex(128,128,(g,w,h)=>{ g.fillStyle='#4b5320'; g.fillRect(0,0,w,h); g.fillStyle=YEL; g.fillRect(0,h-26,w,26); g.fillStyle=BLK; for(let k=-26;k<w+26;k+=26){ g.beginPath(); g.moveTo(k,h); g.lineTo(k+13,h); g.lineTo(k+39,h-26); g.lineTo(k+26,h-26); g.fill(); } },{repeat:true}); hzT.repeat.set(2,3);
-    const col=new THREE.Mesh(new THREE.BoxGeometry(6,PH+2,6),new THREE.MeshStandardMaterial({map:hzT,roughness:0.8})); col.position.set(-3.6,(PH+2)/2,0); col.castShadow=true; tw.add(col);
+  // two beside the start straight
+  { const i=P.idxAt(23,0.5), q=outPt(i,34,0), ry=inRy(i); statue(q[0],heightAt(q[0],q[2]),q[2],ry,46,gold,5); const q2=outPt((i+60)%N,34,0); statue(q2[0],heightAt(q2[0],q2[2]),q2[2],ry,46,gold,5); }
+  // the hologram: a 130 m knifehand turning slowly over the infield
+  { const hg=new THREE.Group(); hg.position.set(cx+30,16,cz+18); const hm=new THREE.MeshBasicMaterial({color:0x2fc4f0,transparent:true,opacity:0.3,depthWrite:false,fog:false}), wm=new THREE.MeshBasicMaterial({color:0x0e7fb0,wireframe:true,transparent:true,opacity:0.22,depthWrite:false,fog:false});
+    const a=new THREE.Mesh(khG,hm), w2=new THREE.Mesh(khG,wm); a.scale.setScalar(320); w2.scale.setScalar(320); hg.add(a); hg.add(w2); G.add(hg);
+    const base=new THREE.Mesh(new THREE.CylinderGeometry(20,24,3,36),stdMat(0x2a323c,{metalness:0.5,roughness:0.4})); base.position.set(cx+30,1.5,cz+18); G.add(base); const br=new THREE.Mesh(new THREE.TorusGeometry(21,0.7,8,48),glow(CY)); br.rotation.x=Math.PI/2; br.position.set(cx+30,3.2,cz+18); G.add(br);
+    const cone=new THREE.Mesh(new THREE.CylinderGeometry(30,19,14,36,1,true),new THREE.MeshBasicMaterial({color:CY,transparent:true,opacity:0.12,blending:THREE.AdditiveBlending,depthWrite:false,side:DS,fog:false})); cone.position.set(cx+30,10,cz+18); G.add(cone);
+    W.updaters.push((dt,t)=>{ hg.rotation.y=t*0.22; hm.opacity=0.27+0.06*Math.sin(t*2.1); hg.position.y=16+Math.sin(t*0.7)*1.5; }); }
+  // ---------- light gates: glowing rings the road passes through ----------
+  { const gm=glow(0xf2c61a), gm2=glow(CY); pulse.push(gm,gm2);
+    [[0,0.05,gm],[3,0.5,gm2],[6,0.7,gm],[10,0.75,gm2],[23,0.2,gm2]].forEach(q=>{ const i=P.idxAt(q[0],q[1]), R=Math.max(P.wl[i],P.wr[i])+4.5; const g=new THREE.Group(); g.position.set(P.x[i],P.y[i],P.z[i]); g.rotation.y=Math.atan2(P.tx[i],P.tz[i]);
+      const r1=new THREE.Mesh(new THREE.TorusGeometry(R,0.55,8,56,Math.PI),q[2]); g.add(r1); const r2=new THREE.Mesh(new THREE.TorusGeometry(R+1.6,0.2,6,56,Math.PI),q[2]===gm?gm2:gm); g.add(r2);
+      [-1,1].forEach(sd=>{ const ft=new THREE.Mesh(new THREE.BoxGeometry(3,2.2,3),stdMat(0x2a323c,{metalness:0.5,roughness:0.4})); ft.position.set(sd*(R+0.4),1.1,0); g.add(ft); }); G.add(g); }); }
+  // ---------- DeptKnifehands.com painted on the road ----------
+  { const t=canvasTex(2048,512,(g,w,h)=>{ g.clearRect(0,0,w,h); g.fillStyle='rgba(242,198,26,0.95)'; g.textAlign='center'; g.textBaseline='middle'; let fs=260; g.font='bold '+fs+'px "Chakra Petch", sans-serif'; while(g.measureText('DeptKnifehands.com').width>w-60){ fs-=6; g.font='bold '+fs+'px "Chakra Petch", sans-serif'; } g.fillText('DeptKnifehands.com',w/2,h/2+10); }); t.anisotropy=16;
+    const dm=new THREE.MeshBasicMaterial({map:t,transparent:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-3,polygonOffsetUnits:-3});
+    [[23,0.75,0],[1,0.75,0],[5,0.9,0],[8,0.35,1],[8,0.35,-1],[12,0.5,0],[19,0.4,0]].forEach(q=>{ const i=P.idxAt(q[0],q[1]), md=P.median[i], wd=md>1?(P.w[i]/2-md)-2.5:P.w[i]-3.5, lat=md>1?q[2]*(md+(P.w[i]/2-md)/2):0, L=22;
+      /* a strip that follows the road for L metres, so it sits flat on slopes; the bottom of the lettering is toward oncoming cars */
+      const n=Math.round(L/P.spacing), pos=[],uv=[],idx=[]; for(let k=0;k<=n;k++){ const j=(i+k)%N, a=ptAt(j,lat-wd/2,0.05), bb=ptAt(j,lat+wd/2,0.05); pos.push(...a,...bb); uv.push(0,k/n,1,k/n); if(k<n){ const w=k*2; idx.push(w,w+2,w+1,w+1,w+2,w+3); } }
+      const g=new THREE.BufferGeometry(); g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3)); g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2)); g.setIndex(idx); const m=new THREE.Mesh(g,dm); m.material.side=DS; m.renderOrder=2; G.add(m); }); }
+  // ---------- THE CHOP: a giant knifehand on a tower outside the east sweeper that chops down across the road ----------
+  { const i=P.idxAt(4,0), e=wallAt(i)+9, q=outPt(i,9,0), PH=7.0, S=(e+P.w[i]/2+6)/0.406;
+    const tw=new THREE.Group(); tw.position.set(q[0],q[1],q[2]); /* local X = across the road toward the inside, local Z = along it */ const ix=-OUT*P.rx[i], iz=-OUT*P.rz[i]; tw.rotation.y=Math.atan2(-iz,ix); G.add(tw);
+    const hzT=canvasTex(128,128,(g,w,h)=>{ g.fillStyle='#2a323c'; g.fillRect(0,0,w,h); g.fillStyle=YEL; g.fillRect(0,h-26,w,26); g.fillStyle=BLK; for(let k=-26;k<w+26;k+=26){ g.beginPath(); g.moveTo(k,h); g.lineTo(k+13,h); g.lineTo(k+39,h-26); g.lineTo(k+26,h-26); g.fill(); } g.fillStyle='#39d8ff'; g.fillRect(0,20,w,5); },{repeat:true}); hzT.repeat.set(2,3);
+    const col=new THREE.Mesh(new THREE.BoxGeometry(6,PH+12,6),new THREE.MeshStandardMaterial({map:hzT,roughness:0.6,metalness:0.3})); col.position.set(-3.6,(PH+2)/2-5,0); col.castShadow=true; tw.add(col);
     const ax=new THREE.Mesh(new THREE.CylinderGeometry(1.5,1.5,7.4,14),stdMat(0x2a2c31,{metalness:0.6,roughness:0.4})); ax.rotation.x=Math.PI/2; ax.position.set(0,PH,0); tw.add(ax);
     const sT=textPanelTex([{text:'THE CHOP',font:F2,color:YEL,y:0.52}],{w:512,h:128,bg:BLK,border:YEL}); const sgn=new THREE.Mesh(new THREE.PlaneGeometry(9,2.25),new THREE.MeshBasicMaterial({map:sT,side:DS})); sgn.position.set(-3.6,PH+4.6,0); sgn.rotation.y=Math.PI/2; tw.add(sgn);
     const arm=new THREE.Group(); arm.position.set(0,PH,0); tw.add(arm); const hand=new THREE.Mesh(khG,gold); hand.scale.setScalar(S); hand.castShadow=true; arm.add(hand);
@@ -2599,31 +2621,60 @@ function buildArenaScenery(W,def,P,Q,H,U){
     W.updaters.push((dt,t)=>{ const u=(t%T)/T; let k;   /* k: 0 = raised, 1 = down */
       if(u<0.5) k=1-smooth01(u/0.5); else if(u<0.68) k=0; else if(u<0.75){ const v=(u-0.68)/0.07; k=v*v; } else k=1+Math.sin((u-0.75)*60)*0.012*Math.max(0,1-(u-0.75)*8);
       arm.rotation.z=lerp(UP,DOWN,k); const hit=u>=0.75&&u<0.8?1:0;
-      if(hit&&!was){ const R=GAME.race, c=R&&R.player; if(c&&R.W===W){ const d=Math.hypot(c.x-wp.x,c.z-wp.z); if(d<150){ R.shake(0.5*Math.max(0.15,1-d/150)); if(d<90) R.sfx('land',9); } } } was=hit; }); }
-  // ---- brick walls. Several stand round the floor with a number plate; one of them is not what it seems (P.sc).
+      if(hit&&!was){ const R=GAME.race, c=R&&R.player; if(c&&R.W===W){ const d=Math.hypot(c.x-wp.x,c.z-wp.z); if(d<150){ R.shake(0.5*Math.max(0.15,1-d/150)); if(d<90) R.sfx('land',9); } } } was=hit;
+      const pv=0.75+0.25*Math.sin(t*3); pulse.forEach((m,n)=>{ m.color.setHex(n%2?CY:0xf2c61a).multiplyScalar(pv); }); }); }
+  // ---------- THE OLD QUARTER: a preserved brick street inside the dome. The west leg runs down it; every house has a number.
+  //            The house at the end of the street, where the road bends away, is 9 3/4 (P.sc). ----------
   const brick=canvasTex(256,256,(g,w,h)=>{ g.fillStyle='#8a8378'; g.fillRect(0,0,w,h); for(let r=0;r<8;r++) for(let k=-1;k<4;k++){ const x=k*64+(r%2)*32, y=r*32; const v=Math.random()*26|0; g.fillStyle='rgb('+(150+v)+','+(62+v*0.6|0)+','+(46+v*0.4|0)+')'; g.fillRect(x+2,y+2,60,28); g.fillStyle='rgba(0,0,0,0.12)'; g.fillRect(x+2,y+24,60,6); } },{repeat:true});
+  /* a house front: brick with a row of tall windows and a stone band (one 512 tile = 8 m of wall, one storey) */
+  const front=canvasTex(512,256,(g,w,h)=>{ for(let r=0;r<8;r++) for(let k=-1;k<9;k++){ const x=k*64+(r%2)*32, y=r*32; const v=Math.random()*26|0; g.fillStyle='#8a8378'; g.fillRect(x,y,64,32); g.fillStyle='rgb('+(150+v)+','+(62+v*0.6|0)+','+(46+v*0.4|0)+')'; g.fillRect(x+2,y+2,60,28); }
+      [70,230,390].forEach(x=>{ g.fillStyle='#d8d0c0'; g.fillRect(x-8,46,68,170); g.fillStyle='#1d2630'; g.fillRect(x,54,52,154); g.fillStyle='rgba(255,214,140,0.85)'; g.fillRect(x+4,58,20,70); g.fillStyle='#d8d0c0'; g.fillRect(x+24,54,4,154); g.fillRect(x,128,52,4); }); g.fillStyle='#c9c0ae'; g.fillRect(0,0,w,16); },{repeat:true});
   const plate=(txt)=>canvasTex(512,256,(g,w,h)=>{ g.fillStyle='#7a1418'; g.fillRect(0,0,w,h); g.strokeStyle='#f4efe2'; g.lineWidth=12; g.strokeRect(10,10,w-20,h-20); g.fillStyle='#f4efe2'; g.textAlign='center'; g.textBaseline='middle'; const m=/^(\d+) (\d+\/\d+)$/.exec(txt);
       if(m){ g.font='bold 190px "Chakra Petch", sans-serif'; g.fillText(m[1],w*0.34,h/2+6); g.font='bold 96px "Chakra Petch", sans-serif'; g.fillText(m[2],w*0.68,h/2+10); } else { let fs=150; g.font='bold '+fs+'px "Chakra Petch", sans-serif'; while(g.measureText(txt).width>w-60){ fs-=6; g.font='bold '+fs+'px "Chakra Petch", sans-serif'; } g.fillText(txt,w/2,h/2+6); } });
-  const brickWall=(x,z,nx,nz,txt,wd=11,ht=6.4)=>{ const g=new THREE.Group(); g.position.set(x,0,z); g.rotation.y=Math.atan2(nx,nz); const bt=brick.clone(); bt.needsUpdate=true; bt.repeat.set(wd/3.2,ht/3.2); const m=new THREE.Mesh(new THREE.BoxGeometry(wd,ht,0.7),new THREE.MeshStandardMaterial({map:bt,roughness:0.9})); m.position.y=ht/2-0.3; m.castShadow=true; g.add(m);
-    [-1,1].forEach(sd=>{ const pl=new THREE.Mesh(new THREE.BoxGeometry(1.1,ht+0.6,1.1),stdMat(0x77706a)); pl.position.set(sd*(wd/2+0.3),ht/2,0); g.add(pl); }); const cap=new THREE.Mesh(new THREE.BoxGeometry(wd+2,0.5,1.2),stdMat(0x77706a)); cap.position.y=ht-0.05; g.add(cap);
-    const sg=new THREE.Mesh(new THREE.BoxGeometry(5.6,2.8,0.25),[stdMat(0x222222),stdMat(0x222222),stdMat(0x222222),stdMat(0x222222),new THREE.MeshBasicMaterial({map:plate(txt)}),stdMat(0x222222)]); sg.position.set(0,ht+2.0,0.1); g.add(sg);
-    [-1.6,1.6].forEach(px=>{ const st=new THREE.Mesh(new THREE.BoxGeometry(0.14,1,0.14),stdMat(0x222222)); st.position.set(px,ht+0.5,0); g.add(st); }); G.add(g); return g; };
-  [[2,0.6,'7 1/2'],[5,0.5,'4 2/3'],[11,0.6,'12 1/4'],[22,0.2,'8 5/8']].forEach(q=>{ const i=P.idxAt(q[0],q[1]), sd=outS(i), e=(sd>0?P.wr[i]:P.wl[i])-0.8, w=ptAt(i,sd*e,0); brickWall(w[0],w[2],-sd*P.rx[i],-sd*P.rz[i],q[2]); });
-  const SC=P.sc; if(SC){ brickWall(SC.ex-SC.dx*0.9,SC.ez-SC.dz*0.9,-SC.dx,-SC.dz,(def.shortcut.name||'9 3/4'),12);
-    // the tunnel behind it: a brick passage along the same curve the car is carried on, open where it meets the road again
-    const k=SC.curve(SC.ex,SC.ez), o={}, HW=6, HT=5.6, L=[],Rr=[],C=[]; let tEnd=1;
+  const stone=stdMat(0x8f887c), roofM=stdMat(0x3a3f46,{metalness:0.3,roughness:0.6}), neon=glow(CY);
+  /* house(x,y,z, nx,nz = the way the front faces, width, height, depth, number, blank = plain brick front (no windows)) */
+  const house=(x,y,z,nx,nz,wd,ht,dp,txt,blank)=>{ const g=new THREE.Group(); g.position.set(x,y,z); g.rotation.y=Math.atan2(nx,nz); const ft=(blank?brick:front).clone(); ft.needsUpdate=true; ft.repeat.set(blank?wd/3.2:Math.max(1,Math.round(wd/8)),blank?ht/3.2:Math.max(1,Math.round(ht/4.4)));
+    const st=brick.clone(); st.needsUpdate=true; st.repeat.set(dp/3.2,ht/3.2); const fm=new THREE.MeshStandardMaterial({map:ft,roughness:0.9}), sm=new THREE.MeshStandardMaterial({map:st,roughness:0.9});
+    const m=new THREE.Mesh(new THREE.BoxGeometry(wd,ht+2,dp),[sm,sm,roofM,roofM,fm,sm]); m.position.set(0,ht/2-1,-dp/2); m.castShadow=true; g.add(m);
+    const cap=new THREE.Mesh(new THREE.BoxGeometry(wd+0.8,0.7,dp+0.8),stone); cap.position.set(0,ht+0.2,-dp/2); g.add(cap); const nl=new THREE.Mesh(new THREE.BoxGeometry(wd+0.9,0.18,0.18),neon); nl.position.set(0,ht+0.7,0.4); g.add(nl);
+    if(txt){ const sg=new THREE.Mesh(new THREE.BoxGeometry(4.4,2.2,0.25),[stdMat(0x222222),stdMat(0x222222),stdMat(0x222222),stdMat(0x222222),new THREE.MeshBasicMaterial({map:plate(txt)}),stdMat(0x222222)]); sg.position.set(0,Math.min(ht-1.6,7.4),0.3); g.add(sg); }
+    G.add(g); return g; };
+  if(SC){ const nums=['8 1/4','8 1/2','8 3/4','9','9 1/4','9 1/2','10','10 1/4','10 1/2','10 3/4','11','11 1/4','11 1/2','11 3/4','12','12 1/4']; let nq=0;
+    // houses down both sides of the west leg and round the outside of the infield and the U-turn; none where the tunnel and its two doors are
+    const k0=SC.curve(SC.ex,SC.ez), o={}; const nearTunnel=(x,z,r)=>{ if(Math.hypot(x-SC.ex,z-SC.ez)<r+9) return true; for(let q=0;q<=20;q++){ SC.at(k0,q/20,o); if(Math.hypot(x-o.x,z-o.z)<r+7) return true; } return false; };
+    const tooClose=(x,z,r,i)=>{ for(let d=0;d<N;d+=2){ if(Math.min((d-i+N)%N,(i-d+N)%N)<10) continue; if(Math.hypot(x-P.x[d],z-P.z[d])<Math.max(P.wl[d],P.wr[d])+r) return true; } return false; };
+    const placed=[]; const row=(ia,ib,side,step)=>{ for(let i=ia;((ib-i+N)%N)>step&&((ib-i+N)%N)<N/2;i=(i+step)%N){ const wd=rr(11,15), ht=[8.8,13.2,13.2,17.6][Math.floor(rnd()*4)], dp=rr(10,14), e=(side>0?P.wr[i]:P.wl[i])+1.6, q=ptAt(i,side*e,0), nx=-side*P.rx[i], nz=-side*P.rz[i], mx=q[0]-nx*dp/2, mz=q[2]-nz*dp/2;
+        if(nearTunnel(mx,mz,Math.max(wd,dp)/2)||tooClose(mx,mz,dp/2+1,i)||placed.some(h=>Math.hypot(h[0]-mx,h[1]-mz)<(h[2]+Math.max(wd,dp))/2+0.5)) continue; placed.push([mx,mz,Math.max(wd,dp)]); house(q[0],q[1],q[2],nx,nz,wd,ht,dp,nums[nq++%nums.length]); } };
+    row(P.idxAt(12,0.15),P.idxAt(14,0.2),OUT,7); row(P.idxAt(12,0.3),P.idxAt(13,0.75),-OUT,7); row(P.idxAt(14,0.3),P.idxAt(20,0.5),OUT,7); row(P.idxAt(21,0.3),P.idxAt(22,0.6),OUT,7);
+    // number 9 3/4: a plain brick front right on the road, the same as its neighbours but with no windows
+    const dpF=10; house(SC.ex-SC.dx*0.9,SC.y,SC.ez-SC.dz*0.9,-SC.dx,-SC.dz,13,13.2,dpF,(def.shortcut.name||'9 3/4'),true);
+    // the passage behind it: brick, lit, along the same curve the car is carried on, open where it meets the road again
+    const k=k0, HW=6, HT=5.6, L=[],Rr=[],C=[];
     for(let q=0;q<=40;q++){ const t=q/40; SC.at(k,t,o); let bd=1e9,bj=SC.iX; for(let d=-40;d<=12;d++){ const j=(SC.iX+d+N)%N, dd=Math.hypot(o.x-P.x[j],o.z-P.z[j]); if(dd<bd){ bd=dd; bj=j; } } const lat=(o.x-P.x[bj])*P.rx[bj]+(o.z-P.z[bj])*P.rz[bj];
-      if(t>0.3&&Math.abs(lat)<(lat<0?P.wl[bj]:P.wr[bj])+HW*0.6){ tEnd=t; break; } const hl=Math.hypot(o.hx,o.hz), rx=o.hz/hl, rz=-o.hx/hl; L.push([o.x-rx*HW,o.z-rz*HW]); Rr.push([o.x+rx*HW,o.z+rz*HW]); C.push([o.x,o.z,o.hx/hl,o.hz/hl]); }
-    const strip=(a,ya,bb,yb,mat)=>{ const pos=[],uv=[],idx=[]; let u=0; for(let q=0;q<a.length;q++){ if(q) u+=Math.hypot(a[q][0]-a[q-1][0],a[q][1]-a[q-1][1])/3.2; pos.push(a[q][0],ya,a[q][1],bb[q][0],yb,bb[q][1]); uv.push(u,0,u,1.75); if(q<a.length-1){ const w=q*2; idx.push(w,w+1,w+2,w+1,w+3,w+2); } }
+      if(t>0.3&&Math.abs(lat)<(lat<0?P.wl[bj]:P.wr[bj])+HW*0.6) break; const hl=Math.hypot(o.hx,o.hz), rx=o.hz/hl, rz=-o.hx/hl; L.push([o.x-rx*HW,o.z-rz*HW]); Rr.push([o.x+rx*HW,o.z+rz*HW]); C.push([o.x,o.z,o.hx/hl,o.hz/hl]); }
+    const strip=(a,ya,bb,yb,mat)=>{ const pos=[],uv=[],idx=[]; let u=0; for(let q=0;q<a.length;q++){ if(q) u+=Math.hypot(a[q][0]-a[q-1][0],a[q][1]-a[q-1][1])/3.2; pos.push(a[q][0],ya,a[q][1],bb[q][0],yb,bb[q][1]); uv.push(u,0,u,(yb-ya)/3.2||1.75); if(q<a.length-1){ const w=q*2; idx.push(w,w+1,w+2,w+1,w+3,w+2); } }
       const g=new THREE.BufferGeometry(); g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3)); g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2)); g.setIndex(idx); g.computeVertexNormals(); G.add(new THREE.Mesh(g,mat)); };
-    if(L.length>2){ const bm=new THREE.MeshBasicMaterial({map:brick,side:DS,color:0xd8d2c8}), rm=new THREE.MeshBasicMaterial({color:0x3a332e,side:DS}); strip(L,-0.4,L,HT,bm); strip(Rr,-0.4,Rr,HT,bm); strip(L,HT,Rr,HT,rm);
-      const lamps=C.filter((q,n)=>n%3===1).map(q=>({x:q[0],y:HT-0.25,z:q[1],ry:Math.atan2(q[2],q[3]),s:[0.5,0.12,2.2]})); G.add(instanced(new THREE.BoxGeometry(1,1,1),new THREE.MeshBasicMaterial({color:0xfff2c8}),lamps,false));
-      const e=C[C.length-1]; brickWall(e[0],e[1],e[2],e[3],'EXIT ONLY',12); }
+    if(L.length>2){ const bm=new THREE.MeshBasicMaterial({map:brick,side:DS,color:0xd8d2c8}), om=new THREE.MeshStandardMaterial({map:brick,side:DS,roughness:0.9}), rm=new THREE.MeshBasicMaterial({color:0x3a332e,side:DS}), y0=SC.y-0.4;
+      strip(L,y0,L,SC.y+HT,bm); strip(Rr,y0,Rr,SC.y+HT,bm); strip(L,SC.y+HT,Rr,SC.y+HT,rm);
+      /* outside it reads as a long brick mill, taller than the passage */
+      const Lo=C.map(q=>[q[0]-q[3]*(HW+0.5),q[1]+q[2]*(HW+0.5)]), Ro=C.map(q=>[q[0]+q[3]*(HW+0.5),q[1]-q[2]*(HW+0.5)]); strip(Lo,y0,Lo,SC.y+11,om); strip(Ro,y0,Ro,SC.y+11,om); strip(Lo,SC.y+11,Ro,SC.y+11,roofM);
+      const lamps=C.filter((q,n)=>n%3===1).map(q=>({x:q[0],y:SC.y+HT-0.25,z:q[1],ry:Math.atan2(q[2],q[3]),s:[0.5,0.12,2.2]})); G.add(instanced(new THREE.BoxGeometry(1,1,1),glow(0xfff2c8),lamps,false));
+      const e=C[C.length-1]; house(e[0]+e[2]*0.5,SC.y1,e[1]+e[3]*0.5,e[2],e[3],13,11,1.2,'12 3/4',true); }
+    // street furniture: gas-lamp posts with a cold light, and an arch over the way in
+    const lp=[],lh=[]; for(let i=P.idxAt(12,0.2);((P.idxAt(13,0.6)-i+N)%N)<N/2&&i!==P.idxAt(13,0.6);i=(i+6)%N){ [-1,1].forEach(sd=>{ const q=ptAt(i,sd*((sd>0?P.wr[i]:P.wl[i])+0.7),0); lp.push({x:q[0],y:q[1],z:q[2],s:[0.16,5,0.16]}); lh.push({x:q[0],y:q[1]+5.1,z:q[2],s:0.42}); }); }
+    G.add(instanced(new THREE.BoxGeometry(1,1,1).translate(0,0.5,0),stdMat(0x1c1d21),lp,false)); G.add(instanced(new THREE.SphereGeometry(1,8,6),glow(0xfff2c8),lh,false));
+    { const i=P.idxAt(12,0.12), R=Math.max(P.wl[i],P.wr[i])+2.5, g=new THREE.Group(); g.position.set(P.x[i],P.y[i],P.z[i]); g.rotation.y=Math.atan2(P.tx[i],P.tz[i]); const at=brick.clone(); at.needsUpdate=true; at.repeat.set(10,1);
+      const ar=new THREE.Mesh(new THREE.TorusGeometry(R,1.5,8,36,Math.PI),new THREE.MeshStandardMaterial({map:at,roughness:0.9})); g.add(ar); [-1,1].forEach(sd=>{ const pr=new THREE.Mesh(new THREE.BoxGeometry(3.4,3,3.4),stone); pr.position.set(sd*R,1.2,0); g.add(pr); });
+      const st=textPanelTex([{text:'THE OLD QUARTER',font:'bold 110px "Chakra Petch", sans-serif',color:'#f4efe2',y:0.52}],{w:1024,h:192,bg:'#7a1418',border:'#f4efe2'}); const sn=new THREE.Mesh(new THREE.PlaneGeometry(15,2.8),new THREE.MeshBasicMaterial({map:st,side:DS})); sn.position.set(0,R+3.4,0); sn.rotation.y=Math.PI; g.add(sn); G.add(g); }
     // bricks fly when a car goes through
     const NB=46, bg=new THREE.BoxGeometry(0.62,0.3,0.3), bim=new THREE.InstancedMesh(bg,new THREE.MeshStandardMaterial({color:0xa24a34,roughness:0.9}),NB); bim.frustumCulled=false; bim.count=0; G.add(bim); const bits=[]; const ob=new THREE.Object3D();
-    W.scBurst=(which,c)=>{ bits.length=0; const fx=Math.sin(c.h), fz=Math.cos(c.h); for(let n=0;n<NB;n++) bits.push({x:c.x+fx*2+rr(-2.6,2.6)*fz,y:rr(0.3,4.5),z:c.z+fz*2-rr(-2.6,2.6)*fx,vx:fx*rr(6,22)+rr(-6,6),vy:rr(2,11),vz:fz*rr(6,22)+rr(-6,6),r:rr(0,6),w:rr(-9,9),t:0}); };
-    W.updaters.push((dt)=>{ if(!bits.length){ if(bim.count){ bim.count=0; } return; } let live=0; bits.forEach((q,n)=>{ q.t+=dt; q.vy-=22*dt; q.x+=q.vx*dt; q.y+=q.vy*dt; q.z+=q.vz*dt; if(q.y<0.15){ q.y=0.15; q.vy*=-0.3; q.vx*=0.6; q.vz*=0.6; } q.r+=q.w*dt; ob.position.set(q.x,q.y,q.z); ob.rotation.set(q.r,q.r*0.7,0); ob.scale.setScalar(q.t>2.2?Math.max(0.001,1-(q.t-2.2)*2):1); ob.updateMatrix(); bim.setMatrixAt(n,ob.matrix); if(q.t<2.7) live++; });
+    W.scBurst=(which,c)=>{ bits.length=0; const fx=Math.sin(c.h), fz=Math.cos(c.h); for(let n=0;n<NB;n++) bits.push({x:c.x+fx*2+rr(-2.6,2.6)*fz,y:c.y+rr(0.3,4.5),g:c.y+0.15,z:c.z+fz*2-rr(-2.6,2.6)*fx,vx:fx*rr(6,22)+rr(-6,6),vy:rr(2,11),vz:fz*rr(6,22)+rr(-6,6),r:rr(0,6),w:rr(-9,9),t:0}); };
+    W.updaters.push((dt)=>{ if(!bits.length){ if(bim.count){ bim.count=0; } return; } let live=0; bits.forEach((q,n)=>{ q.t+=dt; q.vy-=22*dt; q.x+=q.vx*dt; q.y+=q.vy*dt; q.z+=q.vz*dt; if(q.y<q.g){ q.y=q.g; q.vy*=-0.3; q.vx*=0.6; q.vz*=0.6; } q.r+=q.w*dt; ob.position.set(q.x,q.y,q.z); ob.rotation.set(q.r,q.r*0.7,0); ob.scale.setScalar(q.t>2.2?Math.max(0.001,1-(q.t-2.2)*2):1); ob.updateMatrix(); bim.setMatrixAt(n,ob.matrix); if(q.t<2.7) live++; });
       bim.count=bits.length; bim.instanceMatrix.needsUpdate=true; if(!live) bits.length=0; }); }
+  // ---------- machinery on the deck: dark blocks with light strips, away from the road and the Old Quarter ----------
+  { const blocks=[],strips=[]; let tries=0; while(blocks.length<Math.round(46*Math.min(1,Q.density||1))&&tries++<900){ const a=rnd()*TAU, r=Math.sqrt(rnd()), x=cx+Math.cos(a)*r*(A-90), z=cz+Math.sin(a)*r*(B-90); if(!H.clearOfRoad(x,z,38)) continue; if(x<cx-80&&z<cz+60&&Math.hypot(x-cx,z-cz)<260) continue; if(Math.hypot(x-(cx+30),z-(cz+18))<46) continue;
+      const w=rr(10,26), d=rr(10,26), h=rr(6,34)*(Math.hypot(x-cx,z-cz)>250?2.2:1), ry=Math.floor(rnd()*4)*Math.PI/4, y=heightAt(x,z); blocks.push({x,y,z,ry,s:[w,h,d]}); strips.push({x,y:y+h*0.82,z,ry,s:[w+0.3,0.5,d+0.3],c:rnd()<0.5?CY:0xf2c61a}); }
+    G.add(instanced(new THREE.BoxGeometry(1,1,1).translate(0,0.5,0),stdMat(0x2f3842,{metalness:0.5,roughness:0.45}),blocks,true)); const sm=instanced(new THREE.BoxGeometry(1,1,1),new THREE.MeshBasicMaterial({color:0xffffff,fog:false}),strips,false); G.add(sm); }
 }
 function buildSpaceScenery(W,def,P,Q,H){
   const G=W.group, {ptAt,ribbon,notGap}=H, D=Q.density||1, hue=new THREE.Color();
