@@ -276,6 +276,20 @@ const TRACK_DATA = [
   jumps:[{cp:0,f:0.4,len:16,h:1.9,gap:0,name:'DIRECTIVE ONE'}], boosts:[{cp:22,f:0.5,lat:0},{cp:8,f:0.1,lat:15.5},{cp:8,f:0.1,lat:-15.5}], items:[{cp:1,f:0.7},{cp:7,f:0.2}],
   medians:[{cp:7,f:0.55,len:100,w:20}],
 },
+{
+  // One-lap endurance track: 17.2 km through eight districts, 5-7 minutes. Route designed outside the game (Last Round Rally design pack:
+  // control points from its track-definition.json, sector sample ranges from its route-samples.json, which this builder reproduces).
+  // theme 'journey': high desert, the land follows the road (naturalHeightFn), districts dressed by buildJourneyScenery.
+  id:'last_round', name:'Last Round Rally', place:'Pepperbox Proving Grounds',
+  blurb:'One lap. Eight districts. Seventeen kilometres: out of the Pepperbox paddock, past the Dark Roast works, through the proving grounds, up Brass Ridge, down Echo Canyon, across the airfield and the pine quarry, and home to the festival. You see every stretch once.',
+  note:'One lap, 5 to 7 minutes. No car bonuses here: every car runs stock. Item boxes and boost pads are live.',
+  theme:'journey', laps:1, noPerks:true, gp:false, shoulder:3, terrainFollow:true,
+  points:[[0,-1646.9,0,26],[329.4,-1646.9,0,26],[658.8,-1626.3,3.6,25.2],[947,-1544,7.1,24.4],[1152.8,-1358.7,10.9,23.6],[1049.9,-1152.8,14.4,22.8],[1286.6,-947,17,22.2],[1513.1,-1049.9,18,22],[1708.7,-874.9,20,22],[1832.2,-555.8,25.3,22],[1842.5,-205.9,32.6,22],[2038,30.9,40.4,22],[2315.9,102.9,47.7,22],[2418.9,350,53,22],[2213,555.8,55,22],[1883.6,566.1,59.4,21.8],[1626.3,741.1,70.9,21.2],[1760.1,957.3,86.5,20.4],[2110.1,977.8,103.5,19.6],[2295.4,1142.5,119.1,18.8],[2202.7,1348.4,130.6,18.2],[1821.9,1369,135,18],[1523.4,1224.9,138.9,18],[1255.8,1358.7,148.9,18],[1245.5,1688.1,162.6,18],[1029.3,1893.9,177.4,18],[699.9,1863,191.1,18],[494.1,1626.3,201.1,18],[195.6,1554.3,205,18],[-92.6,1739.5,199.5,18.3],[-360.3,1966,185.2,19.2],[-669.1,1935.1,165.6,20.4],[-854.3,1657.2,144.4,21.6],[-1080.8,1574.8,124.8,22.8],[-1338.1,1780.7,110.5,23.7],[-1574.8,1626.3,105,24],[-1544,1327.8,101.7,23.8],[-1317.5,1111.7,93.1,23.2],[-1492.5,844,81.4,22.4],[-1821.9,926.4,68.6,21.6],[-2089.5,772,56.9,20.8],[-2161.5,422,48.3,20.2],[-2079.2,92.6,45,20],[-1893.9,-123.5,43.2,20.2],[-1688.1,-20.6,38.5,20.8],[-1544,-216.2,32,21.6],[-1708.7,-442.6,25,22.4],[-1976.3,-514.7,18.5,23.2],[-2027.7,-761.7,13.8,23.8],[-1791,-916.1,12,24],[-1441,-947,11.3,24.1],[-1245.5,-1163.1,9.6,24.4],[-1132.2,-1482.2,7.3,24.8],[-874.9,-1646.9,0,26],[-535.2,-1646.9,0,26],[-247,-1646.9,0,26]],
+  sectors:[{name:'Creator Row',sub:'Pepperbox paddock',col:'#ff713d',i0:0},{name:'Dark Roast Run',sub:'Roastery & service yard',col:'#d5a75f',i0:1026},{name:'The Proving Grounds',sub:'Range complex',col:'#a9b981',i0:2096},{name:'Brass Ridge',sub:'Mesa ascent',col:'#f0cb65',i0:3169},{name:'Echo Canyon',sub:'Sandstone descent',col:'#e88d76',i0:4292},{name:'Hangar Straight',sub:'Desert airfield',col:'#75bfc6',i0:5406},{name:'Ridgeback Trail',sub:'Pine & quarry road',col:'#6ea895',i0:6566},{name:'Last Call',sub:'Festival return',col:'#c4aedb',i0:7513}],
+  jumps:[], boosts:[{cp:2,f:0.25,lat:0},{cp:10,f:0.25,lat:0},{cp:25,f:0.25,lat:0},{cp:40,f:0.25,lat:0},{cp:53,f:0.25,lat:0}],
+  items:[{cp:1,f:0.35},{cp:9,f:0.35},{cp:18,f:0.35},{cp:24,f:0.35},{cp:31,f:0.35},{cp:39,f:0.35},{cp:46,f:0.35},{cp:52,f:0.35}],
+  medians:[],
+},
 ];
 if (typeof module!=='undefined') module.exports = {TRACK_DATA};
 
@@ -1058,6 +1072,8 @@ const THEMES={
    fog:0xf1caa2, fogNear:220, fogFar:1500, exposure:1.0, road:'#4f4d55', roadLine:'white', curbA:'#ffc23d', curbB:'#2a2a2e', edge:'#8a8a8a', shoulder:'sidewalk', wall:'jersey', wallH:1.0, groundBase:[0.5,0.46,0.42] },
  country:{ skyTop:0x4f7fc4, skyHor:0xffc98a, sunCol:0xffc37a, sunI:2.4, sunDir:[-0.62,0.38,0.62], hemiS:0xb8d0ff, hemiG:0x6b7a3a, hemiI:0.9,
    fog:0xf2cfa0, fogNear:180, fogFar:1300, exposure:1.02, road:'#4e4a47', roadLine:'yellow', curbA:'#c8281e', curbB:'#f3ecd9', edge:'#a0633f', shoulder:'dirt', wall:'wood', wallH:1.0 },
+ journey:{ skyTop:0x3a7fd0, skyHor:0xf6d6ae, sunCol:0xffe2b8, sunI:2.6, sunDir:[-0.45,0.55,-0.5], hemiS:0xc4dcff, hemiG:0xb88456, hemiI:0.85,
+   fog:0xf0d2ae, fogNear:450, fogFar:2600, exposure:0.95, road:'#3d3b3a', roadLine:'yellow', curbA:'#ff713d', curbB:'#f2eadc', edge:'#c9a27a', shoulder:'sand', wall:'guardrail', wallH:0.85 },
  desert:{ skyTop:0x2f78d6, skyHor:0xf8dcb6, sunCol:0xfff0d4, sunI:2.6, sunDir:[0.3,0.85,-0.4], hemiS:0xbfdcff, hemiG:0xc28a58, hemiI:0.8,
    fog:0xf3d8b6, fogNear:200, fogFar:1400, exposure:0.95, road:'#56504b', roadLine:'yellow', curbA:'#e05a1a', curbB:'#f2eadc', edge:'#c9a27a', shoulder:'sand', wall:'guardrail', wallH:0.85 },
  coast:{ skyTop:0x3a6cc0, skyHor:0xffbe86, sunCol:0xffc27a, sunI:2.5, sunDir:[-0.8,0.32,0.2], hemiS:0xa9c4f2, hemiG:0x7a6044, hemiI:0.9,
@@ -1145,6 +1161,18 @@ function naturalHeightFn(def,P){
   const chan=(x,z,h)=>{ for(const c of channels){ const px=x-c.x,pz=z-c.z; const along=px*c.dx+pz*c.dz; const perp=Math.abs(px*c.dz-pz*c.dx); if(Math.abs(along)<420){ const floor=c.y-11; const t=smooth01((perp-7)/7); h=Math.min(h,lerp(floor,h,t)); } } return h; };
   const t=def.theme; let f;
   if(t==='arena') f=()=>0;
+  else if(def.terrainFollow){ /* the land rises and falls with the road: a coarse field of distance-weighted road heights, sandstone mesas between the districts, ranges far out */
+    let mnx=1e9,mxx=-1e9,mnz=1e9,mxz=-1e9; for(let i=0;i<P.N;i++){ mnx=Math.min(mnx,P.x[i]); mxx=Math.max(mxx,P.x[i]); mnz=Math.min(mnz,P.z[i]); mxz=Math.max(mxz,P.z[i]); }
+    const C=48, ox=mnx-900, oz=mnz-900, nx=Math.ceil((mxx-mnx+1800)/C)+1, nz=Math.ceil((mxz-mnz+1800)/C)+1, F=new Float32Array(nx*nz), Dd=new Float32Array(nx*nz), sx=[],sz=[],sy=[];
+    for(let i=0;i<P.N;i+=6){ sx.push(P.x[i]); sz.push(P.z[i]); sy.push(P.y[i]); }
+    for(let a=0;a<nx;a++) for(let b=0;b<nz;b++){ const x=ox+a*C, z=oz+b*C; let ws=0,hs=0,dm=1e9; for(let k=0;k<sx.length;k++){ const dx=x-sx[k], dz=z-sz[k], d2=dx*dx+dz*dz; if(d2<dm) dm=d2; const w=1/(d2+2500); ws+=w*w; hs+=w*w*sy[k]; } F[a*nz+b]=hs/ws; Dd[a*nz+b]=Math.sqrt(dm); }
+    const bil=(A,x,z)=>{ const fx=clamp((x-ox)/C,0,nx-1.001), fz=clamp((z-oz)/C,0,nz-1.001), a=Math.floor(fx), b=Math.floor(fz), u=fx-a, v=fz-b; return lerp(lerp(A[a*nz+b],A[(a+1)*nz+b],u),lerp(A[a*nz+b+1],A[(a+1)*nz+b+1],u),v); };
+    const mesas=[]; let seed=7; const rn=()=>{ seed=(seed*16807)%2147483647; return seed/2147483647; };
+    for(let t2=0;t2<500&&mesas.length<46;t2++){ const x=mnx-400+rn()*(mxx-mnx+800), z=mnz-400+rn()*(mxz-mnz+800), r=60+rn()*150, d=bil(Dd,x,z); if(d<r+90) continue; mesas.push([x,z,r,25+rn()*70]); }
+    f=(x,z)=>{ const base=bil(F,x,z)-1.5, dr=bil(Dd,x,z); let h=base+2.2*fbm(x*0.012,z*0.012)+0.7*fbm(x*0.06,z*0.06)+smooth01((dr-260)/600)*90*fbm(x*0.0025+5,z*0.0025);
+      for(const m of mesas){ const d=Math.hypot(x-m[0],z-m[1]); if(d>m[2]+30) continue; const k=smooth01((m[2]*(0.85+0.3*fbm(x*0.02+m[0],z*0.02))+18-d)/18); if(k>0) h=Math.max(h,base+m[3]*k); }
+      return h; }; f.field=bil.bind(null,F); }
+  else if(t==='arena') f=()=>0;
   else if(t==='city') f=(x,z)=>{ const d=Math.hypot(x-cx,z-cz); return smooth01((d-R0-160)/380)*(25+110*fbm(x*0.004,z*0.004)); };
   else if(t==='desert'){ const mesas=[[150,420,70,34],[520,300,90,55],[-160,250,80,40],[380,-220,110,48],[-120,-120,60,30],[250,120,45,22],[120,300,40,26],[-300,600,140,70],[700,650,160,80],[600,-500,140,60],[-400,-300,150,55]];
     f=(x,z)=>{ let h=1.6*fbm(x*0.015,z*0.015)+0.6*fbm(x*0.08,z*0.08); const d0=Math.hypot(x-cx,z-cz); h+=smooth01((d0-R0-250)/400)*40*fbm(x*0.003+7,z*0.003);
@@ -1662,7 +1690,7 @@ function buildWorld(def,P,Q){
   // ---------- terrain ----------
   let minx=1e9,maxx=-1e9,minz=1e9,maxz=-1e9; for(let i=0;i<P.N;i++){minx=Math.min(minx,P.x[i]);maxx=Math.max(maxx,P.x[i]);minz=Math.min(minz,P.z[i]);maxz=Math.max(maxz,P.z[i]);}
   W.bounds={minx,maxx,minz,maxz};
-  const EXT=def.theme==='city'?650:750, cell=Q.terrainCell;
+  const EXT=def.theme==='city'?650:(def.terrainFollow?600:750); let cell=Q.terrainCell; { const ar=(maxx-minx+EXT*2)*(maxz-minz+EXT*2); if(def.terrainFollow) cell=Math.max(cell,Math.sqrt(ar/170000)); }   /* the 17 km track: keep its terrain mesh under about 170k vertices (other tracks unchanged) */
   const tw=maxx-minx+EXT*2, td=maxz-minz+EXT*2; const nx=Math.ceil(tw/cell), nz=Math.ceil(td/cell);
   const tg=new THREE.PlaneGeometry(tw,td,nx,nz); tg.rotateX(-Math.PI/2); tg.translate((minx+maxx)/2,0,(minz+maxz)/2);
   const tp=tg.attributes.position; const cols=new Float32Array(tp.count*3); const dists=new Float32Array(tp.count);
@@ -1671,7 +1699,7 @@ function buildWorld(def,P,Q){
   for(let v=0;v<tp.count;v++){ const x=tp.getX(v),z=tp.getZ(v),y=tp.getY(v); const slope=1-tn.getY(v); const n=fbm(x*0.03,z*0.03), n2=vnoise(x*0.2,z*0.2); let c;
     const dd=dists[v];
     if(def.theme==='city'){ if(dd<9) c=[0.62,0.6,0.56]; else if(y>6) c=lerp3([0.62,0.55,0.36],[0.38,0.44,0.26],n); else c=n>0.52?[0.4,0.47,0.25]:[0.5,0.48,0.44]; c=lerp3(c,[0.55,0.5,0.4],slope*2); }
-    else if(def.theme==='desert'){ c=lerp3([0.86,0.63,0.42],[0.78,0.52,0.34],n); if(y>5){ const band=0.5+0.5*Math.sin(y*1.3+n*3); c=lerp3([0.72,0.36,0.2],[0.84,0.52,0.32],band); } if(slope>0.25) c=lerp3(c,[0.6,0.3,0.18],clamp((slope-0.25)*2,0,1)); }
+    else if(def.theme==='desert'||def.theme==='journey'){ c=lerp3([0.86,0.63,0.42],[0.78,0.52,0.34],n); if(y>5){ const band=0.5+0.5*Math.sin(y*1.3+n*3); c=lerp3([0.72,0.36,0.2],[0.84,0.52,0.32],band); } if(slope>0.25) c=lerp3(c,[0.6,0.3,0.18],clamp((slope-0.25)*2,0,1)); }
     else if(def.theme==='country'){ c=lerp3([0.34,0.52,0.2],[0.6,0.58,0.28],smooth01((n-0.4)*2.5)); if(y<-3) c=lerp3([0.42,0.3,0.18],c,smooth01((y+6)/3)); if(slope>0.35) c=lerp3(c,[0.55,0.32,0.18],clamp((slope-0.35)*2,0,1)); }
     else if(def.theme==='coast'){ if(y<-1.5) c=[0.82,0.74,0.56]; else c=lerp3([0.72,0.62,0.34],[0.36,0.46,0.22],smooth01((n-0.35)*3)); if(slope>0.3) c=lerp3(c,[0.47,0.42,0.37],clamp((slope-0.3)*2.5,0,1)); if(y<-8) c=[0.55,0.5,0.42]; }
     else if(def.theme==='rally'){ c=lerp3([0.1,0.2,0.07],[0.2,0.16,0.09],smooth01((n-0.38)*2.6)); if(dd<7) c=lerp3([0.3,0.2,0.12],c,smooth01(dd/7)); if(slope>0.3) c=lerp3(c,[0.4,0.34,0.27],clamp((slope-0.3)*2.5,0,1)); }
@@ -2158,6 +2186,7 @@ function buildScenery(W,def,P,Q,H){
       const rocks=scatter(70,2.5,40,3,(x,y,z)=>(W.rk||[]).some(k=>Math.hypot(x-k[0],z-k[1])<k[2])?null:{x,y:y-0.3,z,ry:rnd()*TAU,s:[rr(0.8,2.6),rr(0.6,1.8),rr(0.8,2.6)],c:0x77726a}); G.add(instanced(rockGeo(5),stdMat(0xffffff,{roughness:1,flatShading:true}),rocks,true)); }
   }
   if(def.theme==='arena') buildArenaScenery(W,def,P,Q,H,{stdMat});
+  if(def.theme==='journey') buildJourneyScenery(W,def,P,Q,H,{stdMat,vcMat});
   if(def.theme==='oval'){
     // ===== PEPPERBOX RACEWAY: a short-track oval. Outside = +lat (left turns only), infield = -lat. =====
     const ribbon=H.ribbon, notGap=H.notGap, N=P.N, out=(i,d)=>ptAt(i,P.wr[i]+d,0), inn=(i,d)=>ptAt(i,-(P.wl[i]+d),0);
@@ -2515,6 +2544,122 @@ function spaceSky(W){
         gl_FragColor=vec4(c,1.);}`});
   W.updaters.push((dt,t)=>{ U.t.value=t; });
   const m=new THREE.Mesh(new THREE.SphereGeometry(2600,32,16),mat); m.renderOrder=-10; m.frustumCulled=false; return m;
+}
+// ===== LAST ROUND RALLY (theme 'journey'): one 17 km lap through eight districts (def.sectors: name, colour, first sample).
+// Each district gets its own landmarks, all built here from simple shapes and existing art (Pepperbox show panels, BRCC bag
+// boards, the desert rocks and saguaros, cone pines, the fan figures). Everything stays outside the road and its shoulders.
+function buildJourneyScenery(W,def,P,Q,H,U){
+  const G=W.group, N=P.N, {ptAt,heightAt,clearOfRoad}=H, stdMat=U.stdMat, vcMat=U.vcMat, D=Math.min(1,Q.density||1), DS=THREE.DoubleSide;
+  const SEC=(def.sectors||[]).map((s,k,a)=>Object.assign({},s,{i1:k+1<a.length?a[k+1].i0:N}));
+  const at=(k,f)=>{ const s=SEC[k]; return Math.min(N-1,Math.round(s.i0+(s.i1-s.i0)*f)); };
+  const wallAt=(i,sd)=>sd>0?P.wr[i]:P.wl[i], side=(i,sd,d,dy)=>ptAt(i,sd*(wallAt(i,sd)+d),dy||0);
+  const outSd=i=>{ let c=0; for(let k=-15;k<=15;k++) c+=P.curv[(i+k+N)%N]; return c>0?-1:1; };   /* the outside of the bend around sample i */
+  const face=(i,sd)=>Math.atan2(-sd*P.rx[i],-sd*P.rz[i]);   /* rotation that turns a +z face toward the road from side sd */
+  const ok=(x,z,m)=>clearOfRoad(x,z,m);
+  const scatterIn=(i0,i1,n,minD,maxD,margin,fn)=>{ const out=[]; let tries=0; n=Math.round(n*D); while(out.length<n&&tries<n*8){ tries++; const i=Math.floor(i0+rnd()*(i1-i0))%N, sd=rnd()<0.5?-1:1, d=rr(minD,maxD), q=side(i,sd,d); if(!ok(q[0],q[2],margin)) continue; const y=heightAt(q[0],q[2]); const r=fn(q[0],y,q[2],i,sd); if(r) out.push(r); } return out; };
+  const signTex=(lines,bg,border,w=1024,h=256)=>textPanelTex(lines,{w,h,bg,border});
+  const board=(i,sd,d,tex,w=12,h=6,leg=6)=>{ const q=side(i,sd,d), y=heightAt(q[0],q[2]); const g=new THREE.Group(); g.position.set(q[0],y,q[2]); g.rotation.y=face(i,sd)+(sd>0?-0.5:0.5); const dk=stdMat(0x222222);
+    const b=new THREE.Mesh(new THREE.BoxGeometry(w,h,0.3),[dk,dk,dk,dk,new THREE.MeshStandardMaterial({map:tex,roughness:0.6}),dk]); b.position.y=leg+h/2; b.castShadow=true; g.add(b);
+    [-w/3,w/3].forEach(px=>{ const p=new THREE.Mesh(new THREE.BoxGeometry(0.4,leg+1,0.4),stdMat(0x555555,{metalness:0.5})); p.position.set(px,(leg+1)/2-0.5,0); g.add(p); }); G.add(g); keep(g,20); return g; };
+  const NUM=['01','02','03','04','05','06','07','08'];
+  /* 17 km of scenery: instanced lists are cut into 600 m tiles and every tile or landmark further than ~1.5 km from the camera is hidden */
+  const cull=[]; const instanced=(geo,mat,list,cast=true,recv=false)=>{ const tiles=new Map(); list.forEach(o=>{ const k=Math.floor(o.x/600)+','+Math.floor(o.z/600); let a=tiles.get(k); if(!a){ a=[]; tiles.set(k,a); } a.push(o); });
+      const grp=new THREE.Group(); tiles.forEach(a=>{ const m=window.instanced(geo,mat,a,cast,recv); m.frustumCulled=false; let cx=0,cz=0; a.forEach(o=>{ cx+=o.x; cz+=o.z; }); cx/=a.length; cz/=a.length; cull.push({o:m,x:cx,z:cz,r:460}); grp.add(m); }); return grp; };
+  const keep=(o,r)=>{ o.updateMatrixWorld(true); const v=new THREE.Vector3(); o.getWorldPosition(v); cull.push({o,x:v.x,z:v.z,r:r||120}); return o; };
+  let cullT=0, cx0=1e9, cz0=1e9; W.updaters.push((dt)=>{ const c=GAME.camera.position; cullT-=dt; if(cullT>0&&Math.hypot(c.x-cx0,c.z-cz0)<120) return; cullT=0.3; cx0=c.x; cz0=c.z; for(const q of cull) q.o.visible=Math.hypot(q.x-c.x,q.z-c.z)-q.r<1500; });   /* also at once after a jump of the camera (respawn, replay) */
+  // ---------- everywhere: desert ground cover, scaled to the length of the lap ----------
+  const K=N/1400;
+  { const sag=saguaroGeo(); const notIn=(i,a)=>a.some(k=>SEC[k]&&i>=SEC[k].i0&&i<SEC[k].i1);
+    G.add(instanced(sag,vcMat,scatterIn(0,N,150*K,4,170,3,(x,y,z,i)=>notIn(i,[4,6])?null:{x,y:y-0.2,z,ry:rnd()*TAU,s:rr(0.8,1.6)})));
+    const rocks=[0,1,2].map(k=>rockGeo(k*10)), rockMat=new THREE.MeshStandardMaterial({color:0xa65a34,roughness:0.95,flatShading:true});
+    rocks.forEach(g=>G.add(instanced(g,rockMat,scatterIn(0,N,60*K,3,190,3,(x,y,z)=>{ const s=rr(0.8,5); return {x,y:y+s*0.1,z,ry:rnd()*TAU,s:[s*rr(1,1.8),s,s*rr(1,1.6)],c:pick([0xffffff,0xd8b8a0,0xc09070])}; }),true,true)));
+    const shrub=new THREE.IcosahedronGeometry(0.8,0); G.add(instanced(shrub,new THREE.MeshStandardMaterial({color:0x8a8a4a,roughness:1,flatShading:true}),scatterIn(0,N,260*K,1.5,140,1.5,(x,y,z)=>({x,y,z,s:[rr(0.6,1.4),rr(0.4,0.8),rr(0.6,1.4)],ry:rnd()*TAU})),false)); }
+  // ---------- district gantries: number and name in the district's colour ----------
+  SEC.forEach((s,k)=>{ if(k===0) return; const i=(s.i0+3)%N, R=Math.max(P.wl[i],P.wr[i])+1.2; const g=new THREE.Group(); g.position.set(P.x[i],P.y[i],P.z[i]); g.rotation.y=Math.atan2(P.tx[i],P.tz[i]);
+    const col=new THREE.Color(s.col).getHex(), pm=stdMat(0x2a2a2e,{metalness:0.4,roughness:0.5});
+    [-1,1].forEach(sd=>{ const p=new THREE.Mesh(new THREE.BoxGeometry(1.2,10,1.2),pm); p.position.set(sd*R,5,0); p.castShadow=true; g.add(p); });
+    const t=signTex([{text:NUM[k]+'  ·  '+s.name.toUpperCase(),font:'bold 92px "Chakra Petch", sans-serif',color:'#fff',y:0.42},{text:s.sub.toUpperCase(),font:'bold 44px "Chakra Petch", sans-serif',color:s.col,y:0.8}],'#16161a',s.col,2048,320);
+    const bm=new THREE.MeshBasicMaterial({map:t}); const beam=new THREE.Mesh(new THREE.BoxGeometry(2*R+1.2,3.2,0.6),[pm,pm,pm,pm,bm,pm]); beam.position.y=9.6; beam.rotation.y=Math.PI; g.add(beam);
+    const stripe=new THREE.Mesh(new THREE.BoxGeometry(2*R+1.4,0.35,0.7),stdMat(col)); stripe.position.y=7.85; g.add(stripe); G.add(g); });
+  // ---------- distance boards every kilometre ----------
+  { const L=N*P.spacing; for(let km=1;km<Math.floor(L/1000);km++){ const i=Math.round(km*1000/P.spacing)%N, sd=outSd(i), left=Math.round(L/1000-km);
+      board(i,sd,4,signTex([{text:left+' KM',font:'bold 150px "Chakra Petch", sans-serif',color:'#ff713d',y:0.45},{text:'TO THE FESTIVAL',font:'bold 40px "Chakra Petch", sans-serif',color:'#f2eadc',y:0.85}],'#1c1c20','#ff713d',512,256),4.4,2.2,1.6); } }
+  // ---------- 1 · CREATOR ROW: the Pepperbox paddock ----------
+  if(SEC[0]){ const s=SEC[0];
+    const roof=[],posts=[],flags=[]; for(let n=0;n<26;n++){ const i=at(0,0.04+n*0.012), sd=n%2?1:-1, q=side(i,sd,rr(9,16)); if(!ok(q[0],q[2],4)) continue; const y=heightAt(q[0],q[2]), ry=Math.atan2(P.tx[i],P.tz[i]);
+      roof.push({x:q[0],y:y+3.2,z:q[2],ry,s:[6,0.35,6],c:n%3?0xff713d:0x1b1b1f}); [[-2.8,-2.8],[2.8,-2.8],[2.8,2.8],[-2.8,2.8]].forEach(([a,b])=>posts.push({x:q[0]+Math.cos(ry)*a+Math.sin(ry)*b,y,z:q[2]-Math.sin(ry)*a+Math.cos(ry)*b,s:[0.12,3.2,0.12]})); }
+    G.add(instanced(new THREE.BoxGeometry(1,1,1),stdMat(0xffffff),roof,true)); G.add(instanced(new THREE.BoxGeometry(1,1,1).translate(0,0.5,0),stdMat(0x333333),posts,false));
+    for(let n=0;n<40;n++){ const i=at(0,0.02+n*0.02), sd=n%2?1:-1, q=side(i,sd,1.5); flags.push({x:q[0],y:q[1],z:q[2],ry:Math.atan2(P.tx[i],P.tz[i]),c:n%2?0xff713d:0x1b1b1f}); }
+    const fg=mergeGeos([new THREE.BoxGeometry(0.08,4.2,0.08).translate(0,2.1,0),new THREE.BoxGeometry(0.06,1.8,0.9).translate(0,3.2,0.45)]); G.add(instanced(fg,stdMat(0xffffff),flags,false));
+    for(let n=0;n<8;n++){ const id=pbNextShow(), t=new THREE.TextureLoader().load('models/props/pepperbox/'+id+'.jpg?v=1'); GFX.compat.srgb(t); t.anisotropy=8; const i=at(0,0.1+n*0.1); board(i,n%2?1:-1,6,t,12,6.75,5); } }
+  // ---------- 2 · DARK ROAST RUN: the roastery, copper silos, a giant mug, the bag boards ----------
+  if(SEC[1]){ const i=at(1,0.3), sd=outSd(i), q=side(i,sd,46), y=heightAt(q[0],q[2]); const g=new THREE.Group(); g.position.set(q[0],y,q[2]); g.rotation.y=face(i,sd); G.add(g); keep(g,60);
+    const blk=stdMat(0x18181b,{roughness:0.7}), cop=stdMat(0xb87333,{metalness:0.65,roughness:0.35});
+    const hall=new THREE.Mesh(new THREE.BoxGeometry(48,15,22),blk); hall.position.y=7.5; hall.castShadow=true; g.add(hall); const rf=new THREE.Mesh(new THREE.BoxGeometry(50,1.4,24),stdMat(0xb8875a)); rf.position.y=15.6; g.add(rf);
+    const st=signTex([{text:'DARK ROAST WORKS',font:'bold 120px "Chakra Petch", sans-serif',color:'#c9a66b',y:0.52}],'#18181b','#c9a66b',1024,192); const sn=new THREE.Mesh(new THREE.PlaneGeometry(30,5.6),new THREE.MeshBasicMaterial({map:st})); sn.position.set(0,10,11.05); g.add(sn);
+    for(let k=0;k<4;k++){ const si=new THREE.Mesh(new THREE.CylinderGeometry(3.4,3.4,20,18),cop); si.position.set(-15+k*10,10,-17); si.castShadow=true; g.add(si); const cn=new THREE.Mesh(new THREE.ConeGeometry(3.6,4,18),stdMat(0xc9ccd1,{metalness:0.6})); cn.position.set(-15+k*10,22,-17); g.add(cn); }
+    const ch=new THREE.Mesh(new THREE.CylinderGeometry(1.2,1.4,26,10),blk); ch.position.set(20,13,-6); g.add(ch); const smoke=glowSprite(0xd8d2c8,26,0.35); smoke.position.set(20,30,-6); g.add(smoke);
+    const j=at(1,0.62), sd2=outSd(j), m=side(j,sd2,30), my=heightAt(m[0],m[2]); const mug=new THREE.Group(); mug.position.set(m[0],my,m[2]); mug.rotation.y=face(j,sd2)+0.6; G.add(mug); keep(mug,20);
+    const body=new THREE.Mesh(new THREE.CylinderGeometry(8,7.2,17,28),stdMat(0x141416,{roughness:0.4})); body.position.y=9; body.castShadow=true; mug.add(body); const hd=new THREE.Mesh(new THREE.TorusGeometry(4.6,1.2,10,22,Math.PI),stdMat(0x141416,{roughness:0.4})); hd.rotation.z=-Math.PI/2; hd.position.set(8.4,9.5,0); mug.add(hd);
+    const cof=new THREE.Mesh(new THREE.CircleGeometry(7.3,28),stdMat(0x3b2416)); cof.rotation.x=-Math.PI/2; cof.position.y=17.2; mug.add(cof); const plinth=new THREE.Mesh(new THREE.CylinderGeometry(11,12,1.6,28),stdMat(0x8d6a4a)); plinth.position.y=0.4; mug.add(plinth);
+    [0,1,2].forEach(n=>{ const sp=glowSprite(0xf2efe8,9,0.28); sp.position.set(rr(-2,2),21+n*5,rr(-2,2)); mug.add(sp); });
+    for(let n=0;n<6;n++){ const t=new THREE.TextureLoader().load('models/props/brcc/board'+(n+1)+'.jpg?v=1'); GFX.compat.srgb(t); t.anisotropy=8; board(at(1,0.08+n*0.15),n%2?1:-1,8,t,16,8,5); } }
+  // ---------- 3 · THE PROVING GROUNDS: earth berms, steel targets, a viewing tower ----------
+  if(SEC[2]){ const berm=[],tg=[],posts=[]; for(let n=0;n<9;n++){ const i=at(2,0.06+n*0.105), sd=outSd(i), q=side(i,sd,34), ry=Math.atan2(P.tx[i],P.tz[i]); if(!ok(q[0],q[2],16)) continue; const y=heightAt(q[0],q[2]);
+      berm.push({x:q[0],y:y-1,z:q[2],ry,s:[16,6,60]}); for(let k=0;k<4;k++){ const a=-22+k*14, d2=12; const tx=q[0]+Math.sin(ry)*a+Math.cos(ry)*sd*d2*(P.rx[i]*Math.cos(ry)>=0?1:1), tz=q[2]+Math.cos(ry)*a; const bx=tx+P.rx[i]*sd*12, bz=tz+P.rz[i]*sd*12, by=heightAt(bx,bz);
+        tg.push({x:bx,y:by+1.6,z:bz,ry,s:[1.1,1.8,0.12],c:k%2?0xf2eadc:0xff713d}); posts.push({x:bx,y:by,z:bz,s:[0.12,1.6,0.12]}); } }
+    const bg=new THREE.CylinderGeometry(0.5,1,1,4,1); bg.rotateY(Math.PI/4); bg.translate(0,0.5,0); G.add(instanced(bg,stdMat(0x9c7a52,{flatShading:true,roughness:1}),berm,true,true));
+    G.add(instanced(new THREE.BoxGeometry(1,1,1),stdMat(0xffffff,{metalness:0.4}),tg,true)); G.add(instanced(new THREE.BoxGeometry(1,1,1).translate(0,0.5,0),stdMat(0x444444),posts,false));
+    const i=at(2,0.5), sd=-outSd(i), q=side(i,sd,22), y=heightAt(q[0],q[2]); const tw=new THREE.Group(); tw.position.set(q[0],y,q[2]); tw.rotation.y=face(i,sd); G.add(tw); keep(tw,15);
+    [[-3,-3],[3,-3],[3,3],[-3,3]].forEach(([a,b])=>{ const l=new THREE.Mesh(new THREE.BoxGeometry(0.5,16,0.5),stdMat(0x4b5320)); l.position.set(a,8,b); tw.add(l); });
+    const cab=new THREE.Mesh(new THREE.BoxGeometry(9,5,9),stdMat(0x4b5320)); cab.position.y=18.5; cab.castShadow=true; tw.add(cab); const gl=new THREE.Mesh(new THREE.BoxGeometry(9.2,1.8,9.2),stdMat(0x1d2630,{metalness:0.6,roughness:0.2})); gl.position.y=19; tw.add(gl);
+    board(at(2,0.03),1,6,signTex([{text:'THE PROVING GROUNDS',font:'bold 96px "Chakra Petch", sans-serif',color:'#f2eadc',y:0.42},{text:'HOT RANGE · STAY ON THE ROAD',font:'bold 46px "Chakra Petch", sans-serif',color:'#ff713d',y:0.8}],'#4b5320','#f2eadc'),14,3.5,3); }
+  // ---------- 4 · BRASS RIDGE: outcrops and a radio mast at the top ----------
+  if(SEC[3]){ const rk=rockGeo(77), rm=new THREE.MeshStandardMaterial({color:0xb4643a,roughness:0.95,flatShading:true}); G.add(instanced(rk,rm,scatterIn(SEC[3].i0,SEC[3].i1,40,8,90,6,(x,y,z)=>{ const s=rr(5,14); return {x,y:y+s*0.2,z,ry:rnd()*TAU,s:[s*rr(1,1.6),s*rr(0.8,1.4),s*rr(1,1.5)]}; }),true,true));
+    let top=SEC[3].i0; for(let i=SEC[3].i0;i<SEC[4].i1;i++) if(P.y[i]>P.y[top]) top=i; const sd=outSd(top), q=side(top,sd,30), y=heightAt(q[0],q[2]); const mg=new THREE.Group(); mg.position.set(q[0],y,q[2]); G.add(mg); keep(mg,30);
+    for(let k=0;k<4;k++){ const seg=new THREE.Mesh(new THREE.CylinderGeometry(1.6-k*0.3,1.9-k*0.3,14,3,1,true),new THREE.MeshStandardMaterial({color:k%2?0xd8262b:0xf2eadc,wireframe:true})); seg.position.y=7+k*14; mg.add(seg); }
+    const lt=glowSprite(0xff3030,8,0.9); lt.position.y=58; mg.add(lt); W.updaters.push((dt,t)=>{ lt.material.opacity=Math.sin(t*3)>0?0.95:0.15; });
+    board(at(3,0.04),outSd(at(3,0.04)),6,signTex([{text:'BRASS RIDGE',font:'bold 130px "Chakra Petch", sans-serif',color:'#f0cb65',y:0.45},{text:'205 M SUMMIT · LOW GEAR',font:'bold 44px "Chakra Petch", sans-serif',color:'#f2eadc',y:0.82}],'#3b1f12','#f0cb65'),14,3.5,3); }
+  // ---------- 5 · ECHO CANYON: sandstone walls both sides, an arch over the road ----------
+  if(SEC[4]){ const s=SEC[4], cl=[], rk=rockGeo(31), cm=new THREE.MeshStandardMaterial({color:0xc0703f,roughness:0.95,flatShading:true});
+    for(let i=s.i0+20;i<s.i1-20;i+=7){ [-1,1].forEach(sd=>{ const d=rr(14,26), q=side(i,sd,d); if(!ok(q[0],q[2],9)) return; const y=heightAt(q[0],q[2]), h=rr(22,60); cl.push({x:q[0],y:y-4,z:q[2],ry:rnd()*TAU,s:[rr(9,15),h,rr(9,15)],c:pick([0xffffff,0xe8c9a8,0xd9a982])}); }); }
+    G.add(instanced(rk,cm,cl,true,true));
+    const i=at(4,0.45), R=Math.max(P.wl[i],P.wr[i])+7; const arch=new THREE.Mesh(new THREE.TorusGeometry(R,4.2,8,30,Math.PI),cm); const p=arch.geometry.attributes.position; for(let v=0;v<p.count;v++){ const x=p.getX(v),y=p.getY(v),z=p.getZ(v); const n=0.8+0.45*vnoise(x*0.3+3,y*0.3+z); p.setXYZ(v,x+(x/R)*n*0.8,y+n,z*n*1.4); } arch.geometry.computeVertexNormals();
+    arch.position.set(P.x[i],P.y[i]-3,P.z[i]); arch.rotation.y=Math.atan2(P.tx[i],P.tz[i]); arch.scale.set(1,1.15,1); arch.castShadow=true; G.add(arch); keep(arch,40); }
+  // ---------- 6 · HANGAR STRAIGHT: a retired runway, hangars, a tower, parked planes ----------
+  if(SEC[5]){ const s=SEC[5]; let best=s.i0, bc=1e9; for(let i=s.i0+60;i<s.i1-300;i+=10){ let c=0; for(let k=0;k<280;k+=10) c+=Math.abs(P.curv[(i+k)%N]); if(c<bc){ bc=c; best=i; } }
+    const i=(best+140)%N, sd=outSd(i), ry=Math.atan2(P.tx[i],P.tz[i]), q=side(i,sd,95), y=heightAt(q[0],q[2]);
+    const rt=canvasTex(256,1024,(g,w,h)=>{ g.fillStyle='#4a4846'; g.fillRect(0,0,w,h); g.fillStyle='rgba(255,255,255,0.85)'; for(let k=0;k<h;k+=64) g.fillRect(w/2-3,k,6,34); g.fillRect(6,0,4,h); g.fillRect(w-10,0,4,h); for(let k=0;k<8;k++) g.fillRect(24+k*26,10,14,70); });
+    const rw=new THREE.Mesh(new THREE.PlaneGeometry(46,900),new THREE.MeshStandardMaterial({map:rt,roughness:0.9})); rw.rotation.x=-Math.PI/2; rw.rotation.z=-ry; rw.position.set(q[0],y+0.12,q[2]); rw.receiveShadow=true; G.add(rw);
+    const hm=stdMat(0x9aa3a8,{metalness:0.5,roughness:0.45}); for(let k=0;k<3;k++){ const j=(i-160+k*110+N)%N, h=side(j,sd,150), hy=heightAt(h[0],h[2]); const hg=new THREE.Mesh(new THREE.CylinderGeometry(15,15,40,22,1,false,0,Math.PI),hm); hg.rotation.z=Math.PI/2; hg.rotation.y=ry; hg.position.set(h[0],hy,h[2]); hg.castShadow=true; G.add(hg);
+      const dr=new THREE.Mesh(new THREE.PlaneGeometry(22,11),stdMat(0x2a2a2e,{side:DS})); dr.position.set(h[0]-sd*P.rx[j]*0.1,hy+5.5,h[2]); dr.rotation.y=ry; G.add(dr); }
+    const tq=side((i+260)%N,sd,60), ty=heightAt(tq[0],tq[2]); const tw=new THREE.Group(); tw.position.set(tq[0],ty,tq[2]); G.add(tw); const sh=new THREE.Mesh(new THREE.CylinderGeometry(2.2,3,22,10),stdMat(0xe9dcc5)); sh.position.y=11; tw.add(sh);
+    const cb=new THREE.Mesh(new THREE.CylinderGeometry(5,4,4,10),stdMat(0x1d2630,{metalness:0.6,roughness:0.2})); cb.position.y=24; tw.add(cb); const cr=new THREE.Mesh(new THREE.CylinderGeometry(5.6,5.6,0.8,10),stdMat(0xff713d)); cr.position.y=26.4; tw.add(cr);
+    const pl=[]; for(let k=0;k<4;k++){ const j=(i-60+k*70+N)%N, a=side(j,sd,128); pl.push({x:a[0],y:heightAt(a[0],a[2])+1.6,z:a[2],ry:ry+Math.PI/2+rr(-0.4,0.4),c:pick([0xf2eadc,0xff713d,0x75bfc6])}); }
+    const plane=mergeGeos([new THREE.CylinderGeometry(1.2,0.9,13,10).rotateZ(Math.PI/2),new THREE.BoxGeometry(2.4,0.3,15).translate(0.6,0.2,0),new THREE.BoxGeometry(1.4,2.4,0.2).translate(-5.8,1.4,0),new THREE.BoxGeometry(1.2,0.2,5).translate(-5.8,0.4,0)]); G.add(instanced(plane,stdMat(0xffffff,{metalness:0.3,roughness:0.5}),pl,true));
+    board(at(5,0.03),outSd(at(5,0.03)),6,signTex([{text:'HANGAR STRAIGHT',font:'bold 110px "Chakra Petch", sans-serif',color:'#75bfc6',y:0.45},{text:'RETIRED RUNWAY 09 / 27',font:'bold 44px "Chakra Petch", sans-serif',color:'#f2eadc',y:0.82}],'#1c2a30','#75bfc6'),14,3.5,3); }
+  // ---------- 7 · RIDGEBACK TRAIL: pines, a quarry, a steel bridge ----------
+  if(SEC[6]){ const s=SEC[6], dark=coneTreeGeo(0x163a1c), light=coneTreeGeo(0x22502a);
+    const trees=scatterIn(s.i0,s.i1,1300,3,120,4,(x,y,z)=>({x,y:y-0.3,z,ry:rnd()*TAU,s:rr(2.4,4.6)})); G.add(instanced(dark,vcMat,trees.filter((t,k)=>k%2===0),true)); G.add(instanced(light,vcMat,trees.filter((t,k)=>k%2===1),true));
+    const i=at(6,0.7), sd=outSd(i), q=side(i,sd,70), y=heightAt(q[0],q[2]); const qm=stdMat(0x8d8478,{flatShading:true}); for(let k=0;k<4;k++){ const r=new THREE.Mesh(new THREE.CylinderGeometry(42-k*9,42-k*9,4,20,1,true),qm); r.position.set(q[0],y-2-k*4,q[2]); G.add(r); }
+    const pit=new THREE.Mesh(new THREE.CircleGeometry(15,20),stdMat(0x6f6658)); pit.rotation.x=-Math.PI/2; pit.position.set(q[0],y-17.5,q[2]); G.add(pit);
+    const b0=at(6,0.4), bn=Math.round(80/P.spacing), tm=stdMat(0x5b6b74,{metalness:0.6,roughness:0.4}), beams=[]; [-1,1].forEach(sd2=>{ for(let k=0;k<bn;k+=3){ const j=(b0+k)%N, a=side(j,sd2,0.2), ry=Math.atan2(P.tx[j],P.tz[j]); beams.push({x:a[0],y:a[1]+4,z:a[2],ry,s:[0.4,0.4,P.spacing*3.1]}); beams.push({x:a[0],y:a[1]+2,z:a[2],ry,s:[0.3,4,0.3]}); } });
+    G.add(instanced(new THREE.BoxGeometry(1,1,1),tm,beams,true)); }
+  // ---------- 8 · LAST CALL: grandstands full of fans, festival tents, a ferris wheel by the finish ----------
+  if(SEC[7]){ const s=SEC[7]; const {bodySit,skinSit,bodyUp,skinUp}=fanGeos(); const ROWS=7, WD=30, steps=[]; for(let r=0;r<ROWS;r++){ const b=new THREE.BoxGeometry(WD,0.9,1.5); b.translate(0,1.4+r*0.9,r*1.5+0.75); steps.push(b); } const base=new THREE.BoxGeometry(WD,1.4,ROWS*1.5); base.translate(0,0.7,ROWS*0.75); steps.push(base);
+    const stands=[],bodies=[],skins=[],ub=[],us=[]; const shirts=[0xff713d,0x1b1b1f,0xf2eadc,0xc4aedb,0x75bfc6,0xd5a75f], sk=[0xf1c9a5,0xe0ac82,0xc68a5c,0x9a6238,0x6b4226];
+    for(let n=0;n<10;n++){ const i=Math.round(s.i1-30-n*20)%N, sd=n%2?1:-1, q=side(i,sd,3.5), ry=face(i,sd)+Math.PI; if(!ok(q[0],q[2],1.5)) continue; const y=heightAt(q[0],q[2]); stands.push({x:q[0],y,z:q[2],ry});
+      const fx=Math.sin(ry), fz=Math.cos(ry), rx=Math.cos(ry), rz=-Math.sin(ry); for(let r=0;r<ROWS;r++) for(let k=-WD/2+0.8;k<WD/2-0.5;k+=1.0){ if(rnd()>0.7) continue; const o={x:q[0]+rx*k+fx*(r*1.5+0.9),y:y+1.85+r*0.9-0.42,z:q[2]+rz*k+fz*(r*1.5+0.9),ry:ry+Math.PI,s:1};
+        if(rnd()<0.25){ ub.push(Object.assign({c:pick(shirts)},o)); us.push(Object.assign({c:pick(sk)},o)); } else { bodies.push(Object.assign({c:pick(shirts)},o)); skins.push(Object.assign({c:pick(sk)},o)); } } }
+    G.add(instanced(mergeGeos(steps),stdMat(0x3a3a40),stands,true)); const pm=new THREE.MeshStandardMaterial({color:0xd6d6d6,vertexColors:true,roughness:0.85}); G.add(instanced(bodySit,pm,bodies,false)); G.add(instanced(skinSit,pm,skins,false));
+    const cg=new THREE.Group(); cg.add(instanced(bodyUp,pm,ub,false)); cg.add(instanced(skinUp,pm,us,false)); G.add(cg); W.updaters.push((dt,t)=>{ cg.position.y=Math.abs(Math.sin(t*5))*0.14; });
+    const tents=[]; for(let n=0;n<14;n++){ const i=at(7,0.1+n*0.05), sd=n%2?1:-1, q=side(i,sd,rr(20,40)); if(!ok(q[0],q[2],6)) continue; tents.push({x:q[0],y:heightAt(q[0],q[2]),z:q[2],ry:rnd()*TAU,s:[rr(6,9),rr(4,6),rr(6,9)],c:pick(shirts)}); }
+    const tg=new THREE.ConeGeometry(0.75,1,4,1); tg.rotateY(Math.PI/4); tg.translate(0,0.5,0); G.add(instanced(tg,stdMat(0xffffff,{flatShading:true}),tents,true));
+    const i=(N-120)%N, sd=outSd(i), q=side(i,sd,60), y=heightAt(q[0],q[2]); const fw=new THREE.Group(); fw.position.set(q[0],y+24,q[2]); fw.rotation.y=Math.atan2(P.tx[i],P.tz[i]); G.add(fw); keep(fw,40); const wheel=new THREE.Group(); fw.add(wheel);
+    const rm=stdMat(0xf2eadc,{metalness:0.3}); wheel.add(new THREE.Mesh(new THREE.TorusGeometry(20,0.5,6,48),rm)); for(let k=0;k<12;k++){ const sp=new THREE.Mesh(new THREE.BoxGeometry(0.3,40,0.3),rm); sp.rotation.z=k*Math.PI/12; wheel.add(sp); const cab=new THREE.Mesh(new THREE.BoxGeometry(2.4,2.4,2.4),stdMat([0xff713d,0x75bfc6,0xc4aedb,0xd5a75f][k%4])); cab.position.set(Math.cos(k*TAU/12)*20,Math.sin(k*TAU/12)*20,0); cab.userData.k=k; wheel.add(cab); }
+    [-1,1].forEach(z=>{ const l=new THREE.Mesh(new THREE.BoxGeometry(0.8,26,0.8),stdMat(0x444444)); l.position.set(0,-12,z*4); l.rotation.x=z*0.15; fw.add(l); });
+    W.updaters.push((dt,t)=>{ wheel.rotation.z=t*0.12; wheel.children.forEach(c=>{ if(c.userData.k!==undefined) c.rotation.z=-wheel.rotation.z; }); });
+    for(let n=0;n<4;n++){ const id=pbNextShow(), t=new THREE.TextureLoader().load('models/props/pepperbox/'+id+'.jpg?v=1'); GFX.compat.srgb(t); t.anisotropy=8; board(at(7,0.15+n*0.15),n%2?-1:1,8,t,12,6.75,5); } }
 }
 // ===== KNIFEHAND ARENA (theme 'arena'): a science-fiction megadome, far larger than any building could be, with a whole
 // district inside it. Far away: stacked crowd tiers and a lattice roof swept round an ellipse. Near the track: hovering
@@ -4433,7 +4578,7 @@ let GP_TRACKS=rollGPTracks();
 function esc(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function drawTrackThumb(cv,def){
   const g=cv.getContext('2d'), w=cv.width,h=cv.height;
-  const th=THEMES[def.theme]; const bgs={revolution:['#ffd6a8','#2d4f86'],country:['#ffc98a','#4f7fc4'],dusk:['#ff9a6a','#2c2f78'],city:['#f5c98a','#3f86d8'],desert:['#f0b27a','#c2562a'],coast:['#ffbe86','#1c5a8a'],night:['#3d1656','#05041a'],space:['#5a1a8a','#05010f'],oval:['#ffc48a','#3a74c8'],rally:['#b89a6a','#2f4a2a'],arena:['#f2c61a','#4b5320']}[def.sky||def.theme];
+  const th=THEMES[def.theme]; const bgs={revolution:['#ffd6a8','#2d4f86'],country:['#ffc98a','#4f7fc4'],dusk:['#ff9a6a','#2c2f78'],city:['#f5c98a','#3f86d8'],desert:['#f0b27a','#c2562a'],coast:['#ffbe86','#1c5a8a'],night:['#3d1656','#05041a'],space:['#5a1a8a','#05010f'],oval:['#ffc48a','#3a74c8'],rally:['#b89a6a','#2f4a2a'],arena:['#f2c61a','#4b5320'],journey:['#f6d6ae','#3a7fd0']}[def.sky||def.theme];
   const gr=g.createLinearGradient(0,0,0,h); gr.addColorStop(0,bgs[1]); gr.addColorStop(1,bgs[0]); g.fillStyle=gr; g.fillRect(0,0,w,h);
   if(!def._thumb){ const P=buildTrackPath(def); def._thumb={x:Array.from(P.x),z:Array.from(P.z),y:Array.from(P.y),h:Array.from(P.hidden),s0:P.route?P.route.york:0}; }
   const T=def._thumb; let a=1e9,b=-1e9,c=1e9,d=-1e9; T.x.forEach((x,i)=>{a=Math.min(a,x);b=Math.max(b,x);c=Math.min(c,T.z[i]);d=Math.max(d,T.z[i]);});
