@@ -2585,12 +2585,17 @@ function buildPuzzleScenery(W,def,P,Q,H,U){
   const lookBack=(x,z,i)=>{ const v=(i-26+N)%N; return Math.atan2(P.x[v]-x,P.z[v]-z); };   /* turn a +z face toward a driver 50 m up the road */
   const scatterIn=(i0,i1,n,minD,maxD,margin,fn)=>{ const out=[]; let tries=0; n=Math.round(n*D); while(out.length<n&&tries<n*8){ tries++; const i=Math.floor(i0+rnd()*(i1-i0))%N, sd=rnd()<0.5?-1:1, d=rr(minD,maxD), q=side(i,sd,d); if(!ok(q[0],q[2],margin)) continue; const r=fn(q[0],hy(q[0],q[2]),q[2],i,sd); if(r) out.push(r); } return out; };
   const signTex=(lines,bg,border,w=1024,h=256)=>textPanelTex(lines,{w,h,bg,border});
-  // distance culling: instanced lists in 600 m tiles; tiles and landmarks more than ~1.5 km from the camera are hidden
-  const cull=[]; const instanced=(geo,mat,list,cast=true,recv=false)=>{ const tiles=new Map(); list.forEach(o=>{ const k=Math.floor(o.x/600)+','+Math.floor(o.z/600); let a=tiles.get(k); if(!a){ a=[]; tiles.set(k,a); } a.push(o); });
-      const grp=new THREE.Group(); tiles.forEach(a=>{ const m=window.instanced(geo,mat,a,cast,recv); m.frustumCulled=false; let cx=0,cz=0; a.forEach(o=>{ cx+=o.x; cz+=o.z; }); cx/=a.length; cz/=a.length; cull.push({o:m,x:cx,z:cz,r:460}); grp.add(m); }); return grp; };
+  // distance culling: instanced lists in 1.2 km tiles; tiles and landmarks more than ~1.25 km from the camera are hidden
+  const cull=[]; const instanced=(geo,mat,list,cast=true,recv=false)=>{ const tiles=new Map(); list.forEach(o=>{ const k=Math.floor(o.x/1200)+','+Math.floor(o.z/1200); let a=tiles.get(k); if(!a){ a=[]; tiles.set(k,a); } a.push(o); });
+      const grp=new THREE.Group(); tiles.forEach(a=>{ const m=window.instanced(geo,mat,a,cast,recv); m.frustumCulled=false; let cx=0,cz=0; a.forEach(o=>{ cx+=o.x; cz+=o.z; }); cx/=a.length; cz/=a.length; cull.push({o:m,x:cx,z:cz,r:850}); grp.add(m); }); return grp; };
   const keep=(o,r)=>{ o.updateMatrixWorld(true); const v=new THREE.Vector3(); o.getWorldPosition(v); cull.push({o,x:v.x,z:v.z,r:r||120}); return o; };
-  let cullT=0, cx0=1e9, cz0=1e9; W.updaters.push((dt)=>{ const c=GAME.camera.position; cullT-=dt; if(cullT>0&&Math.hypot(c.x-cx0,c.z-cz0)<120) return; cullT=0.3; cx0=c.x; cz0=c.z; for(const q of cull) q.o.visible=Math.hypot(q.x-c.x,q.z-c.z)-q.r<1500; });
-  const grp=(x,z,ry,r)=>{ const g=new THREE.Group(); g.position.set(x,hy(x,z),z); g.rotation.y=ry||0; G.add(g); keep(g,r||60); return g; };
+  let cullT=0, cx0=1e9, cz0=1e9; W.updaters.push((dt)=>{ const c=GAME.camera.position; cullT-=dt; if(cullT>0&&Math.hypot(c.x-cx0,c.z-cz0)<120) return; cullT=0.3; cx0=c.x; cz0=c.z; for(const q of cull) q.o.visible=Math.hypot(q.x-c.x,q.z-c.z)-q.r<1250; });
+  const bakeL=[]; const grp=(x,z,ry,r)=>{ const g=new THREE.Group(); g.position.set(x,hy(x,z),z); g.rotation.y=ry||0; G.add(g); keep(g,r||60); bakeL.push(g); return g; };
+  /* merge a group's direct, single-material, non-animated meshes into one mesh per material (hundreds of small parts would be hundreds of draw calls) */
+  const bake=g=>{ g.updateMatrixWorld(true); const inv=new THREE.Matrix4().copy(g.matrixWorld).invert(), by=new Map(), drop=[];
+    g.children.forEach(m=>{ if(!m.isMesh||Array.isArray(m.material)||m.userData.anim) return; const geo=m.geometry.clone(); geo.applyMatrix4(new THREE.Matrix4().multiplyMatrices(inv,m.matrixWorld)); let a=by.get(m.material); if(!a){ a=[]; by.set(m.material,a); } a.push(geo); drop.push(m); });
+    by.forEach((list,mat)=>{ if(list.length<2) return; }); drop.forEach(m=>{ const l=by.get(m.material); if(l.length>=2) g.remove(m); });
+    by.forEach((list,mat)=>{ if(list.length<2) return; const mm=new THREE.Mesh(mergeGeos(list),mat); mm.castShadow=true; mm.receiveShadow=true; g.add(mm); }); };
   const mesh=(geo,mat,g,x,y,z)=>{ const m=new THREE.Mesh(geo,mat); m.position.set(x||0,y||0,z||0); m.castShadow=true; g.add(m); return m; };
   const mats={}; const M=(c,o)=>{ const k=c+JSON.stringify(o||{}); return mats[k]||(mats[k]=stdMat(c,Object.assign({roughness:0.6},o||{}))); };
   /* a roadside board facing the oncoming driver */
@@ -2611,7 +2616,7 @@ function buildPuzzleScenery(W,def,P,Q,H,U){
     const col=new THREE.Color(s.col).getHex(), pm=M(0x1b3f8b,{metalness:0.3});
     [-1,1].forEach(sd=>{ mesh(new THREE.BoxGeometry(1.3,10,1.3),pm,g,sd*R,5,0); const pc=mesh(puzzleGeo(3.2,0.8),M(PZC[(k+(sd>0?1:2))%4]),g,sd*R,11.6,0); pc.rotation.y=Math.PI/2; });
     const t=signTex([{text:s.name.toUpperCase(),font:'bold 100px "Chakra Petch", sans-serif',color:'#fff',y:0.42},{text:s.sub.toUpperCase(),font:'bold 46px "Chakra Petch", sans-serif',color:s.col,y:0.8}],'#1b3f8b',s.col,2048,320);
-    const beam=mesh(new THREE.BoxGeometry(2*R+1.4,3.2,0.6),[pm,pm,pm,pm,new THREE.MeshBasicMaterial({map:t}),pm],g,0,9.6,0); beam.rotation.y=Math.PI; });
+    const beam=mesh(new THREE.BoxGeometry(2*R+1.4,3.2,0.6),[pm,pm,pm,pm,new THREE.MeshBasicMaterial({map:t}),pm],g,0,9.6,0); beam.rotation.y=Math.PI; bakeL.push(g); });
   // ---------- distance boards every kilometre (the Math Mile ones are prime-checked) ----------
   { const L=N*P.spacing, prime=n=>{ if(n<2) return false; for(let d=2;d*d<=n;d++) if(n%d===0) return false; return true; };
     for(let km=1;km<Math.floor(L/1000);km++){ const i=Math.round(km*1000/P.spacing)%N, left=Math.round(L/1000-km);
@@ -2629,10 +2634,10 @@ function buildPuzzleScenery(W,def,P,Q,H,U){
       const t=canvasTex(256,256,(g2,w,h)=>{ g2.fillStyle=PZH[k%4]; g2.fillRect(0,0,w,h); g2.fillStyle=k%4===1?'#1b3f8b':'#fff'; g2.font='bold 220px "Chakra Petch", sans-serif'; g2.textAlign='center'; g2.textBaseline='middle'; g2.fillText(digits[k],w/2,h/2+10); });
       const bm=new THREE.MeshStandardMaterial({map:t,roughness:0.6}); mesh(new THREE.BoxGeometry(4.5,4.5,4.5),bm,g,0,2.25,0); }
     const sol=[new THREE.TetrahedronGeometry(7),new THREE.BoxGeometry(9,9,9),new THREE.OctahedronGeometry(7),new THREE.DodecahedronGeometry(7),new THREE.IcosahedronGeometry(7)], names=['TETRAHEDRON · 4 FACES','CUBE · 6 FACES','OCTAHEDRON · 8 FACES','DODECAHEDRON · 12 FACES','ICOSAHEDRON · 20 FACES'], spin=[];
-    sol.forEach((geo,k)=>{ const i=at(1,0.42+k*0.1), sd=-1, q=side(i,sd,18), g=grp(q[0],q[2],lookBack(q[0],q[2],i),20); mesh(new THREE.CylinderGeometry(4,5,4,8),M(0xe9e6da),g,0,2,0); const m=mesh(geo,M(PZC[k%4],{flatShading:true,roughness:0.4}),g,0,13,0); spin.push(m);
+    sol.forEach((geo,k)=>{ const i=at(1,0.42+k*0.1), sd=-1, q=side(i,sd,18), g=grp(q[0],q[2],lookBack(q[0],q[2],i),20); mesh(new THREE.CylinderGeometry(4,5,4,8),M(0xe9e6da),g,0,2,0); const m=mesh(geo,M(PZC[k%4],{flatShading:true,roughness:0.4}),g,0,13,0); m.userData.anim=true; spin.push(m);
       const nt=signTex([{text:names[k],font:'bold 64px "Chakra Petch", sans-serif',color:'#1b3f8b',y:0.55}],'#ffffff','#1b3f8b',1024,128); mesh(new THREE.PlaneGeometry(9,1.1),new THREE.MeshBasicMaterial({map:nt}),g,0,2.2,5.05); });
     W.updaters.push((dt,t)=>{ spin.forEach((m,k)=>{ m.rotation.y=t*0.5+k; m.rotation.x=t*0.3; }); });
-    { const i=at(1,0.3), R=Math.max(P.wl[i],P.wr[i])+1.5, g=new THREE.Group(); g.position.set(P.x[i],P.y[i],P.z[i]); g.rotation.y=Math.atan2(P.tx[i],P.tz[i]); G.add(g); keep(g,30); const fm=M(0x8a5a32);
+    { const i=at(1,0.3), R=Math.max(P.wl[i],P.wr[i])+1.5, g=new THREE.Group(); g.position.set(P.x[i],P.y[i],P.z[i]); g.rotation.y=Math.atan2(P.tx[i],P.tz[i]); G.add(g); keep(g,30); bakeL.push(g); const fm=M(0x8a5a32);
       [-1,1].forEach(sd=>mesh(new THREE.BoxGeometry(1.4,17,1.4),fm,g,sd*R,8.5,0)); mesh(new THREE.BoxGeometry(2*R+2,1.2,1.6),fm,g,0,17,0); mesh(new THREE.BoxGeometry(2*R+2,1.2,1.6),fm,g,0,8,0);
       const bead=new THREE.SphereGeometry(0.95,12,8); bead.scale(1,0.75,1); for(let r=0;r<4;r++){ const y=9.6+r*1.8; mesh(new THREE.CylinderGeometry(0.12,0.12,2*R,6).rotateZ(Math.PI/2),M(0xd8d0c0,{metalness:0.5}),g,0,y,0); for(let b=0;b<10;b++){ const x=-R+1.4+b*2.05+(b>=5+r?R*0.6:0); if(x>R-1) continue; mesh(bead,M(PZC[(r+(b<5?0:2))%4]),g,x,y,0); } } }
     { const i=at(1,0.85), sd=-outSd(i), q=side(i,sd,28), g=grp(q[0],q[2],lookBack(q[0],q[2],i),40); const pts=[]; const ph=(1+Math.sqrt(5))/2; for(let k=0;k<=90;k++){ const a=k/90*3.5*Math.PI, r=0.6*Math.pow(ph,a/(Math.PI/2)); pts.push(new THREE.Vector3(Math.cos(a)*r,24+Math.sin(a)*r,0)); }
@@ -2725,7 +2730,9 @@ function buildPuzzleScenery(W,def,P,Q,H,U){
       const R=GAME.race, c=R&&R.player; if(!c||R.W!==W||R.state!=='race') return;
       for(const o of tokens){ if(o.got) continue; if(Math.hypot(c.x-o.x,c.z-o.z)<4.2&&Math.abs(c.y-o.y)<3){ o.got=true; o.m.visible=false; o.gl.visible=false; found++; c.giveBoost(1.0); R.sfx('pickup');
           R.game.ui.flash(found===tokens.length?'ALL '+tokens.length+' GOLDEN PIECES!':'GOLDEN PIECE '+found+' / '+tokens.length,'#ffc83a',1.6); if(found===tokens.length) for(let n=0;n<60;n++) R.fx.sparks.emit(c.x,c.y+2,c.z,rr(-8,8),rr(4,12),rr(-8,8),1,0.85,0.2,1,0.5,1.2,1,3,6); } } }); }
+  bakeL.forEach(bake);
 }
+
 // ===== KNIFEHAND ARENA (theme 'arena'): a science-fiction megadome, far larger than any building could be, with a whole
 // district inside it. Far away: stacked crowd tiers and a lattice roof swept round an ellipse. Near the track: hovering
 // grandstands full of colonials (rv_troops, lowest LOD), a hovering LED board with the Department's lines, light gates,
