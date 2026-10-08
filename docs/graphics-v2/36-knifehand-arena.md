@@ -24,8 +24,9 @@ automatically (every track with `laps:20`).
 An ode to old racing games. At the end of the Old Quarter street the road bends left into the infield; straight on is one more brick
 house, number 9 3/4, the only one with no windows. `buildTrackPath` walks the straight-on line from the sample at `cp,f` until it leaves the road: that is the wall
 point. A human driver who arrives within 5 m of it, pointing at it (within 15 degrees) and doing more than 10 m/s, is carried
-on rails along a cubic curve through a brick tunnel and put back on the road at the outside of the U-turn (`cpx,fx`), at the
-speed they went in (minimum 27 m/s). Bricks fly, the screen says PLATFORM 9 3/4.
+on rails along a cubic curve through a brick passage, braking on the way out, and put back on the road part-way round the
+U-turn (`cpx:21,fx:0.55`) at `vOut` (23 m/s), slow enough to make the rest of the turn. The door is slid back until no part
+of it is on the road, the passage starts where both its walls are clear of the road, and the way out is an open archway. Bricks fly, the screen says PLATFORM 9 3/4.
 
 - It cuts 150 m of road (the infield hairpin) down to about 55 m: roughly 4 seconds a lap.
 - AI cars never take it (`c.isPlayer` only, and not under autopilot).

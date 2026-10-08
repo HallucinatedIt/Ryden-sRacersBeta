@@ -272,7 +272,7 @@ const TRACK_DATA = [
   note:'Always 20 laps. No car bonuses here: every car runs stock. Item boxes and boost pads are live.',
   theme:'arena', laps:20, shoulder:2.6, noPerks:true, gp:false,
   points:knifePoints(),
-  shortcut:{cp:13,f:0,cpx:21,fx:0,name:'9 3/4'},
+  shortcut:{cp:13,f:0,cpx:21,fx:0.55,vOut:23,name:'9 3/4'},   /* vOut: speed the car is handed back at, low enough to make the rest of the U-turn */
   jumps:[{cp:0,f:0.4,len:16,h:1.9,gap:0,name:'DIRECTIVE ONE'}], boosts:[{cp:22,f:0.5,lat:0},{cp:8,f:0.1,lat:15.5},{cp:8,f:0.1,lat:-15.5}], items:[{cp:1,f:0.7},{cp:7,f:0.2}],
   medians:[{cp:7,f:0.55,len:100,w:20}],
 },
@@ -384,7 +384,7 @@ function buildTrackPath(def){
       const lat=(ex-P.x[bj])*P.rx[bj]+(ez-P.z[bj])*P.rz[bj]; iE=bj; if(Math.abs(lat)>=(lat<0?P.wl[bj]:P.wr[bj])-0.2) break; }
     const near=q=>Math.hypot(P.x[iX]+P.rx[iX]*q-ex,P.z[iX]+P.rz[iX]*q-ez), sd=near(4)<near(-4)?1:-1;   /* the tunnel arrives on the side of the road that faces the wall */
     const ol=sd*(P.w[iX]/2-4), px=P.x[iX]+P.rx[iX]*ol, pz=P.z[iX]+P.rz[iX]*ol, ax=P.tx[iX], az=P.tz[iX];
-    P.sc={iS,iE,iX,ex,ez,dx,dz,px,pz,ax,az,lat:ol,y:P.y[iE],y1:P.y[iX],skip:(iX-iE+N)%N,
+    P.sc={iS,iE,iX,ex,ez,dx,dz,px,pz,ax,az,lat:ol,y:P.y[iE],y1:P.y[iX],skip:(iX-iE+N)%N,vOut:sc.vOut||99,
       /* cubic from (x0,z0) leaving along (dx,dz) to (px,pz) arriving along the road */
       curve(x0,z0){ const L=Math.hypot(px-x0,pz-z0), k=L*0.42; return {x0,z0,x1:x0+dx*k,z1:z0+dz*k,x2:px-ax*k,z2:pz-az*k,x3:px,z3:pz,len:L*1.06}; },
       at(c,t,o){ const u=1-t, a=u*u*u, b=3*u*u*t, d=3*u*t*t, e=t*t*t; o.x=a*c.x0+b*c.x1+d*c.x2+e*c.x3; o.z=a*c.z0+b*c.z1+d*c.z2+e*c.z3;
@@ -2647,11 +2647,15 @@ function buildArenaScenery(W,def,P,Q,H,U){
         if(nearTunnel(mx,mz,Math.max(wd,dp)/2)||tooClose(mx,mz,dp/2+1,i)||placed.some(h=>Math.hypot(h[0]-mx,h[1]-mz)<(h[2]+Math.max(wd,dp))/2+0.5)) continue; placed.push([mx,mz,Math.max(wd,dp)]); house(q[0],q[1],q[2],nx,nz,wd,ht,dp,nums[nq++%nums.length]); } };
     row(P.idxAt(12,0.15),P.idxAt(14,0.2),OUT,7); row(P.idxAt(12,0.3),P.idxAt(13,0.75),-OUT,7); row(P.idxAt(14,0.3),P.idxAt(20,0.5),OUT,7); row(P.idxAt(21,0.3),P.idxAt(22,0.6),OUT,7);
     // number 9 3/4: a plain brick front right on the road, the same as its neighbours but with no windows
-    const dpF=10; house(SC.ex-SC.dx*0.9,SC.y,SC.ez-SC.dz*0.9,-SC.dx,-SC.dz,13,13.2,dpF,(def.shortcut.name||'9 3/4'),true);
+    /* the front of 9 3/4 sits where the straight-on line meets the wall, slid back until no part of it is on the road */
+    const offRoad=(x,z,m)=>H.clearOfRoad(x,z,m), rX=SC.dz, rZ=-SC.dx; let sb=0.9; for(;sb<9;sb+=0.3){ const fx=SC.ex+SC.dx*(sb-0.9)*0+SC.dx*(sb-0.9), fz=SC.ez+SC.dz*(sb-0.9); const okC=[-6.6,-3.3,0,3.3,6.6].every(l=>offRoad(fx+rX*l,fz+rZ*l,0.15)); if(okC) break; }
+    const dpF=10; house(SC.ex+SC.dx*(sb-0.9)-SC.dx*0.9,SC.y,SC.ez+SC.dz*(sb-0.9)-SC.dz*0.9,-SC.dx,-SC.dz,13,13.2,dpF,(def.shortcut.name||'9 3/4'),true); W.scFront=sb-0.9;
     // the passage behind it: brick, lit, along the same curve the car is carried on, open where it meets the road again
     const k=k0, HW=6, HT=5.6, L=[],Rr=[],C=[];
     for(let q=0;q<=40;q++){ const t=q/40; SC.at(k,t,o); let bd=1e9,bj=SC.iX; for(let d=-40;d<=12;d++){ const j=(SC.iX+d+N)%N, dd=Math.hypot(o.x-P.x[j],o.z-P.z[j]); if(dd<bd){ bd=dd; bj=j; } } const lat=(o.x-P.x[bj])*P.rx[bj]+(o.z-P.z[bj])*P.rz[bj];
-      if(t>0.3&&Math.abs(lat)<(lat<0?P.wl[bj]:P.wr[bj])+HW*0.6) break; const hl=Math.hypot(o.hx,o.hz), rx=o.hz/hl, rz=-o.hx/hl; L.push([o.x-rx*HW,o.z-rz*HW]); Rr.push([o.x+rx*HW,o.z+rz*HW]); C.push([o.x,o.z,o.hx/hl,o.hz/hl]); }
+      if(t>0.3&&Math.abs(lat)<(lat<0?P.wl[bj]:P.wr[bj])+HW*0.6) break; const hl=Math.hypot(o.hx,o.hz), rx=o.hz/hl, rz=-o.hx/hl;
+      if(t<0.3&&!(H.clearOfRoad(o.x-rx*(HW+0.6),o.z-rz*(HW+0.6),0.15)&&H.clearOfRoad(o.x+rx*(HW+0.6),o.z+rz*(HW+0.6),0.15))) continue;   /* near the door the road is still beside it: start the passage once both walls are off the road */
+      L.push([o.x-rx*HW,o.z-rz*HW]); Rr.push([o.x+rx*HW,o.z+rz*HW]); C.push([o.x,o.z,o.hx/hl,o.hz/hl]); }
     const strip=(a,ya,bb,yb,mat)=>{ const pos=[],uv=[],idx=[]; let u=0; for(let q=0;q<a.length;q++){ if(q) u+=Math.hypot(a[q][0]-a[q-1][0],a[q][1]-a[q-1][1])/3.2; pos.push(a[q][0],ya,a[q][1],bb[q][0],yb,bb[q][1]); uv.push(u,0,u,(yb-ya)/3.2||1.75); if(q<a.length-1){ const w=q*2; idx.push(w,w+1,w+2,w+1,w+3,w+2); } }
       const g=new THREE.BufferGeometry(); g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3)); g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2)); g.setIndex(idx); g.computeVertexNormals(); G.add(new THREE.Mesh(g,mat)); };
     if(L.length>2){ const bm=new THREE.MeshBasicMaterial({map:brick,side:DS,color:0xd8d2c8}), om=new THREE.MeshStandardMaterial({map:brick,side:DS,roughness:0.9}), rm=new THREE.MeshBasicMaterial({color:0x3a332e,side:DS}), y0=SC.y-0.4;
@@ -2659,7 +2663,12 @@ function buildArenaScenery(W,def,P,Q,H,U){
       /* outside it reads as a long brick mill, taller than the passage */
       const Lo=C.map(q=>[q[0]-q[3]*(HW+0.5),q[1]+q[2]*(HW+0.5)]), Ro=C.map(q=>[q[0]+q[3]*(HW+0.5),q[1]-q[2]*(HW+0.5)]); strip(Lo,y0,Lo,SC.y+11,om); strip(Ro,y0,Ro,SC.y+11,om); strip(Lo,SC.y+11,Ro,SC.y+11,roofM);
       const lamps=C.filter((q,n)=>n%3===1).map(q=>({x:q[0],y:SC.y+HT-0.25,z:q[1],ry:Math.atan2(q[2],q[3]),s:[0.5,0.12,2.2]})); G.add(instanced(new THREE.BoxGeometry(1,1,1),glow(0xfff2c8),lamps,false));
-      const e=C[C.length-1]; house(e[0]+e[2]*0.5,SC.y1,e[1]+e[3]*0.5,e[2],e[3],13,11,1.2,'12 3/4',true); }
+      const e=C[C.length-1]; let eb=0.5; for(;eb>-8;eb-=0.3){ const fx=e[0]+e[2]*eb, fz=e[1]+e[3]*eb; if([-6.6,-3.3,0,3.3,6.6].every(l=>H.clearOfRoad(fx+e[3]*l,fz-e[2]*l,0.15))) break; } /* the way out is an open brick archway (a solid front here would be a wall in your face from inside) */
+        { const g=new THREE.Group(); g.position.set(e[0]+e[2]*eb,SC.y1,e[1]+e[3]*eb); g.rotation.y=Math.atan2(e[2],e[3]); const pt=brick.clone(); pt.needsUpdate=true; pt.repeat.set(1,3); const pm=new THREE.MeshStandardMaterial({map:pt,roughness:0.9});
+          [-1,1].forEach(sd=>{ const pr=new THREE.Mesh(new THREE.BoxGeometry(2.2,11,2.2),pm); pr.position.set(sd*(HW+1.4),5.5-0.4,0); pr.castShadow=true; g.add(pr); });
+          const lt=brick.clone(); lt.needsUpdate=true; lt.repeat.set(5,1); const li=new THREE.Mesh(new THREE.BoxGeometry(2*HW+5,4.6,2.2),new THREE.MeshStandardMaterial({map:lt,roughness:0.9})); li.position.set(0,HT+2.3,0); g.add(li);
+          const cap=new THREE.Mesh(new THREE.BoxGeometry(2*HW+5.6,0.6,2.6),stone); cap.position.set(0,HT+4.9,0); g.add(cap); const nl=new THREE.Mesh(new THREE.BoxGeometry(2*HW+5.6,0.18,0.18),neon); nl.position.set(0,HT+5.3,1.3); g.add(nl);
+          const sg=new THREE.Mesh(new THREE.BoxGeometry(4.4,2.2,0.25),[stdMat(0x222222),stdMat(0x222222),stdMat(0x222222),stdMat(0x222222),new THREE.MeshBasicMaterial({map:plate('12 3/4')}),stdMat(0x222222)]); sg.position.set(0,HT+2.3,1.25); g.add(sg); G.add(g); } }
     // street furniture: gas-lamp posts with a cold light, and an arch over the way in
     const lp=[],lh=[]; for(let i=P.idxAt(12,0.2);((P.idxAt(13,0.6)-i+N)%N)<N/2&&i!==P.idxAt(13,0.6);i=(i+6)%N){ [-1,1].forEach(sd=>{ const q=ptAt(i,sd*((sd>0?P.wr[i]:P.wl[i])+0.7),0); lp.push({x:q[0],y:q[1],z:q[2],s:[0.16,5,0.16]}); lh.push({x:q[0],y:q[1]+5.1,z:q[2],s:0.42}); }); }
     G.add(instanced(new THREE.BoxGeometry(1,1,1).translate(0,0.5,0),stdMat(0x1c1d21),lp,false)); G.add(instanced(new THREE.SphereGeometry(1,8,6),glow(0xfff2c8),lh,false));
@@ -3661,11 +3670,11 @@ class Race{
   // that was cut off are credited so the lap still counts.
   scEnter(c){ const S=this.P.sc; c.sc={k:S.curve(c.x,c.z),t:0,v:Math.max(c.speed,27)}; c.drifting=false; c.spin=0; c.vy=0; this.scUsed=(this.scUsed||0)+1;
     if(c.isPlayer){ this.sfx('boost'); this.shake(0.35); this.game.ui.flash('PLATFORM 9 3/4','#f2c61a',1.4); } if(this.W.scBurst) this.W.scBurst(0,c); }
-  scStep(c,dt){ const S=this.P.sc, P=this.P, N=P.N, o=c.sc, q=Race._sq||(Race._sq={}); o.t+=o.v*dt/o.k.len;
-    if(o.t>=1){ c.sc=null; c.place(S.iX,S.lat); c.vF=o.v; c.vx=Math.sin(c.h)*o.v; c.vz=Math.cos(c.h)*o.v; c.ghost=Math.max(c.ghost,0.6);
+  scStep(c,dt){ const S=this.P.sc, P=this.P, N=P.N, o=c.sc, q=Race._sq||(Race._sq={}); const v=lerp(o.v,Math.min(o.v,S.vOut),smooth01((o.t-0.35)/0.6)); o.t+=v*dt/o.k.len;   /* brake on the way out of the tunnel */
+    if(o.t>=1){ c.sc=null; c.place(S.iX,S.lat); const vo=Math.min(o.v,S.vOut); c.vF=vo; c.vx=Math.sin(c.h)*vo; c.vz=Math.cos(c.h)*vo; c.ghost=Math.max(c.ghost,0.6);
       if(!this.route){ const NCP=this.cpIdx.length; for(let g=0;g<NCP;g++){ if(((this.cpIdx[c.cp]-S.iE+N)%N)<=S.skip && c.cp!==0){ c.cp=(c.cp+1)%NCP; c.cpCount++; } else break; } }
       if(this.W.scBurst) this.W.scBurst(1,c); if(c.isPlayer) this.shake(0.2); return; }
-    S.at(o.k,o.t,q); c.x=q.x; c.z=q.z; c.y=lerp(S.y,S.y1,o.t); c.h=Math.atan2(q.hx,q.hz); c.vx=Math.sin(c.h)*o.v; c.vz=Math.cos(c.h)*o.v; c.vy=0; c.vF=o.v; c.vS=0; c.yaw=0; c.grounded=true; c.offroad=false; c.offroadRaw=false;
+    S.at(o.k,o.t,q); c.x=q.x; c.z=q.z; c.y=lerp(S.y,S.y1,o.t); c.h=Math.atan2(q.hx,q.hz); c.vx=Math.sin(c.h)*v; c.vz=Math.cos(c.h)*v; c.vy=0; c.vF=v; c.vS=0; c.yaw=0; c.grounded=true; c.offroad=false; c.offroadRaw=false;
     if(c.ghost>0) c.ghost-=dt; if(c.shield>0) c.shield-=dt; if(c.itemCD>0) c.itemCD-=dt; }
   onLap(c){
     if(c.finished) return;   // a finished car that keeps circulating must not finish again (20-lap races: the leader can lap once more before the player is home)
