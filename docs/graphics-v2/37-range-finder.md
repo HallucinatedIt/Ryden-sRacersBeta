@@ -4,8 +4,8 @@ Asked for by players. A fourth item in the item boxes on every track. Using it p
 screen for the rest of the race: it appears big in the centre of the screen for 1.4 s, then slides up under the timer and
 counts down to zero at the flag.
 
-- `ITEMS.range` (◎, yellow). `Race.rollItem` gives it only to the human driver (20 % of rolls) and only until it has been used
-  once in that race; the AI never rolls it.
+- `ITEMS.range` (◎, yellow). `Race.rollItem` gives it only to the human driver: 1 in 4 per item box and certain by the third box,
+  once per race; the AI never rolls it.
 - `Race.useItem` sets `R.rangeOn`; `UI.hud` shows `#distBox`, then adds `.dock` and pins it under `#timeBox` (re-measured every
   frame, so it follows screen size and rotation).
 - `Race.distLeft(c)`: metres along the road. Normal tracks: laps still to run x lap length + what is left of the current lap
@@ -17,3 +17,5 @@ counts down to zero at the flag.
 Checked by simulation: PepperBox Raceway, 20 laps: 16,942 m at the start, exactly one lap (847 m) less at each line, 0 at the
 flag, never more than 1.4 m per frame. Knifehand Arena: 20,400 m, 1,020 m per lap. Revolution: 12,923 m including the opening,
 4,168 m per circuit lap.
+
+The How to Play page lists it with the other items.

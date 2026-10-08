@@ -3452,7 +3452,7 @@ function segDist(px,py,pz,ax,ay,az,bx,by,bz){ const vx=bx-ax,vy=by-ay,vz=bz-az; 
 const NCP=12, DT=1/120, MUD_TIRE_TIME=5;
 const DIFFS={easy:{base:0.9,rb:0.05,label:'Easy'},normal:{base:1.0,rb:0.1,label:'Normal'},hard:{base:1.07,rb:0.18,label:'Hard'}};
 // range: the Range Finder (asked for by players). Using it puts the exact distance left in the race on screen for the rest of
-// the race: it appears big in the centre, then docks under the timer and counts down. Only the human driver can roll it, once.
+// the race: it appears big in the centre, then docks under the timer and counts down. Only the human driver gets it: a 1 in 4 chance per item box, and certain by the third box, once per race.
 const ITEMS={nitro:{name:'Nitro Cell',icon:'⚡',col:'#22e4ff'},aegis:{name:'Aegis Bubble',icon:'◈',col:'#7ff6ff'},slick:{name:'Glaze Slick',icon:'◍',col:'#ff4fb0'},range:{name:'Range Finder',icon:'◎',col:'#f2c61a'}};
 class Race{
   constructor(game,opt){
@@ -3681,7 +3681,7 @@ class Race{
     if(c.isPlayer && c.lap>1 && this.practice){ const lt=c.lapTimes[c.lapTimes.length-1]; this.sfx('lap'); this.game.ui.flash('LAP '+fmtTime(lt)+(lt<=c.bestLap+1e-6?' · BEST':''),'#22e4ff'); return; }
     if(c.isPlayer && c.lap>1){ if(c.lap===this.laps){ this.sfx('final'); this.game.ui.flash('FINAL LAP','#ff2e97'); } else { this.sfx('lap'); this.game.ui.flash('LAP '+c.lap+' / '+this.laps,'#22e4ff'); } }
   }
-  rollItem(c){ if(c.isPlayer && !this.rangeOn && Math.random()<0.2) return 'range'; const r=Math.random(), pos=c.rank/8;
+  rollItem(c){ if(c.isPlayer && !this.rangeOn && c.item!=='range'){ this.rangeRolls=(this.rangeRolls||0)+1; if(this.rangeRolls>=3||Math.random()<0.25) return 'range'; }   /* the Range Finder is certain by the player's third item box */ const r=Math.random(), pos=c.rank/8;
     const wN=0.2+0.6*pos, wA=0.35-0.15*pos, wS=0.45-0.3*pos; const t=wN+wA+wS; const x=r*t; return x<wN?'nitro':x<wN+wA?'aegis':'slick'; }
   useItem(c){
     const it=c.item; c.item=null;
