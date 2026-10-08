@@ -280,7 +280,7 @@ const TRACK_DATA = [
   // One-lap endurance track: 17.2 km through eight districts, 5-7 minutes. Route designed outside the game (Last Round Rally design pack:
   // control points from its track-definition.json, sector sample ranges from its route-samples.json, which this builder reproduces).
   // theme 'journey': high desert, the land follows the road (naturalHeightFn), districts dressed by buildJourneyScenery.
-  id:'last_round', name:'Last Round Rally', place:'Pepperbox Proving Grounds',
+  id:'last_round', name:'Last Round Rally', place:'Pepperbox Proving Grounds', hidden:true,
   blurb:'One lap. Eight districts. Seventeen kilometres: out of the Pepperbox paddock, past the Dark Roast works, through the proving grounds, up Brass Ridge, down Echo Canyon, across the airfield and the pine quarry, and home to the festival. You see every stretch once.',
   note:'One lap, 5 to 7 minutes. No car bonuses here: every car runs stock. Item boxes and boost pads are live.',
   theme:'journey', laps:1, noPerks:true, gp:false, shoulder:3, terrainFollow:true,
@@ -298,6 +298,8 @@ function smooth01(t){ t=Math.max(0,Math.min(1,t)); return t*t*(3-2*t); }
 // records and leaderboards are kept per course revision so a redesigned layout never mixes with old times
 function trackKey(t){ return t&&t.rev>1 ? t.id+'_r'+t.rev : (t&&t.id); }
 // account-exclusive tracks: locked unless a racer account is signed in (checked at every entry point: menus, race launch, practice, Grand Prix, Race constructor)
+// hidden:true keeps a track out of every menu while it is being rebuilt (?hidden=1 shows it for testing)
+function trackHidden(t){ return !!(t&&t.hidden) && !/[?&]hidden=1/.test(location.search); }
 function trackLocked(t){ return !!(t&&t.account) && !(typeof GAME!=='undefined'&&GAME&&GAME.online&&GAME.online.hasAccess()); }
 const UNLOCK_ID='revolution';
 function buildTrackPath(def){
@@ -4451,7 +4453,7 @@ class UI{
   onlineHints(){ const g=this.g, u=g.online.user; const jb=$('joinBanner'); if(jb) jb.style.display=u?'none':'flex';
     const lh=$('lbHint'); if(lh){ if(g.sel.diff!=='hard') lh.innerHTML='🏆 Online leaderboard counts <b>Hard</b> races only'; else if(!u) lh.innerHTML='🏆 Hard race: <b>log in</b> to post your time online (it’s saved until you do)'; else lh.innerHTML='✓ Hard race · your time will post to the online leaderboard as <b>'+esc(u)+'</b>'; } }
   buildBoardTabs(){ if(this.bSel==null) this.bSel={track:trackKey(TRACK_DATA[this.g.sel.track]),kind:'race'}; const el=$('bTracks');
-    el.innerHTML=TRACK_DATA.map(t=>`<button data-t="${trackKey(t)}" class="${trackKey(t)===this.bSel.track?'on':''}">${t.name}</button>`).join('');
+    el.innerHTML=TRACK_DATA.filter(t=>!trackHidden(t)).map(t=>`<button data-t="${trackKey(t)}" class="${trackKey(t)===this.bSel.track?'on':''}">${t.name}</button>`).join('');
     el.querySelectorAll('button').forEach(b=>b.onclick=()=>{ this.bSel.track=b.dataset.t; this.g.audio.play('blip'); this.buildBoardTabs(); this.loadBoard(); });
     $('bKind').querySelectorAll('button').forEach(b=>{ b.classList.toggle('on',b.dataset.k===this.bSel.kind); b.onclick=()=>{ this.bSel.kind=b.dataset.k; this.g.audio.play('blip'); this.buildBoardTabs(); this.loadBoard(); }; }); }
   async loadBoard(){
@@ -4481,8 +4483,8 @@ class UI{
     [...$('carDots').children].forEach((d,k)=>d.classList.toggle('on',k===this.g.sel.vehicle));
   }
   buildTracks(){
-    const el=$('tList'); el.innerHTML='';
-    TRACK_DATA.forEach((t,i)=>{ const b=Store.get('best_'+trackKey(t),{});
+    const el=$('tList'); el.innerHTML=''; if(trackHidden(TRACK_DATA[this.g.sel.track])) this.g.sel.track=0;
+    TRACK_DATA.forEach((t,i)=>{ if(trackHidden(t)) return; const b=Store.get('best_'+trackKey(t),{});
       const d=document.createElement('div'); d.className='tcard'; d.dataset.i=i;
       const lk=trackLocked(t); if(t.account) d.classList.add('acct'); if(lk) d.classList.add('locked');
       d.innerHTML=`<canvas width="144" height="108"></canvas><div><h3>${esc(t.name)}</h3><div class="pl">${t.place}</div><div class="rec">${lk?'🔒 CREATE AN ACCOUNT TO UNLOCK':(t.account?'★ ACCOUNT EXCLUSIVE · ':'')+(lk?'':`RACE ${fmtTime(b.race)} · LAP ${fmtTime(b.lap)}`)}</div></div>${lk?'<i class="lock">🔒</i>':''}`;
@@ -4501,7 +4503,7 @@ class UI{
     const badge=t.hard?'<span class="badge" style="background:#ff3b3b;color:#fff">HARDEST</span>':t.id==='country'?'<span class="badge" style="background:var(--gold);color:#1a1000">NEW</span>':'';
     $('tInfo').innerHTML=`<h2>${t.name}${badge}</h2><div class="pl">${t.place}</div><p>${t.blurb}</p>${t.note?`<p class="hint" style="text-align:left;margin:4px 0 8px;text-transform:none;letter-spacing:.02em;color:#ffd23f">${t.note}</p>`:''}<div class="stats"><span>Length <b>${(P/1000).toFixed(2)} km</b></span><span>Laps <b>${t.laps}</b></span>${feats.length?`<span>${feats.join(' · ')}</span>`:''}</div><div class="stats" style="margin-top:6px"><span>Best race <b>${fmtTime(b.race)}</b></span><span>Best lap <b>${fmtTime(b.lap)}</b></span></div>`; }
   records(){
-    $('recList').innerHTML=TRACK_DATA.map(t=>{ const b=Store.get('best_'+trackKey(t),{}); return `<div style="display:flex;justify-content:space-between;gap:10px;padding:10px 4px;border-bottom:1px solid rgba(255,255,255,.08)"><div><div style="font-family:var(--disp);font-size:20px;font-style:italic">${t.name}</div><div class="hint" style="margin:0;text-align:left">${t.place}${t.rev>1?' · new layout':''}</div>${(()=>{ if(!(t.rev>1)) return ''; const o=Store.get('best_'+t.id,{}); return (o.race!=null||o.lap!=null)?`<div class="hint" style="margin:2px 0 0;text-align:left;letter-spacing:.06em;text-transform:none">Original layout: race ${fmtTime(o.race)} · lap ${fmtTime(o.lap)}</div>`:''; })()}</div><div style="text-align:right;font-size:13px;letter-spacing:.06em"><div>RACE <b style="color:var(--gold)">${fmtTime(b.race)}</b> <span style="color:var(--dim)">${b.raceCar||''}</span></div><div>LAP <b style="color:var(--cyan)">${fmtTime(b.lap)}</b> <span style="color:var(--dim)">${b.lapCar||''}</span></div></div></div>`; }).join('');
+    $('recList').innerHTML=TRACK_DATA.filter(t=>!trackHidden(t)).map(t=>{ const b=Store.get('best_'+trackKey(t),{}); return `<div style="display:flex;justify-content:space-between;gap:10px;padding:10px 4px;border-bottom:1px solid rgba(255,255,255,.08)"><div><div style="font-family:var(--disp);font-size:20px;font-style:italic">${t.name}</div><div class="hint" style="margin:0;text-align:left">${t.place}${t.rev>1?' · new layout':''}</div>${(()=>{ if(!(t.rev>1)) return ''; const o=Store.get('best_'+t.id,{}); return (o.race!=null||o.lap!=null)?`<div class="hint" style="margin:2px 0 0;text-align:left;letter-spacing:.06em;text-transform:none">Original layout: race ${fmtTime(o.race)} · lap ${fmtTime(o.lap)}</div>`:''; })()}</div><div style="text-align:right;font-size:13px;letter-spacing:.06em"><div>RACE <b style="color:var(--gold)">${fmtTime(b.race)}</b> <span style="color:var(--dim)">${b.raceCar||''}</span></div><div>LAP <b style="color:var(--cyan)">${fmtTime(b.lap)}</b> <span style="color:var(--dim)">${b.lapCar||''}</span></div></div></div>`; }).join('');
   }
   // ---------- race HUD ----------
   raceStart(R){ $('miniName').textContent=R.def.name; $('icName').textContent=R.def.name; $('icPlace').textContent=R.def.place; this.introCard(true); $('hUnit').textContent=this.g.S.units==='mph'?'MPH':'KM/H';
