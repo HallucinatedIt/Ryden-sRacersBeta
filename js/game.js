@@ -62,7 +62,7 @@ function rallyPoints(){ const S=0.88, W=16; return [
 // infield hairpin and a U-turn back onto the start straight. The west leg points straight at a brick wall (see def.shortcut).
 function knifePoints(){ const W=16; return [
   [-40,-95],[40,-95],[112,-92],[152,-62,2],[162,0,6,18],[144,60,9.5,20],[102,90,11,22],[52,95,11,36],[5,95,11,46],[-50,95,11,46],[-100,94,10,36],[-142,84,7,26],[-172,52,3,19],
-  [-178,8],[-168,-20],[-138,-28],[-112,-30],[-97,-45],[-112,-61],[-130,-62],[-141,-64],[-152,-79],[-137,-95],[-90,-95]
+  [-178,8,0,18],[-168,-20,0,18],[-138,-28],[-112,-30],[-97,-45],[-112,-61],[-130,-62],[-141,-64],[-152,-79],[-137,-95],[-90,-95]
  ].map(p=>[p[0],p[1],p[2]||0,p[3]||W]); }
 // Oval control points: two straights (S) and two half circles (R), driven counter-clockwise (left turns), 40 points by arc
 // length starting 55 % along the front straight.
@@ -273,7 +273,7 @@ const TRACK_DATA = [
   theme:'arena', laps:20, shoulder:2.6, noPerks:true, gp:false,
   points:knifePoints(),
   shortcut:{cp:13,f:0,cpx:21,fx:0,name:'9 3/4'},
-  jumps:[{cp:0,f:0.35,len:14,h:2.6,gap:0,name:'DIRECTIVE ONE'}], boosts:[{cp:22,f:0.5,lat:0},{cp:8,f:0.1,lat:15.5},{cp:8,f:0.1,lat:-15.5}], items:[{cp:1,f:0.7},{cp:12,f:0.3}],
+  jumps:[{cp:0,f:0.4,len:16,h:1.9,gap:0,name:'DIRECTIVE ONE'}], boosts:[{cp:22,f:0.5,lat:0},{cp:8,f:0.1,lat:15.5},{cp:8,f:0.1,lat:-15.5}], items:[{cp:1,f:0.7},{cp:7,f:0.2}],
   medians:[{cp:7,f:0.55,len:100,w:20}],
 },
 ];
@@ -2605,7 +2605,7 @@ function buildArenaScenery(W,def,P,Q,H,U){
   // ---------- DeptKnifehands.com painted on the road ----------
   { const t=canvasTex(2048,512,(g,w,h)=>{ g.clearRect(0,0,w,h); g.fillStyle='rgba(242,198,26,0.95)'; g.textAlign='center'; g.textBaseline='middle'; let fs=260; g.font='bold '+fs+'px "Chakra Petch", sans-serif'; while(g.measureText('DeptKnifehands.com').width>w-60){ fs-=6; g.font='bold '+fs+'px "Chakra Petch", sans-serif'; } g.fillText('DeptKnifehands.com',w/2,h/2+10); }); t.anisotropy=16;
     const dm=new THREE.MeshBasicMaterial({map:t,transparent:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-3,polygonOffsetUnits:-3});
-    [[23,0.75,0],[1,0.75,0],[5,0.9,0],[8,0.35,1],[8,0.35,-1],[12,0.5,0],[19,0.4,0]].forEach(q=>{ const i=P.idxAt(q[0],q[1]), md=P.median[i], wd=md>1?(P.w[i]/2-md)-2.5:P.w[i]-3.5, lat=md>1?q[2]*(md+(P.w[i]/2-md)/2):0, L=22;
+    [[23,0.1,0],[1,0.75,0],[5,0.9,0],[8,0.35,1],[8,0.35,-1],[12,0.5,0],[19,0.4,0]].forEach(q=>{ const i=P.idxAt(q[0],q[1]), md=P.median[i], wd=md>1?(P.w[i]/2-md)-2.5:P.w[i]-3.5, lat=md>1?q[2]*(md+(P.w[i]/2-md)/2):0, L=22;
       /* a strip that follows the road for L metres, so it sits flat on slopes; the bottom of the lettering is toward oncoming cars */
       const n=Math.round(L/P.spacing), pos=[],uv=[],idx=[]; for(let k=0;k<=n;k++){ const j=(i+k)%N, a=ptAt(j,lat-wd/2,0.05), bb=ptAt(j,lat+wd/2,0.05); pos.push(...a,...bb); uv.push(0,k/n,1,k/n); if(k<n){ const w=k*2; idx.push(w,w+2,w+1,w+1,w+2,w+3); } }
       const g=new THREE.BufferGeometry(); g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3)); g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2)); g.setIndex(idx); const m=new THREE.Mesh(g,dm); m.material.side=DS; m.renderOrder=2; G.add(m); }); }
