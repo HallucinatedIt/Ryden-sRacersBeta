@@ -19,3 +19,4 @@ route from an outside design pack, retired before it was rebuilt; its leaderboar
 | secret | five golden puzzle pieces near the edge of the road (Math Mile, Train Town, Space Ridge, Block City, Quiet Garden). Drive through one: a small boost and GOLDEN PIECE n / 5; all five: a shower of sparks |
 | cost | about 750k triangles and 290 draw calls in view. Instanced scenery in 1.2 km tiles, tiles and landmarks more than about 1.25 km away hidden; static landmark parts merged into one mesh per material |
 | leaderboard | `puzzle` must be allowed in `race_results_track_check`; floor: race (and lap) >= 240 s |
+| even CPUs | `evenCpu:true` (this track only): a CPU car's top speed is capped at the player's car top speed. Skill and catch-up bonuses can lower it but never raise it; boosts and pads still work. Cornering and AI lines unchanged. Other tracks are not affected |

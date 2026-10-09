@@ -450,7 +450,7 @@ body:not(.racing) #chapterTag{display:none}
 
 <div class="screen" id="records">
   <div class="title">Records</div>
-  <div class="panel" id="recList" style="margin-top:14px;width:min(620px,94vw)"></div>
+  <div class="panel" id="recList" style="margin-top:14px;width:min(620px,94vw);max-height:62vh;overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain"></div>
   <div class="row" style="margin-top:16px"><div class="btn small" data-act="back"><span>Back</span></div><div class="btn small" data-act="clearRec"><span>Clear records</span></div></div>
 </div>
 
@@ -562,28 +562,28 @@ body:not(.racing) #chapterTag{display:none}
 <script>(function(){ var want=/[?&]three=r128/.test(location.search), gl2=false;
   try{ var c=document.createElement('canvas'), g=window.WebGL2RenderingContext&&c.getContext('webgl2'); gl2=!!g; if(g){ var x=g.getExtension('WEBGL_lose_context'); if(x) x.loseContext(); } }catch(e){}
   window.RR_THREE=(want||!gl2)?'r128':'r186';
-  if(window.RR_THREE==='r128') document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script><script src="js/vendor/GLTFLoader.r128.js?v=20261008d"><\/script>');
-  else document.write('<script src="js/vendor/three.r186.min.js?v=20261008d"><\/script>'); })();</script>
+  if(window.RR_THREE==='r128') document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script><script src="js/vendor/GLTFLoader.r128.js?v=20261008e"><\/script>');
+  else document.write('<script src="js/vendor/three.r186.min.js?v=20261008e"><\/script>'); })();</script>
 <!-- Graphics V2 (js/gfx/*): compat, settings, renderer, lighting, environment, materials, post, assets, perf overlay, benchmark. See docs/graphics-v2/ -->
-<script src="js/gfx/compat.js?v=20261008d"></script>
-<script src="js/gfx/settings.js?v=20261008d"></script>
-<script src="js/gfx/renderer.js?v=20261008d"></script>
-<script src="js/gfx/lighting.js?v=20261008d"></script>
-<script src="js/gfx/environment.js?v=20261008d"></script>
-<script src="js/gfx/materials.js?v=20261008d"></script>
-<script src="js/gfx/post.js?v=20261008d"></script>
-<script src="js/gfx/sky.js?v=20261008d"></script>
-<script src="js/gfx/road.js?v=20261008d"></script>
-<script src="js/gfx/decals.js?v=20261008d"></script>
-<script src="js/gfx/lod.js?v=20261008d"></script>
-<script src="js/gfx/scatter.js?v=20261008d"></script>
-<script src="js/gfx/roadside.js?v=20261008d"></script>
-<script src="js/gfx/vehicles.js?v=20261008d"></script>
-<script src="js/gfx/nightfx.js?v=20261008d"></script>
-<script src="js/gfx/showroom.js?v=20261008d"></script>
-<script src="js/gfx/v2.js?v=20261008d"></script>
-<script src="js/gfx/assets.js?v=20261008d"></script>
-<script src="js/gfx/perf.js?v=20261008d"></script>
-<script src="js/gfx/benchmark.js?v=20261008d"></script>
-<script src="js/game.js?v=20261008d"></script>
+<script src="js/gfx/compat.js?v=20261008e"></script>
+<script src="js/gfx/settings.js?v=20261008e"></script>
+<script src="js/gfx/renderer.js?v=20261008e"></script>
+<script src="js/gfx/lighting.js?v=20261008e"></script>
+<script src="js/gfx/environment.js?v=20261008e"></script>
+<script src="js/gfx/materials.js?v=20261008e"></script>
+<script src="js/gfx/post.js?v=20261008e"></script>
+<script src="js/gfx/sky.js?v=20261008e"></script>
+<script src="js/gfx/road.js?v=20261008e"></script>
+<script src="js/gfx/decals.js?v=20261008e"></script>
+<script src="js/gfx/lod.js?v=20261008e"></script>
+<script src="js/gfx/scatter.js?v=20261008e"></script>
+<script src="js/gfx/roadside.js?v=20261008e"></script>
+<script src="js/gfx/vehicles.js?v=20261008e"></script>
+<script src="js/gfx/nightfx.js?v=20261008e"></script>
+<script src="js/gfx/showroom.js?v=20261008e"></script>
+<script src="js/gfx/v2.js?v=20261008e"></script>
+<script src="js/gfx/assets.js?v=20261008e"></script>
+<script src="js/gfx/perf.js?v=20261008e"></script>
+<script src="js/gfx/benchmark.js?v=20261008e"></script>
+<script src="js/game.js?v=20261008e"></script>
 </body></html>
